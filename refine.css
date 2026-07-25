@@ -86,6 +86,12 @@ footer .footer-de8 .de8-wordmark{display:inline-block!important;font-size:16px!i
   .creator-signature .de8-wordmark{font-size:15px!important}
   footer .footer-de8 .de8-wordmark{font-size:15px!important}
 
+  /* Estado inicial del directorio: compacto, sin una tarjeta a pantalla completa. */
+  #explorar .directory-shell{min-height:0!important;border-radius:20px}
+  #explorar .directory-empty{min-height:0!important;padding:30px 24px!important;justify-content:flex-start}
+  #explorar .directory-empty strong{font-size:22px!important;line-height:1.15}
+  #explorar .directory-empty p{font-size:14px!important;line-height:1.55;margin-top:9px;max-width:100%}
+
   /* Escala móvil simplificada: 12 / 14 / 16 px. */
   .hero-lead{font-size:16px!important;line-height:1.62;max-width:360px}
   .hero-biographic-note{font-size:12px!important;line-height:1.35}
