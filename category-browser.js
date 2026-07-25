@@ -2,6 +2,38 @@
 const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Economía','Educación','Política','Sociedad'];
 let c8ActiveMainArea=null;
 
+(function c8InstallAreaStyles(){
+  if(document.getElementById('c8MainAreaStyles'))return;
+  const style=document.createElement('style');
+  style.id='c8MainAreaStyles';
+  style.textContent=`
+    #islandSelector{display:flex!important;gap:9px;flex-wrap:wrap;margin-bottom:24px}
+    .area-chip{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid rgba(157,78,221,.42);
+      background:rgba(59,10,106,.16);
+      border-radius:999px;padding:10px 14px;
+      font-family:"Work Sans",Arial,sans-serif;
+      font-size:10px;letter-spacing:.04em;color:#F5EEFA;
+      transition:.2s ease
+    }
+    .area-chip small{font-size:8px;color:#DCCFED;opacity:.9}
+    .area-chip:hover,.area-chip.active{
+      border-color:rgba(255,205,0,.72);
+      background:var(--de8-yellow);color:#1A0633;
+      box-shadow:0 0 24px rgba(255,205,0,.10)
+    }
+    .area-chip:hover small,.area-chip.active small{color:#1A0633;opacity:.72}
+    .area-directory .person-row small{color:#E6DCEF}
+    @media(max-width:620px){
+      #islandSelector{gap:8px;margin-bottom:22px}
+      .area-chip{font-size:13px;padding:10px 13px}
+      .area-chip small{font-size:11px}
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
 function c8PersonMatchesArea(person,area){
   const categories=person.categories?.length?person.categories:[person.category].filter(Boolean);
   return categories.includes(area);
