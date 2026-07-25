@@ -25,10 +25,13 @@ let c8ActiveMainArea=null;
     }
     .area-chip:hover small,.area-chip.active small{color:#1A0633;opacity:.72}
     .area-directory .person-row small{color:#E6DCEF}
+    .profile-alias{margin-top:7px;font-size:12px;line-height:1.45;color:#E7DDF0}
+    .profile-alias strong{font-weight:600;color:#fff}
     @media(max-width:620px){
       #islandSelector{gap:8px;margin-bottom:22px}
       .area-chip{font-size:13px;padding:10px 13px}
       .area-chip small{font-size:11px}
+      .profile-alias{font-size:14px}
     }
   `;
   document.head.appendChild(style);
@@ -44,6 +47,15 @@ function c8MainAreaCounts(){
     area,
     people.filter(person=>c8PersonMatchesArea(person,area)).length
   ]));
+}
+
+function c8UseCivilNamesForLucha(){
+  people.forEach(person=>{
+    const isLucha=(person.disciplines??[]).includes('Lucha canaria')||person.discipline==='Lucha canaria';
+    if(!isLucha||!person.fullName)return;
+    if(!person.c8Alias&&person.name&&person.name!==person.fullName)person.c8Alias=person.name;
+    person.name=person.fullName;
+  });
 }
 
 renderIslandSelector=function(){
@@ -109,16 +121,29 @@ openIsland=function(slug,scroll=true){
   c8OriginalOpenIsland(slug,scroll);
 };
 
+const c8OriginalOpenProfileForAliases=openProfile;
+openProfile=function(id){
+  c8OriginalOpenProfileForAliases(id);
+  const person=people.find(item=>item.id===id);
+  if(!person?.c8Alias||person.c8Alias===person.name)return;
+  const heading=directory?.querySelector('.profile-top h3');
+  if(!heading||directory.querySelector('.profile-alias'))return;
+  heading.insertAdjacentHTML('afterend',`<div class="profile-alias">Conocido en los terreros como <strong>${escapeHtml(person.c8Alias)}</strong></div>`);
+};
+
 const c8ExplorerEyebrow=document.querySelector('#explorar .section-heading .eyebrow');
 const c8ExplorerCopy=document.querySelector('#explorar .section-heading>p:last-child');
 if(c8ExplorerEyebrow)c8ExplorerEyebrow.textContent='Explora por territorio o categoría';
 if(c8ExplorerCopy)c8ExplorerCopy.textContent='Pulsa una isla en el mapa para recorrer sus biografías o entra por una de las categorías principales para descubrir personas de todo el archipiélago.';
 
+c8UseCivilNamesForLucha();
 renderIslandSelector();
 if(!currentIsland)renderEmpty();
 
 window.addEventListener('c8:data-ready',()=>{
+  c8UseCivilNamesForLucha();
   renderIslandSelector();
   if(c8ActiveMainArea)renderMainAreaDirectory(c8ActiveMainArea);
-  else if(!currentIsland)renderEmpty();
+  else if(currentIsland)renderIslandList();
+  else renderEmpty();
 });
