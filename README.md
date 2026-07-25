@@ -5,9 +5,16 @@ Repositorio principal de **Constelación 8**, directorio y mapa interactivo de p
 ## Estado del repositorio
 
 - Rama principal de producción: `main`.
-- Despliegue automático mediante GitHub Pages al publicar cambios en `main`.
+- La web está preparada para publicarse con GitHub Pages directamente desde `main` y la raíz `/` del repositorio.
 - Interfaz web actual: `index.html`, `app.css`, `app.js` y `map-data.js`.
 - La base de datos editorial se gestiona en Supabase; GitHub contiene el código y los recursos versionados de la web.
+- El archivo `.nojekyll` evita que GitHub Pages intente procesar esta web estática con Jekyll.
+
+## Publicación
+
+En GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: main → /(root) → Save**.
+
+Una vez activado ese ajuste del repositorio, los cambios publicados en `main` se sirven desde GitHub Pages.
 
 ## Flujo de trabajo
 
@@ -15,11 +22,8 @@ Repositorio principal de **Constelación 8**, directorio y mapa interactivo de p
 2. Versionar en GitHub cualquier cambio de código, estilos, recursos o configuración.
 3. No guardar claves, contraseñas ni secretos de Supabase en el repositorio.
 4. Usar ramas y pull requests para cambios estructurales; las correcciones pequeñas y controladas pueden integrarse directamente cuando sea apropiado.
-5. Cada actualización de `main` activa el flujo de despliegue de GitHub Pages definido en `.github/workflows/pages.yml`.
 
 ## Fuente de verdad
 
 - **Datos y relaciones editoriales:** Supabase.
-- **Código, interfaz y despliegue:** GitHub.
-
-Esto permite ampliar la base de datos de forma independiente sin perder trazabilidad del código ni del historial de publicación.
+- **Código, interfaz y publicación:** GitHub.
