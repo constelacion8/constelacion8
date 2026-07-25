@@ -10,8 +10,12 @@
 .hero-biographic-note{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:7px 11px;border:1px solid rgba(255,205,0,.14);border-radius:999px;background:rgba(255,205,0,.025);font-family:"Work Sans";font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#D7C9E1}
 .hero-biographic-note:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--de8-yellow);box-shadow:0 0 12px rgba(255,205,0,.8)}
 .archipelago-stage{margin-top:3px}
-.creator-signature{display:none!important}
-.creator-signature>span{font-size:8px;text-transform:uppercase;letter-spacing:.14em}
+
+/* Firma de marca bajo «Descubre con quién coincidiste». */
+.creator-signature{position:relative;z-index:5;display:flex!important;order:10;align-items:baseline;justify-content:center;gap:7px;margin-top:0;font-family:"Work Sans",Arial,sans-serif;color:#fff}
+.creator-signature>span{font-size:0;color:#fff}
+.creator-signature>span::after{content:"Creado por";font-family:"Work Sans",Arial,sans-serif;font-size:9px;line-height:1;font-weight:400;letter-spacing:.02em;color:#fff;white-space:nowrap}
+.creator-signature .de8-wordmark{font-size:15px!important;color:#fff!important}
 
 /* Marca DE8: texto real en Work Sans, sin imágenes ni SVG. */
 .de8-wordmark{font-family:"Work Sans",Arial,sans-serif!important;font-size:18px!important;line-height:1!important;font-weight:700!important;letter-spacing:-.045em!important;color:#fff!important;background:none!important;width:auto!important;height:auto!important;aspect-ratio:auto!important;opacity:1!important;white-space:nowrap}
@@ -80,7 +84,9 @@ footer .footer-de8 .de8-wordmark{display:inline-block!important;font-size:16px!i
   .hero-presenter strong{font-size:17px}
   .hero-presenter span{font-size:8px}
   .hero-atlas-title{font-size:25px;line-height:1.08}
-  .creator-signature{display:none!important}
+  .creator-signature{display:flex!important;margin-top:2px;gap:6px}
+  .creator-signature>span::after{font-size:11px}
+  .creator-signature .de8-wordmark{font-size:15px!important}
   footer .footer-de8 .de8-wordmark{font-size:15px!important}
 
   /* Escala móvil simplificada: 12 / 14 / 16 px. */
