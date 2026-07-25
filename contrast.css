@@ -17,6 +17,12 @@
   color:#F4EFF8!important;
 }
 
+/* Resumen visual de la portada: amarillo de marca */
+.hero-biographic-note{
+  color:#FFCD00!important;
+  border-color:rgba(255,205,0,.78)!important;
+}
+
 /* Metadatos: blanco violáceo luminoso, nunca gris oscuro */
 .time-tool-head small,
 .time-field span,
