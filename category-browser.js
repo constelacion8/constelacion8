@@ -2,12 +2,20 @@
 const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Economía','Educación','Política','Sociedad'];
 let c8ActiveMainArea=null;
 
+/* Limpieza editorial del tramo final: se elimina el bloque explicativo de proyecto
+   y el estado vacío del directorio para que las cifras sigan inmediatamente al explorador. */
+(function c8StreamlineBottom(){
+  document.getElementById('proyecto')?.remove();
+  document.querySelector('.main-nav [data-scroll="proyecto"]')?.remove();
+})();
+
 (function c8InstallAreaStyles(){
   if(document.getElementById('c8MainAreaStyles'))return;
   const style=document.createElement('style');
   style.id='c8MainAreaStyles';
   style.textContent=`
     #islandSelector{display:flex!important;gap:9px;flex-wrap:wrap;margin-bottom:24px}
+    #directory:empty{display:none}
     .area-chip{
       display:inline-flex;align-items:center;gap:8px;
       border:1px solid rgba(157,78,221,.42);
@@ -78,7 +86,7 @@ renderIslandSelector=function(){
 
 renderEmpty=function(){
   if(!directory)return;
-  directory.innerHTML=`<div class="directory-empty"><strong>Explora por isla o por categoría.</strong><p>Pulsa una isla en el mapa para entrar en su directorio, o elige arriba una categoría principal para descubrir perfiles de todo el archipiélago.</p></div>`;
+  directory.innerHTML='';
 };
 
 function renderMainAreaDirectory(area){
@@ -151,7 +159,7 @@ window.addEventListener('c8:data-ready',()=>{
 (function loadEditorialEnhancements(){
   const assets=[
     ['full-name-display.js?v=20260725-2245','data-c8-full-names'],
-    ['constellation-stats.js?v=20260725-2245','data-c8-constellation-stats']
+    ['constellation-stats.js?v=20260725-2318','data-c8-constellation-stats']
   ];
   assets.forEach(([src,marker])=>{
     if(document.querySelector(`script[${marker}]`))return;
