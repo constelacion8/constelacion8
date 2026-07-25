@@ -60,6 +60,10 @@ footer .footer-de8 .de8-wordmark{display:inline-block!important;font-size:16px!i
 .time-overlap{display:inline-flex;margin-top:10px;border-radius:999px;padding:5px 7px;background:rgba(255,205,0,.045);border:1px solid rgba(255,205,0,.12);font-size:7px;color:#D7C867}
 
 .section-heading h2{max-width:760px}
+/* Una vez elegida una isla, evitamos repetir la introducción general y mostramos directamente su directorio. */
+.explorer:has(.island-chip.active) .section-heading,
+.explorer:has(.island-chip.active) .island-selector{display:none}
+.explorer:has(.island-chip.active) .directory-shell{margin-top:0}
 .project-section{padding-top:86px}
 .project-copy .project-definition{color:#DED3E6;font-size:15px;line-height:1.8;margin-bottom:16px}
 .project-copy .project-secondary{color:#9E8BAB;font-size:12px;line-height:1.75}
