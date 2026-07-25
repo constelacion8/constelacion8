@@ -46,6 +46,7 @@ function primaryBirthPlace(record){
 function primaryDisplayPlace(record){
   return primaryBirthPlace(record)
     ??record.places?.find(place=>place.is_primary&&place.island)
+    ??record.places?.find(place=>place.island)
     ??null;
 }
 
@@ -166,7 +167,7 @@ renderIslandList=function(query=''){
   directory.innerHTML=`
     <div class="directory-inner">
       <div class="directory-head">
-        <div><h3>${escapeHtml(islands[currentIsland].name)}</h3><p>Personas nacidas en la isla · orden alfabético · datos sincronizados con Supabase</p></div>
+        <div><h3>${escapeHtml(islands[currentIsland].name)}</h3><p>Personas nacidas en la isla o especialmente vinculadas a ella · orden alfabético · datos sincronizados con Supabase</p></div>
         <div class="directory-count">${all.length} ${all.length===1?'perfil verificado':'perfiles verificados'}</div>
       </div>
       <div class="toolbar">
