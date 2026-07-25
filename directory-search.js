@@ -2,7 +2,7 @@
 (function refineHeroCopy(){
   const lead=document.querySelector('#inicio .hero-lead');
   if(!lead)return;
-  lead.innerHTML='<strong>Ocho islas, siglos de historia contados a través de sus personas.</strong> Elige un punto del mapa y empieza el recorrido.';
+  lead.textContent='Elige una isla del mapa y empieza el recorrido.';
 })();
 
 (function moveHeroCreditBelowCoincidences(){
@@ -160,7 +160,7 @@ renderIslandList=function(query){
 (function loadCategoryBrowser(){
   if(document.querySelector('script[data-c8-category-browser]'))return;
   const script=document.createElement('script');
-  script.src='category-browser.js?v=20260725-2340';
+  script.src='category-browser.js?v=20260726-0015';
   script.dataset.c8CategoryBrowser='true';
   script.async=false;
   document.body.appendChild(script);
