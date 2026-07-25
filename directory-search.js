@@ -149,3 +149,13 @@ renderIslandList=function(query){
   }));
   directory.querySelectorAll('[data-person]').forEach(button=>button.addEventListener('click',()=>openProfile(button.dataset.person)));
 };
+
+/* La navegación territorial ya vive en el mapa. Cargamos una segunda entrada por categorías principales. */
+(function loadCategoryBrowser(){
+  if(document.querySelector('script[data-c8-category-browser]'))return;
+  const script=document.createElement('script');
+  script.src='category-browser.js?v=20260725-2045';
+  script.dataset.c8CategoryBrowser='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
