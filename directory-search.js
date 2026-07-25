@@ -154,7 +154,7 @@ renderIslandList=function(query){
 (function loadCategoryBrowser(){
   if(document.querySelector('script[data-c8-category-browser]'))return;
   const script=document.createElement('script');
-  script.src='category-browser.js?v=20260725-2245';
+  script.src='category-browser.js?v=20260725-2318';
   script.dataset.c8CategoryBrowser='true';
   script.async=false;
   document.body.appendChild(script);
@@ -174,7 +174,7 @@ renderIslandList=function(query){
 (function loadConstellationStats(){
   if(document.querySelector('script[data-c8-constellation-stats]'))return;
   const script=document.createElement('script');
-  script.src='constellation-stats.js?v=20260725-2245';
+  script.src='constellation-stats.js?v=20260725-2318';
   script.dataset.c8ConstellationStats='true';
   script.async=false;
   document.body.appendChild(script);
