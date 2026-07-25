@@ -29,3 +29,13 @@
     rerenderCurrentView();
   });
 })();
+
+/* Geometría oriental revisada sobre cartografía actual: Lanzarote, La Graciosa y Chinijo. */
+(function loadMapGeometry(){
+  if(document.querySelector('script[data-c8-map-geometry]'))return;
+  const script=document.createElement('script');
+  script.src='map-geometry.js?v=20260726-0215';
+  script.dataset.c8MapGeometry='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
