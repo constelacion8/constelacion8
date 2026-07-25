@@ -25,7 +25,6 @@
         <button data-scroll="inicio">Inicio</button>
         <button data-scroll="coincidencias">Coincidencias</button>
         <button data-scroll="explorar">Islas</button>
-        <button data-scroll="proyecto">Proyecto</button>
       </nav>
       <button class="header-cta" data-scroll="explorar">Explorar</button>
     </header>
@@ -47,42 +46,29 @@
 
           <svg class="network-layer" viewBox="0 0 588 246" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
-              <filter id="networkGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="1.4" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-              <linearGradient id="lineGold" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#9D4EDD" stop-opacity=".16"/>
-                <stop offset=".48" stop-color="#FFCD00" stop-opacity=".9"/>
-                <stop offset="1" stop-color="#9D4EDD" stop-opacity=".18"/>
-              </linearGradient>
+              <filter id="networkGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <linearGradient id="lineGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9D4EDD" stop-opacity=".16"/><stop offset=".48" stop-color="#FFCD00" stop-opacity=".9"/><stop offset="1" stop-color="#9D4EDD" stop-opacity=".18"/></linearGradient>
             </defs>
             <g class="constellation-lines" filter="url(#networkGlow)">
-              <path d="M22 229 C70 197, 92 187, 119 179 S168 151, 203 156 S275 200, 321 203 S432 172, 510 141 S544 78, 559 53"/>
-              <path d="M43 98 C92 121, 135 141, 203 156 C278 172, 397 157, 510 141 C536 116, 548 84, 559 53"/>
-              <path d="M119 179 C153 198, 197 207, 321 203 C393 201, 449 176, 510 141"/>
-              <path d="M203 156 C235 132, 276 121, 321 203 C355 146, 431 116, 510 141" class="violet-line"/>
-              <path d="M510 141 C532 107, 550 79, 559 53 C555 43, 550 34, 543 27" class="violet-line"/>
+              <path d="M22 229 C70 197,92 187,119 179 S168 151,203 156 S275 200,321 203 S432 172,510 141 S544 78,559 53"/>
+              <path d="M43 98 C92 121,135 141,203 156 C278 172,397 157,510 141 C536 116,548 84,559 53"/>
+              <path d="M119 179 C153 198,197 207,321 203 C393 201,449 176,510 141"/>
+              <path d="M203 156 C235 132,276 121,321 203 C355 146,431 116,510 141" class="violet-line"/>
+              <path d="M510 141 C532 107,550 79,559 53 C563 39,562 28,559 19" class="violet-line"/>
             </g>
             <g class="network-nodes">
               <circle cx="22" cy="229" r="2"/><circle cx="43" cy="98" r="2"/><circle cx="119" cy="179" r="2"/>
               <circle cx="203" cy="156" r="2.4"/><circle cx="321" cy="203" r="2"/><circle cx="510" cy="141" r="2"/>
-              <circle cx="559" cy="53" r="2"/><circle cx="543" cy="27" r="1.5"/>
+              <circle cx="559" cy="53" r="2"/><circle cx="559" cy="19" r="1.5"/>
               <circle cx="77" cy="207" r="1"/><circle cx="151" cy="166" r="1"/><circle cx="265" cy="181" r="1"/>
               <circle cx="378" cy="186" r="1"/><circle cx="457" cy="157" r="1"/><circle cx="535" cy="102" r="1"/>
             </g>
           </svg>
 
-          <!-- Siluetas vectorizadas directamente del mapa de referencia aportado al proyecto. -->
           <svg class="canary-map" viewBox="0 0 588 246" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mapTitle mapDesc">
             <title id="mapTitle">Islas Canarias</title>
-            <desc id="mapDesc">Mapa interactivo con las ocho islas del archipiélago canario, sin territorio continental.</desc>
-            <defs>
-              <filter id="islandGlow" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="3.1" result="coloredBlur"/>
-                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
+            <desc id="mapDesc">Mapa interactivo de las ocho islas Canarias, incluyendo La Graciosa separada de Lanzarote y referencias del Archipiélago Chinijo.</desc>
+            <defs><filter id="islandGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3.1" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
 
             <g class="island-node" data-island="el-hierro" role="button" tabindex="0" aria-label="El Hierro">
               <path class="island-aura" d="M37,217 L33,214 L28,215 L23,218 L24,220 L23,222 L15,227 L12,227 L6,224 L3,226 L2,233 L4,235 L9,235 L16,237 L20,243 L25,245 L27,243 L28,233 L32,232 L34,226 L38,222 Z"/>
@@ -108,107 +94,61 @@
               <path class="island-aura" d="M538,90 L534,93 L535,94 L534,96 L530,92 L526,93 L524,92 L512,98 L513,105 L511,107 L510,115 L507,119 L503,130 L496,137 L494,147 L489,152 L489,164 L488,166 L476,177 L472,178 L470,180 L463,182 L455,181 L454,183 L455,184 L453,188 L460,187 L464,189 L476,191 L490,174 L497,173 L500,171 L505,171 L508,169 L512,169 L517,166 L522,166 L526,162 L529,157 L528,155 L531,150 L532,145 L534,143 L534,137 L532,130 L535,127 L537,121 L537,109 L536,108 L536,98 L535,96 L538,95 L539,93 Z"/>
               <path class="island-shape" d="M538,90 L534,93 L535,94 L534,96 L530,92 L526,93 L524,92 L512,98 L513,105 L511,107 L510,115 L507,119 L503,130 L496,137 L494,147 L489,152 L489,164 L488,166 L476,177 L472,178 L470,180 L463,182 L455,181 L454,183 L455,184 L453,188 L460,187 L464,189 L476,191 L490,174 L497,173 L500,171 L505,171 L508,169 L512,169 L517,166 L522,166 L526,162 L529,157 L528,155 L531,150 L532,145 L534,143 L534,137 L532,130 L535,127 L537,121 L537,109 L536,108 L536,98 L535,96 L538,95 L539,93 Z"/>
             </g>
+
             <g class="island-node" data-island="lanzarote" role="button" tabindex="0" aria-label="Lanzarote">
-              <path class="island-aura" d="M577,19 L573,18 L572,16 L569,16 L569,19 L572,20 L571,24 L568,28 L569,29 L573,28 L575,29 L573,31 L571,39 L569,41 L567,41 L565,39 L555,41 L551,46 L543,48 L536,54 L534,60 L535,62 L534,67 L535,68 L529,73 L529,79 L539,79 L540,81 L542,81 L549,71 L559,70 L563,68 L564,66 L571,65 L573,62 L578,59 L580,56 L580,51 L582,47 L582,44 L580,41 L585,36 L585,29 L577,24 L579,22 Z"/>
-              <path class="island-shape" d="M577,19 L573,18 L572,16 L569,16 L569,19 L572,20 L571,24 L568,28 L569,29 L573,28 L575,29 L573,31 L571,39 L569,41 L567,41 L565,39 L555,41 L551,46 L543,48 L536,54 L534,60 L535,62 L534,67 L535,68 L529,73 L529,79 L539,79 L540,81 L542,81 L549,71 L559,70 L563,68 L564,66 L571,65 L573,62 L578,59 L580,56 L580,51 L582,47 L582,44 L580,41 L585,36 L585,29 L577,24 L579,22 Z"/>
+              <path class="island-aura" d="M580 25 L576 23 L573 25 L571 29 L570 33 L567 36 L565 40 L561 43 L559 47 L555 49 L553 53 L550 56 L548 60 L544 63 L542 67 L538 70 L535 74 L531 77 L529 80 L534 82 L539 82 L544 79 L549 77 L553 74 L558 72 L561 69 L565 67 L568 63 L572 60 L575 56 L578 52 L580 47 L582 43 L583 39 L585 35 L585 31 L583 27 Z"/>
+              <path class="island-shape" d="M580 25 L576 23 L573 25 L571 29 L570 33 L567 36 L565 40 L561 43 L559 47 L555 49 L553 53 L550 56 L548 60 L544 63 L542 67 L538 70 L535 74 L531 77 L529 80 L534 82 L539 82 L544 79 L549 77 L553 74 L558 72 L561 69 L565 67 L568 63 L572 60 L575 56 L578 52 L580 47 L582 43 L583 39 L585 35 L585 31 L583 27 Z"/>
             </g>
             <g class="island-node island-node-tiny" data-island="la-graciosa" role="button" tabindex="0" aria-label="La Graciosa">
-              <path class="island-aura" d="M536,23 L539,20 L544,19 L548,21 L550,25 L549,29 L546,31 L544,35 L540,35 L538,32 L534,31 L534,27 Z"/>
-              <path class="island-shape" d="M536,23 L539,20 L544,19 L548,21 L550,25 L549,29 L546,31 L544,35 L540,35 L538,32 L534,31 L534,27 Z"/>
-              <circle class="tiny-hit" cx="542" cy="27" r="10"/>
+              <path class="island-aura" d="M553 14 L557 12 L562 12 L566 14 L568 17 L568 20 L565 22 L562 24 L558 25 L554 23 L551 21 L550 18 L551 16 Z"/>
+              <path class="island-shape" d="M553 14 L557 12 L562 12 L566 14 L568 17 L568 20 L565 22 L562 24 L558 25 L554 23 L551 21 L550 18 L551 16 Z"/>
+              <circle class="tiny-hit" cx="559" cy="19" r="11"/>
             </g>
-            <g class="chinijo-reference" aria-label="Alegranza">
-              <path d="M558,8 L560,5 L564,5 L566,8 L564,11 L560,11 Z" fill="rgba(255,205,0,.08)" stroke="rgba(255,205,0,.5)" stroke-width=".55" vector-effect="non-scaling-stroke"/>
+            <g class="chinijo-reference" aria-label="Archipiélago Chinijo" pointer-events="none">
+              <path d="M548 2 L551 1 L554 3 L554 6 L552 8 L548 8 L546 6 L546 4 Z" fill="rgba(255,205,0,.07)" stroke="rgba(255,205,0,.52)" stroke-width=".55" vector-effect="non-scaling-stroke" aria-label="Alegranza"/>
+              <path d="M547 10 L550 9 L552 11 L551 14 L548 14 L546 12 Z" fill="rgba(255,205,0,.07)" stroke="rgba(255,205,0,.52)" stroke-width=".55" vector-effect="non-scaling-stroke" aria-label="Montaña Clara"/>
+              <circle cx="543.5" cy="12.8" r=".85" fill="rgba(255,205,0,.07)" stroke="rgba(255,205,0,.52)" stroke-width=".55" vector-effect="non-scaling-stroke" aria-label="Roque del Oeste"/>
+              <circle cx="574" cy="17.2" r=".75" fill="rgba(255,205,0,.07)" stroke="rgba(255,205,0,.52)" stroke-width=".55" vector-effect="non-scaling-stroke" aria-label="Roque del Este"/>
             </g>
           </svg>
 
-          <div class="map-tooltip" id="mapTooltip" role="status" aria-live="polite">
-            <span class="tooltip-dot"></span>
-            <strong>Explora una isla</strong>
-            <small>Pulsa sobre su silueta</small>
-          </div>
-
+          <div class="map-tooltip" id="mapTooltip" role="status" aria-live="polite"><span class="tooltip-dot"></span><strong>Explora una isla</strong><small>Pulsa sobre su silueta</small></div>
           <div class="map-mobile-ui" aria-label="Controles del mapa">
             <div class="map-gesture-hint"><span class="gesture-hand" aria-hidden="true">↔</span> Desliza para recorrer</div>
-            <div class="map-controls">
-              <button type="button" id="mapZoomOut" aria-label="Alejar mapa">−</button>
-              <button type="button" id="mapReset" aria-label="Ver el archipiélago completo">◎</button>
-              <button type="button" id="mapZoomIn" aria-label="Acercar mapa">+</button>
-              <button type="button" id="gyroButton" class="gyro-button" aria-pressed="false" hidden><span aria-hidden="true">✦</span> Movimiento</button>
-            </div>
+            <div class="map-controls"><button type="button" id="mapZoomOut" aria-label="Alejar mapa">−</button><button type="button" id="mapReset" aria-label="Ver el archipiélago completo">◎</button><button type="button" id="mapZoomIn" aria-label="Acercar mapa">+</button><button type="button" id="gyroButton" class="gyro-button" aria-pressed="false" hidden><span aria-hidden="true">✦</span> Movimiento</button></div>
           </div>
         </div>
 
         <div class="creator-signature"><span>Un proyecto creado por</span><strong class="de8-wordmark">DE8 Films.</strong></div>
-
-        <button class="hero-down" data-scroll="coincidencias">
-          <span>Descubre con quién coincidiste</span>
-          <b aria-hidden="true">↓</b>
-        </button>
+        <button class="hero-down" data-scroll="coincidencias"><span>Descubre con quién coincidiste</span><b aria-hidden="true">↓</b></button>
       </section>
 
       <section class="time-match" id="coincidencias">
         <div class="time-match-inner">
-          <div class="time-match-copy">
-            <p class="eyebrow">Tu lugar en la constelación</p>
-            <h2>¿Con quién <span>coincidiste?</span></h2>
-            <p>Introduce tu nombre y tu fecha de nacimiento. Constelación 8 comparará tu vida con las biografías del atlas y te mostrará qué figuras canarias coincidieron contigo en el tiempo.</p>
-            <div class="time-orbit" aria-hidden="true"><i></i><b></b></div>
-          </div>
-
+          <div class="time-match-copy"><p class="eyebrow">Tu lugar en la constelación</p><h2>¿Con quién <span>coincidiste?</span></h2><p>Introduce tu nombre y tu fecha de nacimiento. Constelación 8 comparará tu vida con las biografías del atlas y te mostrará qué figuras canarias coincidieron contigo en el tiempo.</p><div class="time-orbit" aria-hidden="true"><i></i><b></b></div></div>
           <div class="time-tool">
-            <div class="time-tool-head">
-              <div><strong>Coincidencia espaciotemporal</strong><small>Una forma personal de entrar en el atlas: tu fecha frente a la cronología vital de las personas incorporadas.</small></div>
-              <span class="time-tool-badge">Experimental</span>
-            </div>
-            <form class="time-form" id="timeForm">
-              <label class="time-field"><span>Tu nombre</span><input id="timeName" name="name" autocomplete="given-name" placeholder="Nombre" required></label>
-              <label class="time-field"><span>Fecha de nacimiento</span><input id="timeBirth" name="birth" type="date" required></label>
-              <button class="time-submit" type="submit">Calcular coincidencias →</button>
-            </form>
+            <div class="time-tool-head"><div><strong>Coincidencia espaciotemporal</strong><small>Una forma personal de entrar en el atlas: tu fecha frente a la cronología vital de las personas incorporadas.</small></div><span class="time-tool-badge">Experimental</span></div>
+            <form class="time-form" id="timeForm"><label class="time-field"><span>Tu nombre</span><input id="timeName" name="name" autocomplete="given-name" placeholder="Nombre" required></label><label class="time-field"><span>Fecha de nacimiento</span><input id="timeBirth" name="birth" type="date" required></label><button class="time-submit" type="submit">Calcular coincidencias →</button></form>
             <p class="time-privacy">Los datos se utilizan solo en tu navegador para calcular el resultado y no se guardan.</p>
-            <div class="time-results" id="timeResults" aria-live="polite">
-              <div class="time-empty">Escribe tus datos para situarte temporalmente dentro del atlas biográfico.</div>
-            </div>
+            <div class="time-results" id="timeResults" aria-live="polite"><div class="time-empty">Escribe tus datos para situarte temporalmente dentro del atlas biográfico.</div></div>
           </div>
         </div>
       </section>
 
       <section class="explorer" id="explorar">
         <div class="section-wrap">
-          <div class="section-heading">
-            <p class="eyebrow">Explora por territorio</p>
-            <h2>Ocho islas. Un atlas de biografías.</h2>
-            <p>Elige una isla y recorre, por orden alfabético, las personas nacidas en ella. Filtra por áreas y abre cada biografía para descubrir después sus conexiones con otras vidas.</p>
-          </div>
+          <div class="section-heading"><p class="eyebrow">Explora por territorio</p><h2>Ocho islas. Un atlas de biografías.</h2><p>Elige una isla y recorre, por orden alfabético, las personas nacidas en ella. Filtra por áreas y abre cada biografía para descubrir después sus conexiones con otras vidas.</p></div>
           <div class="island-selector" id="islandSelector" aria-label="Selector de isla"></div>
           <div class="directory-shell" id="directory" aria-live="polite"></div>
         </div>
       </section>
-
-      <section class="project-section" id="proyecto">
-        <div class="section-wrap project-grid">
-          <div>
-            <p class="eyebrow">Qué es Constelación 8</p>
-            <h2>Biografías conectadas como una constelación.</h2>
-          </div>
-          <div class="project-copy">
-            <p class="project-definition">El corazón de Constelación 8 son las biografías de las personas que han marcado la historia de Canarias.</p>
-            <p class="project-secondary">La constelación es la manera de descubrirlas: territorio, siglo, década, disciplina, instituciones y relaciones documentadas convierten cada perfil en una puerta hacia otras vidas.</p>
-            <div class="project-tags"><span>Biografías</span><span>Territorio</span><span>Tiempo</span><span>Disciplina</span><span>Relaciones</span></div>
-            <div class="de8-credit"><span>Un proyecto creado por</span><strong class="de8-wordmark">DE8 Films.</strong></div>
-          </div>
-        </div>
-      </section>
     </main>
 
-    <footer>
-      <span>CONSTELACIÓN 8</span>
-      <div class="footer-de8"><small>Creado por</small><strong class="de8-wordmark">DE8 Films.</strong></div>
-    </footer>
+    <footer><span>CONSTELACIÓN 8</span><div class="footer-de8"><small>Creado por</small><strong class="de8-wordmark">DE8 Films.</strong></div></footer>
   </div>
   <script src="app.js"></script>
   <script src="experience.js?v=20260725-1915"></script>
-  <script src="directory-search.js?v=20260725-1945"></script>
+  <script src="directory-search.js?v=20260726-0220"></script>
+  <script src="map-geometry.js?v=20260726-0220"></script>
 </body>
 </html>
