@@ -41,8 +41,20 @@ const directory = document.getElementById('directory');
 const islandSelector = document.getElementById('islandSelector');
 const mapTooltip = document.getElementById('mapTooltip');
 const particleField = document.getElementById('particleField');
+const archipelagoStage = document.getElementById('archipelagoStage');
+const mapZoomIn = document.getElementById('mapZoomIn');
+const mapZoomOut = document.getElementById('mapZoomOut');
+const mapReset = document.getElementById('mapReset');
+const gyroButton = document.getElementById('gyroButton');
 let currentIsland = null;
 let currentCategory = 'Todas';
+
+const mapView = {scale:1,x:0,y:0,gyroX:0,gyroY:0};
+let mapGestureMovedAt = 0;
+let activePointer = null;
+let gestureStart = null;
+let gyroEnabled = false;
+let gyroBaseline = null;
 
 function escapeHtml(value){
   return String(value).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
@@ -179,6 +191,105 @@ function openProfile(id){
   document.getElementById('explorar').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+function isCompactMap(){
+  return window.matchMedia('(max-width: 900px)').matches;
+}
+function clamp(value,min,max){return Math.min(max,Math.max(min,value))}
+function clampMapPan(){
+  const rect=archipelagoStage.getBoundingClientRect();
+  const maxX=Math.max(0,(mapView.scale-1)*rect.width*.5+5);
+  const maxY=Math.max(0,(mapView.scale-1)*rect.height*.5+4);
+  mapView.x=clamp(mapView.x,-maxX,maxX);
+  mapView.y=clamp(mapView.y,-maxY,maxY);
+}
+function applyMapTransform(){
+  clampMapPan();
+  const gx=isCompactMap()?mapView.gyroX:0;
+  const gy=isCompactMap()?mapView.gyroY:0;
+  const transform=`translate3d(${(mapView.x+gx).toFixed(2)}px, ${(mapView.y+gy).toFixed(2)}px, 0) scale(${mapView.scale.toFixed(3)})`;
+  document.querySelectorAll('.canary-map,.network-layer,.particle-field').forEach(layer=>{layer.style.transform=transform});
+}
+function setMapScale(nextScale){
+  mapView.scale=clamp(nextScale,1,2.05);
+  if(mapView.scale===1){mapView.x=0;mapView.y=0}
+  applyMapTransform();
+}
+function resetMapView(){
+  mapView.scale=1;mapView.x=0;mapView.y=0;mapView.gyroX=0;mapView.gyroY=0;
+  applyMapTransform();
+}
+function bindMobileMapGestures(){
+  archipelagoStage.addEventListener('pointerdown',event=>{
+    if(!isCompactMap() || event.pointerType==='mouse' || event.target.closest('.map-controls'))return;
+    activePointer=event.pointerId;
+    gestureStart={x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,dragging:false};
+  });
+  archipelagoStage.addEventListener('pointermove',event=>{
+    if(activePointer!==event.pointerId || !gestureStart)return;
+    const totalX=event.clientX-gestureStart.x;
+    const totalY=event.clientY-gestureStart.y;
+    if(!gestureStart.dragging && Math.abs(totalX)>7 && Math.abs(totalX)>Math.abs(totalY)*1.1){
+      gestureStart.dragging=true;
+      if(mapView.scale<1.08) mapView.scale=1.30;
+      archipelagoStage.classList.add('is-gesturing');
+      try{archipelagoStage.setPointerCapture(event.pointerId)}catch(_){ }
+    }
+    if(!gestureStart.dragging)return;
+    event.preventDefault();
+    mapView.x+=event.clientX-gestureStart.lastX;
+    mapView.y+=(event.clientY-gestureStart.lastY)*.22;
+    gestureStart.lastX=event.clientX;
+    gestureStart.lastY=event.clientY;
+    applyMapTransform();
+    mapGestureMovedAt=Date.now();
+  });
+  const endGesture=event=>{
+    if(activePointer!==event.pointerId)return;
+    if(gestureStart?.dragging)mapGestureMovedAt=Date.now();
+    activePointer=null;gestureStart=null;
+    archipelagoStage.classList.remove('is-gesturing');
+  };
+  archipelagoStage.addEventListener('pointerup',endGesture);
+  archipelagoStage.addEventListener('pointercancel',endGesture);
+
+  mapZoomIn?.addEventListener('click',event=>{event.stopPropagation();setMapScale(mapView.scale+.28)});
+  mapZoomOut?.addEventListener('click',event=>{event.stopPropagation();setMapScale(mapView.scale-.28)});
+  mapReset?.addEventListener('click',event=>{event.stopPropagation();resetMapView()});
+}
+function handleDeviceOrientation(event){
+  if(!gyroEnabled || !isCompactMap() || event.gamma==null || event.beta==null)return;
+  if(!gyroBaseline)gyroBaseline={gamma:event.gamma,beta:event.beta};
+  const dx=event.gamma-gyroBaseline.gamma;
+  const dy=event.beta-gyroBaseline.beta;
+  mapView.gyroX=clamp(dx*.34,-9,9);
+  mapView.gyroY=clamp(dy*.15,-5,5);
+  applyMapTransform();
+}
+async function toggleGyroscope(){
+  if(!gyroButton)return;
+  if(gyroEnabled){
+    gyroEnabled=false;gyroBaseline=null;mapView.gyroX=0;mapView.gyroY=0;
+    window.removeEventListener('deviceorientation',handleDeviceOrientation);
+    gyroButton.setAttribute('aria-pressed','false');gyroButton.innerHTML='<span aria-hidden="true">✦</span> Movimiento';
+    applyMapTransform();return;
+  }
+  try{
+    if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+      const permission=await DeviceOrientationEvent.requestPermission();
+      if(permission!=='granted')return;
+    }
+    gyroEnabled=true;gyroBaseline=null;
+    window.addEventListener('deviceorientation',handleDeviceOrientation,{passive:true});
+    gyroButton.setAttribute('aria-pressed','true');gyroButton.innerHTML='<span aria-hidden="true">✦</span> Activo';
+  }catch(_){gyroButton.hidden=true}
+}
+function prepareGyroscopeControl(){
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!gyroButton || reduceMotion || typeof DeviceOrientationEvent==='undefined'){if(gyroButton)gyroButton.hidden=true;return}
+  gyroButton.hidden=false;
+  gyroButton.addEventListener('click',event=>{event.stopPropagation();toggleGyroscope()});
+}
+
 function createParticles(){
   const count=window.innerWidth<700?36:70;
   const fragment=document.createDocumentFragment();
@@ -209,7 +320,10 @@ function bindMap(){
     node.addEventListener('mouseleave',()=>setTooltip(currentIsland));
     node.addEventListener('focus',()=>setTooltip(slug));
     node.addEventListener('blur',()=>setTooltip(currentIsland));
-    node.addEventListener('click',()=>openIsland(slug,true));
+    node.addEventListener('click',()=>{
+      if(Date.now()-mapGestureMovedAt<320)return;
+      openIsland(slug,true);
+    });
     node.addEventListener('keydown',e=>{
       if(e.key==='Enter'||e.key===' '){e.preventDefault();openIsland(slug,true)}
     });
@@ -222,5 +336,11 @@ document.getElementById('homeButton').addEventListener('click',()=>document.getE
 renderIslandSelector();
 renderEmpty();
 bindMap();
+bindMobileMapGestures();
+prepareGyroscopeControl();
 createParticles();
-window.addEventListener('resize',()=>{clearTimeout(window.__c8resize);window.__c8resize=setTimeout(createParticles,180)});
+applyMapTransform();
+window.addEventListener('resize',()=>{
+  clearTimeout(window.__c8resize);
+  window.__c8resize=setTimeout(()=>{createParticles();if(!isCompactMap())resetMapView();else applyMapTransform()},180);
+});
