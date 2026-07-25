@@ -2,26 +2,32 @@
 const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Educación','Política','Sociedad'];
 let c8ActiveMainArea=null;
 
-/* Corrección geográfica mínima del extremo oriental.
-   Lanzarote conserva intacta su silueta. La Graciosa se recoloca como isla
-   independiente y Alegranza queda como referencia discreta no navegable. */
+/* Corrección geográfica del extremo oriental.
+   Lanzarote conserva intacta su silueta. El pequeño polígono original del extremo
+   superior pasa a representar Alegranza y La Graciosa se dibuja separada, al
+   noroeste de Lanzarote, dejando visible el canal de El Río entre ambas. */
 (function c8CorrectChinijoGeography(){
   const map=document.querySelector('.canary-map');
   const graciosa=map?.querySelector('[data-island="la-graciosa"]');
   if(!map||!graciosa||map.dataset.chinijoCorrected==='true')return;
 
   map.dataset.chinijoCorrected='true';
+
+  /* La Graciosa: claramente separada del norte de Lanzarote. */
+  graciosa.classList.add('island-node-tiny');
   graciosa.setAttribute('aria-label','La Graciosa');
   graciosa.innerHTML=`
-    <path class="island-aura" d="M546,27 L549,24 L554,23 L559,25 L561,28 L559,32 L555,34 L550,33 L547,31 Z"/>
-    <path class="island-shape" d="M546,27 L549,24 L554,23 L559,25 L561,28 L559,32 L555,34 L550,33 L547,31 Z"/>
-    <circle class="tiny-hit" cx="553.5" cy="28.5" r="9"/>
+    <path class="island-aura" d="M550,19 L552,16 L556,14 L561,14 L565,16 L566,19 L563,22 L559,23 L555,22 L552,21 Z"/>
+    <path class="island-shape" d="M550,19 L552,16 L556,14 L561,14 L565,16 L566,19 L563,22 L559,23 L555,22 L552,21 Z"/>
+    <circle class="tiny-hit" cx="558" cy="18.5" r="10"/>
   `;
 
+  /* Alegranza ocupa la posición del pequeño islote que antes se interpretaba
+     erróneamente como La Graciosa. Es una referencia cartográfica, no navegable. */
   const alegranza=document.createElementNS('http://www.w3.org/2000/svg','g');
   alegranza.setAttribute('class','chinijo-reference');
   alegranza.setAttribute('aria-label','Alegranza');
-  alegranza.innerHTML='<path d="M558,8 L560,5 L564,5 L566,8 L564,11 L560,11 Z"/>';
+  alegranza.innerHTML='<path d="M576,2 L573,0 L570,3 L570,6 L574,6 L576,4 Z"/>';
   map.appendChild(alegranza);
 
   if(!document.getElementById('c8ChinijoStyles')){
@@ -30,9 +36,9 @@ let c8ActiveMainArea=null;
     style.textContent=`
       .chinijo-reference{pointer-events:none}
       .chinijo-reference path{
-        fill:rgba(255,205,0,.08);
-        stroke:rgba(255,205,0,.5);
-        stroke-width:.55;
+        fill:rgba(255,205,0,.07);
+        stroke:rgba(255,205,0,.48);
+        stroke-width:.5;
         vector-effect:non-scaling-stroke
       }
     `;
