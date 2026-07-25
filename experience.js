@@ -6,17 +6,52 @@ const timeName=document.getElementById('timeName');
 const timeBirth=document.getElementById('timeBirth');
 const timeResults=document.getElementById('timeResults');
 
+const C8_TIME_ISLANDS=[
+  ['all','Todas las islas canarias'],
+  ['el-hierro','El Hierro'],
+  ['fuerteventura','Fuerteventura'],
+  ['gran-canaria','Gran Canaria'],
+  ['la-gomera','La Gomera'],
+  ['la-graciosa','La Graciosa'],
+  ['la-palma','La Palma'],
+  ['lanzarote','Lanzarote'],
+  ['tenerife','Tenerife']
+];
+
+function ensureTimeIslandSelector(){
+  if(!timeForm)return null;
+  const existing=document.getElementById('timeIsland');
+  if(existing)return existing;
+  const label=document.createElement('label');
+  label.className='time-field time-field-island';
+  label.innerHTML=`<span>Isla de nacimiento</span><select id="timeIsland" name="island" aria-label="Isla de nacimiento">${C8_TIME_ISLANDS.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select>`;
+  const submit=timeForm.querySelector('.time-submit');
+  timeForm.insertBefore(label,submit);
+  return label.querySelector('select');
+}
+
+const timeIsland=ensureTimeIslandSelector();
+const timeIntro=document.querySelector('#coincidencias .time-match-copy>p:last-of-type');
+if(timeIntro)timeIntro.textContent='Introduce tu nombre, tu fecha de nacimiento y la isla en la que naciste. Constelación 8 comparará tu vida con las biografías del atlas y te mostrará qué figuras de esa isla coincidieron contigo en el tiempo.';
+const timeToolHelp=document.querySelector('#coincidencias .time-tool-head small');
+if(timeToolHelp)timeToolHelp.textContent='Una forma personal de entrar en el atlas: tu fecha y tu isla de nacimiento frente a la cronología vital de las personas incorporadas.';
+
 const heroEyebrow=document.querySelector('#inicio .hero-intro .eyebrow');
 if(heroEyebrow) heroEyebrow.textContent='';
 
 function primaryBirthPlace(record){
-  return record.places?.find(place=>place.relation_type==='birth'&&place.island)
+  return record.places?.find(place=>place.relation_type==='birth'&&place.island)??null;
+}
+
+function primaryDisplayPlace(record){
+  return primaryBirthPlace(record)
     ??record.places?.find(place=>place.is_primary&&place.island)
     ??null;
 }
 
 function normalizeRemotePerson(record){
   const birthPlace=primaryBirthPlace(record);
+  const displayPlace=primaryDisplayPlace(record);
   const categories=(record.areas??[]).map(area=>area.name).filter(Boolean);
   const primaryCategory=(record.areas??[]).find(area=>area.is_primary)?.name??categories[0]??'Sin categoría';
   const disciplines=(record.disciplines??[]).map(discipline=>discipline.name).filter(Boolean);
@@ -30,9 +65,11 @@ function normalizeRemotePerson(record){
     died:livingStatus==='living'?null:(Number.isFinite(record.death_year)?record.death_year:null),
     isLiving:livingStatus==='living',
     livingStatus,
-    island:birthPlace?.island?.slug??null,
-    islandName:birthPlace?.island?.name??null,
-    municipality:birthPlace?.municipality?.name??null,
+    island:displayPlace?.island?.slug??null,
+    islandName:displayPlace?.island?.name??null,
+    birthIsland:birthPlace?.island?.slug??null,
+    birthIslandName:birthPlace?.island?.name??null,
+    municipality:birthPlace?.municipality?.name??displayPlace?.municipality?.name??null,
     category:primaryCategory,
     categories,
     discipline:disciplines.join(' · ')||'Sin disciplina especificada',
@@ -215,23 +252,26 @@ function userOverlap(birthYear,person){
   return {start,end,years:Math.max(0,end-start)};
 }
 
-function temporalMatches(birthYear){
+function temporalMatches(birthYear,islandSlug='all'){
   return people
+    .filter(person=>islandSlug==='all'||(person.birthIsland??person.island)===islandSlug)
     .map(person=>({person,overlap:userOverlap(birthYear,person)}))
     .filter(item=>item.overlap)
     .sort((a,b)=>b.overlap.years-a.overlap.years||a.person.name.localeCompare(b.person.name,'es'));
 }
 
-function renderTemporalMatches(name,birthYear){
-  const matches=temporalMatches(birthYear);
+function renderTemporalMatches(name,birthYear,islandSlug='all'){
+  const matches=temporalMatches(birthYear,islandSlug);
   const longest=matches[0]?.overlap?.years??0;
   const bornBefore=matches.filter(item=>Number.isFinite(item.person.born)&&item.person.born<=birthYear).length;
+  const selectedIslandLabel=islandSlug==='all'?'Todas las islas canarias':(islands[islandSlug]?.name??'Isla seleccionada');
 
   timeResults.innerHTML=`
     <div class="time-summary">
       <span><b>${matches.length}</b> vidas coincidentes</span>
       <span><b>${longest}</b> años de coincidencia máxima</span>
       <span><b>${bornBefore}</b> ya habían nacido cuando llegaste</span>
+      <span><b>✦</b> ${escapeHtml(selectedIslandLabel)}</span>
     </div>
     ${matches.length?`<div class="time-match-grid">${matches.map(({person,overlap})=>{
       const stillAlive=person.livingStatus==='living'&&overlap.end===CURRENT_YEAR;
@@ -243,7 +283,7 @@ function renderTemporalMatches(name,birthYear){
         <small>${escapeHtml(personIslandName(person))} · ${escapeHtml(person.discipline)} · ${escapeHtml(lifeLabel(person))}</small>
         <span class="time-overlap">${escapeHtml(wording)} · ${overlap.start}–${endLabel}</span>
       </button>`;
-    }).join('')}</div>`:`<div class="time-empty">${escapeHtml(name)}, todavía no aparece ninguna coincidencia temporal verificable en la base.</div>`}`;
+    }).join('')}</div>`:`<div class="time-empty">${escapeHtml(name)}, todavía no aparece ninguna coincidencia temporal verificable para ${escapeHtml(selectedIslandLabel)}.</div>`}`;
 
   timeResults.querySelectorAll('[data-time-person]').forEach(button=>button.addEventListener('click',()=>openProfile(button.dataset.timePerson)));
 }
@@ -253,10 +293,11 @@ if(timeForm){
     event.preventDefault();
     const name=timeName.value.trim();
     const raw=timeBirth.value;
+    const islandSlug=timeIsland?.value||'all';
     if(!name||!raw)return;
     const birthYear=new Date(`${raw}T00:00:00`).getFullYear();
     if(!Number.isFinite(birthYear)||birthYear>CURRENT_YEAR)return;
-    renderTemporalMatches(name,birthYear);
+    renderTemporalMatches(name,birthYear,islandSlug);
   });
 }
 
