@@ -87,6 +87,7 @@
       .c8-rank-person{border:0;background:transparent;padding:0;text-align:left;color:#fff;cursor:pointer}
       .c8-rank-person strong{display:block;font-family:"Work Sans",Arial,sans-serif;font-size:17px;line-height:1.22;color:#fff}
       .c8-rank-person small{display:block;margin-top:5px;font-size:11px;color:#DCCFED}
+      .c8-rank-island{color:#FFCD00!important;font-weight:600}
       .c8-rank-score{font-family:"Work Sans",Arial,sans-serif;font-size:30px;font-weight:600;color:#fff;letter-spacing:-.04em}.c8-rank-score small{font-size:11px;color:#DCCFED}
       .c8-rank-copy{font-size:12px;line-height:1.58;color:#F1E9F6}.c8-rank-copy p{margin:0 0 10px}.c8-rank-copy a{color:#FFCD00;text-decoration:none}.c8-rank-copy a:hover{text-decoration:underline}
       .c8-rank-parts{display:flex;flex-wrap:wrap;gap:5px}.c8-rank-parts span{padding:5px 7px;border:1px solid rgba(255,205,0,.25);border-radius:999px;font-size:9px;color:#F7F0FA}
@@ -129,9 +130,11 @@
       <div class="c8-ranking-list">${RANKING.map((item,index)=>{
         const person=bySlug.get(item.slug);
         if(!person)return '';
+        const island=birthIsland(person)||'Canarias';
+        const alias=person.known_as&&person.known_as!==person.full_name?person.known_as:null;
         return `<article class="c8-rank-card">
           <div class="c8-rank-num">0${index+1}</div>
-          <button type="button" class="c8-rank-person" data-c8-rank-person="${esc(person.id)}"><strong>${esc(fullName(person))}</strong><small>${esc(person.known_as&&person.known_as!==person.full_name?person.known_as:'Constelación 8')}</small></button>
+          <button type="button" class="c8-rank-person" data-c8-rank-person="${esc(person.id)}"><strong>${esc(fullName(person))}</strong>${alias?`<small>${esc(alias)}</small>`:''}<small class="c8-rank-island">${esc(island)}</small></button>
           <div class="c8-rank-score">${item.score}<small>/100</small></div>
           <div class="c8-rank-copy"><p>${esc(item.why)}</p><div class="c8-rank-parts">${item.parts.map(([label,value,max])=>`<span>${esc(label)} ${value}/${max}</span>`).join('')}</div><p><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">Fuente de referencia ↗</a></p></div>
         </article>`;
