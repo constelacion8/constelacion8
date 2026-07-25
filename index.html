@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1A0633">
-  <meta name="description" content="Constelación 8 — una cartografía viva de personas relevantes de Canarias y de las conexiones que las unen.">
+  <meta name="description" content="Constelación 8 — atlas biográfico de los canarios más influyentes de la historia, conectado por territorio, época y relaciones.">
   <title>Constelación 8</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="refine.css">
 </head>
 <body>
   <div class="cosmic-noise" aria-hidden="true"></div>
@@ -21,6 +22,7 @@
       </button>
       <nav class="main-nav" aria-label="Navegación principal">
         <button data-scroll="inicio">Inicio</button>
+        <button data-scroll="coincidencias">Coincidencias</button>
         <button data-scroll="explorar">Islas</button>
         <button data-scroll="proyecto">Proyecto</button>
       </nav>
@@ -33,9 +35,10 @@
         <div class="hero-halo hero-halo-b" aria-hidden="true"></div>
 
         <div class="hero-intro">
-          <p class="eyebrow">Cartografía humana de Canarias</p>
-          <h1>CONSTELACIÓN <span>8</span></h1>
-          <p class="hero-lead">Ocho islas. Miles de vidas. Una red de conexiones para recorrer la memoria, la cultura y el talento del archipiélago.</p>
+          <p class="eyebrow">Atlas biográfico de Canarias</p>
+          <h1 class="hero-atlas-title">Atlas biográfico de los canarios más influyentes de la historia.</h1>
+          <p class="hero-lead"><strong>Pulsa una isla</strong> para entrar en sus biografías. Desde cada persona podrás saltar a otras por época, disciplina, territorio y relaciones documentadas.</p>
+          <span class="hero-biographic-note">Biografías · épocas · disciplinas · conexiones</span>
         </div>
 
         <div class="archipelago-stage" id="archipelagoStage" aria-label="Mapa interactivo de las Islas Canarias">
@@ -84,37 +87,30 @@
               <path class="island-aura" d="M37,217 L33,214 L28,215 L23,218 L24,220 L23,222 L15,227 L12,227 L6,224 L3,226 L2,233 L4,235 L9,235 L16,237 L20,243 L25,245 L27,243 L28,233 L32,232 L34,226 L38,222 Z"/>
               <path class="island-shape" d="M37,217 L33,214 L28,215 L23,218 L24,220 L23,222 L15,227 L12,227 L6,224 L3,226 L2,233 L4,235 L9,235 L16,237 L20,243 L25,245 L27,243 L28,233 L32,232 L34,226 L38,222 Z"/>
             </g>
-
             <g class="island-node" data-island="la-palma" role="button" tabindex="0" aria-label="La Palma">
               <path class="island-aura" d="M36,74 L30,78 L28,82 L25,84 L25,90 L28,94 L30,100 L29,101 L34,108 L34,112 L38,116 L40,122 L40,128 L42,131 L45,132 L56,115 L57,107 L55,101 L61,91 L57,87 L54,77 L50,76 L44,78 L38,74 Z"/>
               <path class="island-shape" d="M36,74 L30,78 L28,82 L25,84 L25,90 L28,94 L30,100 L29,101 L34,108 L34,112 L38,116 L40,122 L40,128 L42,131 L45,132 L56,115 L57,107 L55,101 L61,91 L57,87 L54,77 L50,76 L44,78 L38,74 Z"/>
             </g>
-
             <g class="island-node" data-island="la-gomera" role="button" tabindex="0" aria-label="La Gomera">
               <path class="island-aura" d="M108,166 L106,169 L106,172 L104,174 L104,183 L107,186 L107,188 L112,191 L113,193 L117,194 L118,193 L124,193 L136,183 L134,175 L123,167 L118,167 L116,165 Z"/>
               <path class="island-shape" d="M108,166 L106,169 L106,172 L104,174 L104,183 L107,186 L107,188 L112,191 L113,193 L117,194 L118,193 L124,193 L136,183 L134,175 L123,167 L118,167 L116,165 Z"/>
             </g>
-
             <g class="island-node" data-island="tenerife" role="button" tabindex="0" aria-label="Tenerife">
               <path class="island-aura" d="M255,116 L251,115 L246,118 L230,117 L228,120 L223,121 L218,126 L218,128 L208,138 L203,138 L198,141 L189,141 L188,140 L185,141 L184,143 L182,142 L179,144 L174,145 L169,141 L162,145 L157,146 L156,148 L160,151 L167,161 L166,162 L167,169 L171,174 L174,181 L179,185 L179,190 L183,193 L183,197 L187,198 L192,197 L196,194 L204,194 L206,190 L219,177 L219,171 L220,170 L219,169 L224,161 L224,158 L228,153 L226,150 L227,146 L241,135 L243,130 L246,130 L249,127 L254,126 L256,124 L257,119 Z"/>
               <path class="island-shape" d="M255,116 L251,115 L246,118 L230,117 L228,120 L223,121 L218,126 L218,128 L208,138 L203,138 L198,141 L189,141 L188,140 L185,141 L184,143 L182,142 L179,144 L174,145 L169,141 L162,145 L157,146 L156,148 L160,151 L167,161 L166,162 L167,169 L171,174 L174,181 L179,185 L179,190 L183,193 L183,197 L187,198 L192,197 L196,194 L204,194 L206,190 L219,177 L219,171 L220,170 L219,169 L224,161 L224,158 L228,153 L226,150 L227,146 L241,135 L243,130 L246,130 L249,127 L254,126 L256,124 L257,119 Z"/>
             </g>
-
             <g class="island-node" data-island="gran-canaria" role="button" tabindex="0" aria-label="Gran Canaria">
               <path class="island-aura" d="M345,172 L342,171 L339,173 L340,177 L337,179 L334,176 L331,175 L320,176 L316,172 L313,174 L310,172 L306,173 L307,176 L306,185 L302,189 L300,189 L296,194 L295,193 L293,194 L293,197 L291,199 L291,209 L293,211 L296,219 L311,232 L314,231 L318,232 L320,234 L323,234 L326,230 L333,226 L342,224 L343,219 L347,217 L348,214 L346,212 L347,207 L348,206 L350,207 L350,205 L348,203 L349,195 L343,188 L344,187 L344,182 L342,179 L345,178 Z"/>
               <path class="island-shape" d="M345,172 L342,171 L339,173 L340,177 L337,179 L334,176 L331,175 L320,176 L316,172 L313,174 L310,172 L306,173 L307,176 L306,185 L302,189 L300,189 L296,194 L295,193 L293,194 L293,197 L291,199 L291,209 L293,211 L296,219 L311,232 L314,231 L318,232 L320,234 L323,234 L326,230 L333,226 L342,224 L343,219 L347,217 L348,214 L346,212 L347,207 L348,206 L350,207 L350,205 L348,203 L349,195 L343,188 L344,187 L344,182 L342,179 L345,178 Z"/>
             </g>
-
             <g class="island-node" data-island="fuerteventura" role="button" tabindex="0" aria-label="Fuerteventura">
               <path class="island-aura" d="M538,90 L534,93 L535,94 L534,96 L530,92 L526,93 L524,92 L512,98 L513,105 L511,107 L510,115 L507,119 L503,130 L496,137 L494,147 L489,152 L489,164 L488,166 L476,177 L472,178 L470,180 L463,182 L455,181 L454,183 L455,184 L453,188 L460,187 L464,189 L476,191 L490,174 L497,173 L500,171 L505,171 L508,169 L512,169 L517,166 L522,166 L526,162 L529,157 L528,155 L531,150 L532,145 L534,143 L534,137 L532,130 L535,127 L537,121 L537,109 L536,108 L536,98 L535,96 L538,95 L539,93 Z"/>
               <path class="island-shape" d="M538,90 L534,93 L535,94 L534,96 L530,92 L526,93 L524,92 L512,98 L513,105 L511,107 L510,115 L507,119 L503,130 L496,137 L494,147 L489,152 L489,164 L488,166 L476,177 L472,178 L470,180 L463,182 L455,181 L454,183 L455,184 L453,188 L460,187 L464,189 L476,191 L490,174 L497,173 L500,171 L505,171 L508,169 L512,169 L517,166 L522,166 L526,162 L529,157 L528,155 L531,150 L532,145 L534,143 L534,137 L532,130 L535,127 L537,121 L537,109 L536,108 L536,98 L535,96 L538,95 L539,93 Z"/>
             </g>
-
             <g class="island-node" data-island="lanzarote" role="button" tabindex="0" aria-label="Lanzarote">
               <path class="island-aura" d="M577,19 L573,18 L572,16 L569,16 L569,19 L572,20 L571,24 L568,28 L569,29 L573,28 L575,29 L573,31 L571,39 L569,41 L567,41 L565,39 L555,41 L551,46 L543,48 L536,54 L534,60 L535,62 L534,67 L535,68 L529,73 L529,79 L539,79 L540,81 L542,81 L549,71 L559,70 L563,68 L564,66 L571,65 L573,62 L578,59 L580,56 L580,51 L582,47 L582,44 L580,41 L585,36 L585,29 L577,24 L579,22 Z"/>
               <path class="island-shape" d="M577,19 L573,18 L572,16 L569,16 L569,19 L572,20 L571,24 L568,28 L569,29 L573,28 L575,29 L573,31 L571,39 L569,41 L567,41 L565,39 L555,41 L551,46 L543,48 L536,54 L534,60 L535,62 L534,67 L535,68 L529,73 L529,79 L539,79 L540,81 L542,81 L549,71 L559,70 L563,68 L564,66 L571,65 L573,62 L578,59 L580,56 L580,51 L582,47 L582,44 L580,41 L585,36 L585,29 L577,24 L579,22 Z"/>
             </g>
-
             <g class="island-node island-node-tiny" data-island="la-graciosa" role="button" tabindex="0" aria-label="La Graciosa">
               <path class="island-aura" d="M576,2 L573,0 L570,3 L570,6 L574,6 L576,4 Z"/>
               <path class="island-shape" d="M576,2 L573,0 L570,3 L570,6 L574,6 L576,4 Z"/>
@@ -139,20 +135,48 @@
           </div>
         </div>
 
-        <button class="hero-down" data-scroll="explorar">
-          <span>Explorar el archipiélago</span>
+        <div class="creator-signature"><span>Un proyecto creado por</span><strong class="de8-wordmark">DE8 Films.</strong></div>
+
+        <button class="hero-down" data-scroll="coincidencias">
+          <span>Descubre con quién coincidiste</span>
           <b aria-hidden="true">↓</b>
         </button>
+      </section>
+
+      <section class="time-match" id="coincidencias">
+        <div class="time-match-inner">
+          <div class="time-match-copy">
+            <p class="eyebrow">Tu lugar en la constelación</p>
+            <h2>¿Con quién <span>coincidiste?</span></h2>
+            <p>Introduce tu nombre y tu fecha de nacimiento. Constelación 8 comparará tu vida con las biografías del atlas y te mostrará qué figuras canarias coincidieron contigo en el tiempo.</p>
+            <div class="time-orbit" aria-hidden="true"><i></i><b></b></div>
+          </div>
+
+          <div class="time-tool">
+            <div class="time-tool-head">
+              <div><strong>Coincidencia espaciotemporal</strong><small>Una forma personal de entrar en el atlas: tu fecha frente a la cronología vital de las personas incorporadas.</small></div>
+              <span class="time-tool-badge">Experimental</span>
+            </div>
+            <form class="time-form" id="timeForm">
+              <label class="time-field"><span>Tu nombre</span><input id="timeName" name="name" autocomplete="given-name" placeholder="Nombre" required></label>
+              <label class="time-field"><span>Fecha de nacimiento</span><input id="timeBirth" name="birth" type="date" required></label>
+              <button class="time-submit" type="submit">Calcular coincidencias →</button>
+            </form>
+            <p class="time-privacy">Los datos se utilizan solo en tu navegador para calcular el resultado y no se guardan.</p>
+            <div class="time-results" id="timeResults" aria-live="polite">
+              <div class="time-empty">Escribe tus datos para situarte temporalmente dentro del atlas biográfico.</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="explorer" id="explorar">
         <div class="section-wrap">
           <div class="section-heading">
             <p class="eyebrow">Explora por territorio</p>
-            <h2>Ocho puertas de entrada.</h2>
-            <p>Elige una isla y recorre, por orden alfabético, las personas nacidas en ella. Filtra por áreas y abre cada perfil para descubrir su constelación.</p>
+            <h2>Ocho islas. Un atlas de biografías.</h2>
+            <p>Elige una isla y recorre, por orden alfabético, las personas nacidas en ella. Filtra por áreas y abre cada biografía para descubrir después sus conexiones con otras vidas.</p>
           </div>
-
           <div class="island-selector" id="islandSelector" aria-label="Selector de isla"></div>
           <div class="directory-shell" id="directory" aria-live="polite"></div>
         </div>
@@ -161,12 +185,14 @@
       <section class="project-section" id="proyecto">
         <div class="section-wrap project-grid">
           <div>
-            <p class="eyebrow">El proyecto</p>
-            <h2>Una constelación no es una lista.</h2>
+            <p class="eyebrow">Qué es Constelación 8</p>
+            <h2>Biografías conectadas como una constelación.</h2>
           </div>
           <div class="project-copy">
-            <p>Constelación 8 conecta personas por isla, disciplina, época, instituciones y relaciones documentadas. Cada perfil es un nodo; cada vínculo abre una nueva forma de recorrer la historia de Canarias.</p>
-            <div class="project-tags"><span>Territorio</span><span>Tiempo</span><span>Disciplina</span><span>Relaciones</span></div>
+            <p class="project-definition">El corazón de Constelación 8 son las biografías de las personas que han marcado la historia de Canarias.</p>
+            <p class="project-secondary">La constelación es la manera de descubrirlas: territorio, siglo, década, disciplina, instituciones y relaciones documentadas convierten cada perfil en una puerta hacia otras vidas.</p>
+            <div class="project-tags"><span>Biografías</span><span>Territorio</span><span>Tiempo</span><span>Disciplina</span><span>Relaciones</span></div>
+            <div class="de8-credit"><span>Un proyecto creado por</span><strong class="de8-wordmark">DE8 Films.</strong></div>
           </div>
         </div>
       </section>
@@ -174,9 +200,10 @@
 
     <footer>
       <span>CONSTELACIÓN 8</span>
-      <small>Una cartografía humana de Canarias.</small>
+      <div class="footer-de8"><small>Creado por</small><strong class="de8-wordmark">DE8 Films.</strong></div>
     </footer>
   </div>
   <script src="app.js"></script>
+  <script src="experience.js"></script>
 </body>
 </html>
