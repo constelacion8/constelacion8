@@ -3,20 +3,10 @@ const timeName=document.getElementById('timeName');
 const timeBirth=document.getElementById('timeBirth');
 const timeResults=document.getElementById('timeResults');
 
-// La presentación usa exactamente el mismo wordmark visual que el pie de página.
+// La presentación DE8 se resuelve únicamente en CSS para que use exactamente
+// el mismo wordmark visual que el pie, sin una segunda versión inyectada por JS.
 const heroEyebrow=document.querySelector('#inicio .hero-intro .eyebrow');
-if(heroEyebrow){
-  const presenterStyle=document.createElement('style');
-  presenterStyle.textContent=`
-    #inicio .hero-intro .eyebrow::before,#inicio .hero-intro .eyebrow::after{display:none!important}
-    #inicio .hero-intro .eyebrow{font-size:initial!important;display:inline-flex!important;align-items:baseline!important;justify-content:center!important;gap:9px!important;margin-bottom:10px!important}
-    #inicio .hero-intro .hero-de8-wordmark{font-size:18px!important;color:#fff!important}
-    #inicio .hero-intro .hero-presenta-word{font-family:"Work Sans",Arial,sans-serif;font-size:8px;font-weight:500;letter-spacing:.23em;text-transform:uppercase;color:#FFCD00}
-    @media(max-width:620px){#inicio .hero-intro .hero-de8-wordmark{font-size:16px!important}#inicio .hero-intro .hero-presenta-word{font-size:7px}}
-  `;
-  document.head.appendChild(presenterStyle);
-  heroEyebrow.innerHTML='<strong class="de8-wordmark hero-de8-wordmark">DE8 Films.</strong><span class="hero-presenta-word">presenta</span>';
-}
+if(heroEyebrow) heroEyebrow.textContent='';
 
 // Taxonomía editorial principal. Se mantiene visible aunque una categoría todavía no tenga perfiles.
 const C8_CATEGORIES=[
