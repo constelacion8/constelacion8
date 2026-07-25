@@ -150,14 +150,14 @@ window.addEventListener('c8:data-ready',()=>{
 
 (function loadEditorialEnhancements(){
   const assets=[
-    ['full-name-display.js?v=20260725-2245','c8-full-names'],
-    ['constellation-stats.js?v=20260725-2245','c8-constellation-stats']
+    ['full-name-display.js?v=20260725-2245','data-c8-full-names'],
+    ['constellation-stats.js?v=20260725-2245','data-c8-constellation-stats']
   ];
-  assets.forEach(([src,key])=>{
-    if(document.querySelector(`script[data-${key}]`))return;
+  assets.forEach(([src,marker])=>{
+    if(document.querySelector(`script[${marker}]`))return;
     const script=document.createElement('script');
     script.src=src;
-    script.dataset[key.replace(/^c8-/,'c8')]='true';
+    script.setAttribute(marker,'true');
     script.async=false;
     document.body.appendChild(script);
   });
