@@ -185,3 +185,13 @@ renderIslandList=function(query){
   script.async=false;
   document.body.appendChild(script);
 })();
+
+/* Métricas territoriales e Índice de trascendencia C8. */
+(function loadConstellationRanking(){
+  if(document.querySelector('script[data-c8-constellation-ranking]'))return;
+  const script=document.createElement('script');
+  script.src='constellation-ranking.js?v=20260726-0110';
+  script.dataset.c8ConstellationRanking='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
