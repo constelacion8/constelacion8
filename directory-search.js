@@ -84,7 +84,7 @@ renderIslandList=function(query){
     .filter(person=>categoryMatches(person,currentCategory))
     .filter(person=>{
       if(!normalizedQuery)return true;
-      const searchable=c8NormalizeSearchText(`${person.name??''} ${person.fullName??''}`);
+      const searchable=c8NormalizeSearchText(`${person.name??''} ${person.fullName??''} ${person.c8Alias??''}`);
       return searchable.includes(normalizedQuery);
     })
     .sort((a,b)=>a.name.localeCompare(b.name,'es'));
@@ -154,7 +154,7 @@ renderIslandList=function(query){
 (function loadCategoryBrowser(){
   if(document.querySelector('script[data-c8-category-browser]'))return;
   const script=document.createElement('script');
-  script.src='category-browser.js?v=20260725-2045';
+  script.src='category-browser.js?v=20260725-2145';
   script.dataset.c8CategoryBrowser='true';
   script.async=false;
   document.body.appendChild(script);
