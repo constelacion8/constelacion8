@@ -120,6 +120,59 @@ footer span{
   color:#E8DFF0!important;
 }
 
+/* Wordmark de cabecera inspirado en DE8 Films: Work Sans, blanco y punto final. */
+.brand{
+  gap:11px!important;
+}
+.brand-name{
+  font-family:"Work Sans",Arial,sans-serif!important;
+  font-size:0!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  font-weight:700!important;
+  text-transform:none!important;
+  color:#FFFFFF!important;
+}
+.brand-name::after{
+  content:"Constelación 8.";
+  display:inline-block;
+  font-family:"Work Sans",Arial,sans-serif;
+  font-size:18px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:-.045em;
+  color:#FFFFFF;
+  white-space:nowrap;
+}
+.brand-name b{
+  font-size:0!important;
+  color:inherit!important;
+}
+.brand-mark{
+  position:relative!important;
+  width:37px!important;
+  height:22px!important;
+  display:block!important;
+  flex:none;
+  transform:none!important;
+  filter:drop-shadow(0 0 4px rgba(255,205,0,.38));
+  background:
+    radial-gradient(circle at 3px 13px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 8px 5px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 14px 17px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 18px 9px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 23px 3px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 27px 15px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 32px 8px,#FFCD00 0 2px,transparent 2.4px),
+    radial-gradient(circle at 35px 19px,#FFCD00 0 2px,transparent 2.4px)!important;
+}
+.brand-mark i,
+.brand-mark::before,
+.brand-mark::after{
+  display:none!important;
+  content:none!important;
+}
+
 @media(max-width:620px){
   .hero-lead,
   .time-match-copy>p:last-of-type,
@@ -142,5 +195,17 @@ footer span{
   .profile-meta,
   .rel-card small{
     color:#E9E0F1!important;
+  }
+
+  .brand{
+    gap:9px!important;
+  }
+  .brand-name::after{
+    font-size:16px;
+  }
+  .brand-mark{
+    width:34px!important;
+    height:21px!important;
+    transform:none!important;
   }
 }
