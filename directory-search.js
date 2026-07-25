@@ -1,3 +1,61 @@
+/* Ajustes de interacción del directorio y firma de portada. */
+(function moveHeroCreditBelowCoincidences(){
+  const hero=document.getElementById('inicio');
+  const credit=hero?.querySelector('.hero-presenter');
+  const oldSignature=hero?.querySelector('.creator-signature');
+  const coincidencesLink=hero?.querySelector('.hero-down');
+
+  oldSignature?.remove();
+  if(!hero||!credit||!coincidencesLink)return;
+
+  credit.className='hero-credit-below';
+  credit.setAttribute('aria-label','Creado por DE8 Films');
+  credit.innerHTML='<span>Creado por</span><strong>DE8 Films.</strong>';
+  coincidencesLink.insertAdjacentElement('afterend',credit);
+
+  if(!document.getElementById('heroCreditBelowStyles')){
+    const style=document.createElement('style');
+    style.id='heroCreditBelowStyles';
+    style.textContent=`
+      .hero-credit-below{
+        position:relative;
+        z-index:5;
+        order:10;
+        display:flex;
+        align-items:baseline;
+        justify-content:center;
+        gap:7px;
+        margin-top:0;
+        font-family:"Work Sans",Arial,sans-serif;
+        color:#fff;
+      }
+      .hero-credit-below span{
+        font-size:9px;
+        line-height:1;
+        font-weight:400;
+        letter-spacing:.02em;
+        color:#fff;
+        white-space:nowrap;
+      }
+      .hero-credit-below strong{
+        font-family:"Work Sans",Arial,sans-serif;
+        font-size:15px;
+        line-height:1;
+        font-weight:700;
+        letter-spacing:-.045em;
+        color:#fff;
+        white-space:nowrap;
+      }
+      @media(max-width:620px){
+        .hero-credit-below{gap:6px;margin-top:1px}
+        .hero-credit-below span{font-size:10px}
+        .hero-credit-below strong{font-size:15px}
+      }
+    `;
+    document.head.appendChild(style);
+  }
+})();
+
 /* Búsqueda manual del directorio: no filtra mientras el usuario escribe. */
 let c8DirectorySearchQuery='';
 let c8DirectorySearchIsland=null;
