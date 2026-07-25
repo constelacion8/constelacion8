@@ -1,5 +1,5 @@
 /* Navegación alternativa por las categorías principales de Constelación 8. */
-const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Economía','Educación','Política','Sociedad'];
+const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Educación','Política','Sociedad'];
 let c8ActiveMainArea=null;
 
 /* Limpieza editorial del tramo final: se elimina el bloque explicativo de proyecto
