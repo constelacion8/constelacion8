@@ -1,4 +1,10 @@
 /* Ajustes de interacción del directorio y firma de portada. */
+(function refineHeroCopy(){
+  const lead=document.querySelector('#inicio .hero-lead');
+  if(!lead)return;
+  lead.innerHTML='<strong>Ocho islas, siglos de historia contados a través de sus personas.</strong> Elige un punto del mapa y empieza el recorrido.';
+})();
+
 (function moveHeroCreditBelowCoincidences(){
   const hero=document.getElementById('inicio');
   const credit=hero?.querySelector('.hero-presenter');
