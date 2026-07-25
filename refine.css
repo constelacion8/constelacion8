@@ -1,9 +1,9 @@
 /* Capa de refinamiento editorial de Constelación 8 */
 .hero{min-height:auto;padding-bottom:54px}
 .hero-intro{max-width:900px;margin:0 auto 12px}
-.hero-intro .eyebrow{display:inline-flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:10px;font-size:0;color:var(--de8-yellow)}
-.hero-intro .eyebrow::before{content:"DE8 Films.";display:inline-block;font-family:"Work Sans",Arial,sans-serif;font-size:18px;line-height:1;font-weight:700;letter-spacing:-.045em;text-transform:none;color:#fff;white-space:nowrap}
-.hero-intro .eyebrow::after{content:"presenta";font-family:"Work Sans",Arial,sans-serif;font-size:8px;font-weight:500;letter-spacing:.23em;text-transform:uppercase;color:#fff}
+.hero-presenter{display:inline-flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:10px;color:#fff;font-family:"Work Sans",Arial,sans-serif}
+.hero-presenter strong{font-size:18px;line-height:1;font-weight:700;letter-spacing:-.045em;color:#fff;white-space:nowrap}
+.hero-presenter span{font-size:8px;line-height:1;font-weight:500;letter-spacing:.23em;text-transform:uppercase;color:#fff;white-space:nowrap}
 .hero-atlas-title{font-family:"Work Sans",Arial,sans-serif;font-size:clamp(22px,3.2vw,42px);line-height:1.08;font-weight:500;letter-spacing:-.035em;color:#fff;margin:0 auto;max-width:820px;text-wrap:balance}
 .hero-lead{max-width:760px;margin:14px auto 0;font-size:clamp(11px,1.1vw,14px);line-height:1.72;color:#C7B8D4}
 .hero-lead strong{font-weight:500;color:#F7F2FF}
@@ -77,8 +77,8 @@ footer .footer-de8 .de8-wordmark{display:inline-block!important;font-size:16px!i
   /* Marca DE8 textual y estable. */
   .hero{padding-top:86px}
   .hero-intro{margin-bottom:4px}
-  .hero-intro .eyebrow::before{font-size:17px}
-  .hero-intro .eyebrow::after{font-size:8px}
+  .hero-presenter strong{font-size:17px}
+  .hero-presenter span{font-size:8px}
   .hero-atlas-title{font-size:25px;line-height:1.08}
   .creator-signature{display:none!important}
   footer .footer-de8 .de8-wordmark{font-size:15px!important}
