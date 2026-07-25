@@ -11,8 +11,7 @@ const islands={
   'la-graciosa':{name:'La Graciosa',x:88,y:29,w:6,h:8,r:15}
 };
 
-// Datos de demostración. Supabase será la fuente editorial definitiva.
-// "category" es el ámbito amplio; "discipline" concreta la actividad.
+// Datos provisionales de demostración. La fuente editorial definitiva será Supabase.
 const people=[
   {id:'benito-perez-galdos',name:'Benito Pérez Galdós',born:1843,died:1920,island:'gran-canaria',category:'Artes',discipline:'Literatura',role:'Novelista y dramaturgo',bio:'Una de las figuras centrales de la literatura española del siglo XIX. Nació en Las Palmas de Gran Canaria y su obra convirtió la vida social y política de su tiempo en materia literaria.'},
   {id:'fernando-leon-castillo',name:'Fernando León y Castillo',born:1842,died:1918,island:'gran-canaria',category:'Política',discipline:'Diplomacia y política',role:'Diplomático y político',bio:'Diplomático y político grancanario, figura destacada de la vida pública española de la segunda mitad del siglo XIX.'},
@@ -40,13 +39,14 @@ const people=[
 
 const mapWrap=document.getElementById('mapWrap');
 const directory=document.getElementById('directory');
+const personalForm=document.getElementById('personalForm');
+const interestOptions=document.getElementById('interestOptions');
 let currentIsland=null;
 let currentCategory='Todas';
 
 function escapeHtml(value){
   return String(value).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
 }
-
 function endYear(person){return person.died??CURRENT_YEAR}
 function lifeLabel(person){return `${person.born}–${person.died??'actualidad'}`}
 function overlap(a,b){
@@ -62,6 +62,7 @@ function getConnections(person){
       return (ob.end-ob.start)-(oa.end-oa.start)||a.name.localeCompare(b.name,'es');
     });
 }
+function scrollToDirectory(){directory.scrollIntoView({behavior:'smooth',block:'start'})}
 
 Object.entries(islands).forEach(([slug,island])=>{
   const button=document.createElement('button');
@@ -77,18 +78,23 @@ Object.entries(islands).forEach(([slug,island])=>{
   mapWrap.appendChild(button);
 });
 
-function scrollToDirectory(){
-  directory.scrollIntoView({behavior:'smooth',block:'start'});
-}
+const categories=[...new Set(people.map(p=>p.category))].sort((a,b)=>a.localeCompare(b,'es'));
+interestOptions.innerHTML=categories.map((category,index)=>`
+  <label class="interest-chip">
+    <input type="checkbox" name="interests" value="${escapeHtml(category)}" ${index===0?'checked':''}>
+    <span>${escapeHtml(category)}</span>
+  </label>`).join('');
+
+document.getElementById('visitorBirth').max=new Date().toISOString().slice(0,10);
 
 function renderHome(scroll=false){
   currentIsland=null;
   currentCategory='Todas';
   directory.innerHTML=`
     <div class="directory-inner home-note">
-      <div class="eyebrow">Cómo explorar</div>
-      <h2>El mapa es la puerta de entrada.</h2>
-      <p>No hay marcadores ni etiquetas sobre las islas. Pulsa una de ellas y aparecerá aquí su directorio. Las conexiones solo se crean cuando dos personas pertenecen a la <em>misma categoría</em> y sus vidas se solaparon en el tiempo.</p>
+      <div class="eyebrow">Dos formas de entrar</div>
+      <h2>Busca en el mapa o sitúate dentro de él.</h2>
+      <p>Puedes explorar una isla directamente o usar el formulario de arriba para descubrir qué personas de tus áreas de interés <em>compartieron tiempo vital contigo</em>.</p>
     </div>`;
   if(scroll)scrollToDirectory();
 }
@@ -105,15 +111,12 @@ function renderIslandList(query='',restoreFocus=false){
   const island=islands[currentIsland];
   const all=people.filter(p=>p.island===currentIsland);
   const q=query.trim().toLocaleLowerCase('es');
-  const categories=['Todas',...new Set(all.map(p=>p.category))];
+  const available=['Todas',...new Set(all.map(p=>p.category))];
   const filtered=all
     .filter(p=>(currentCategory==='Todas'||p.category===currentCategory)&&p.name.toLocaleLowerCase('es').includes(q))
     .sort((a,b)=>a.name.localeCompare(b.name,'es'));
   const groups={};
-  filtered.forEach(p=>{
-    const letter=p.name[0].toLocaleUpperCase('es');
-    (groups[letter]??=[]).push(p);
-  });
+  filtered.forEach(p=>{const letter=p.name[0].toLocaleUpperCase('es');(groups[letter]??=[]).push(p)});
 
   directory.innerHTML=`
     <div class="directory-inner">
@@ -127,7 +130,7 @@ function renderIslandList(query='',restoreFocus=false){
       </div>
       <div class="toolbar">
         <input class="search" id="search" placeholder="Buscar una persona…" value="${escapeHtml(query)}">
-        <div class="chips">${categories.map(c=>`<button class="chip ${currentCategory===c?'active':''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}</div>
+        <div class="chips">${available.map(c=>`<button class="chip ${currentCategory===c?'active':''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}</div>
       </div>
       <div>${Object.keys(groups).length?Object.entries(groups).map(([letter,ps])=>`
         <div class="alpha-block">
@@ -173,7 +176,7 @@ function openProfile(id){
         <span class="fact"><b>Isla</b>${escapeHtml(islands[person.island].name)}</span>
       </div>
       <h3 class="rel-title">Contemporáneos de su misma categoría</h3>
-      <p class="rel-intro">La conexión significa únicamente que pertenecen a la misma categoría y que sus vidas se solaparon. No presupone que se conocieran o trabajaran juntos: esas relaciones deberán estar documentadas por separado.</p>
+      <p class="rel-intro">La conexión significa que pertenecen a la misma categoría y que sus vidas se solaparon. No presupone que se conocieran o trabajaran juntos: esas relaciones deberán estar documentadas por separado.</p>
       ${connections.length?`<div class="connections-grid">${connections.map(other=>{
         const shared=overlap(person,other);
         return `<button class="rel-card" data-related="${other.id}">
@@ -188,6 +191,68 @@ function openProfile(id){
   directory.querySelectorAll('[data-related]').forEach(el=>el.addEventListener('click',()=>openProfile(el.dataset.related)));
   scrollToDirectory();
 }
+
+function personalMatches(profile){
+  const user={born:profile.birthYear,died:null};
+  return people
+    .filter(person=>profile.interests.includes(person.category)&&overlap(user,person))
+    .map(person=>{
+      const shared=overlap(user,person);
+      return {...person,shared,sharedYears:Math.max(0,shared.end-shared.start),sameIsland:person.island===profile.island};
+    })
+    .sort((a,b)=>(Number(b.sameIsland)-Number(a.sameIsland))||(b.sharedYears-a.sharedYears)||a.name.localeCompare(b.name,'es'));
+}
+
+function renderPersonalConstellation(profile){
+  const matches=personalMatches(profile);
+  const sameIslandCount=matches.filter(p=>p.sameIsland).length;
+  const interestText=profile.interests.join(', ');
+
+  directory.innerHTML=`
+    <div class="directory-inner">
+      <div class="personal-result-head">
+        <div class="eyebrow">Tu constelación personal</div>
+        <h2>${escapeHtml(profile.name)}, también formas parte de esta historia.</h2>
+        <p>Naciste en ${escapeHtml(islands[profile.island].name)} en ${profile.birthYear}. Estas son personas vinculadas a <strong>${escapeHtml(interestText)}</strong> cuyas vidas coincidieron con la tuya al menos durante una parte del tiempo.</p>
+        <div class="personal-summary">
+          <span class="summary-pill"><strong>${matches.length}</strong> coincidencias vitales</span>
+          <span class="summary-pill"><strong>${sameIslandCount}</strong> de tu misma isla</span>
+          <span class="summary-pill"><strong>${profile.interests.length}</strong> ${profile.interests.length===1?'área de interés':'áreas de interés'}</span>
+        </div>
+      </div>
+      ${matches.length?`<div class="match-grid">${matches.map(person=>{
+        const years=person.sharedYears;
+        const timeText=person.shared.end===CURRENT_YEAR
+          ? `Coincidís desde ${person.shared.start}`
+          : `Coincidisteis aprox. ${years} ${years===1?'año':'años'}`;
+        return `<button class="match-card" data-person="${person.id}">
+          <strong>${escapeHtml(person.name)}</strong>
+          <small>${escapeHtml(islands[person.island].name)} · ${escapeHtml(person.category)} · ${escapeHtml(person.discipline)}<br>${lifeLabel(person)}</small>
+          <span class="match-years">${timeText} · ${person.shared.start}–${person.shared.end===CURRENT_YEAR?'actualidad':person.shared.end}</span>
+          ${person.sameIsland?'<span class="same-island">✦ misma isla</span>':''}
+        </button>`;
+      }).join('')}</div>`:'<div class="empty">Con los perfiles disponibles en esta versión todavía no encontramos una coincidencia. La base irá creciendo a medida que incorporemos más personas verificadas.</div>'}
+    </div>`;
+
+  directory.querySelectorAll('[data-person]').forEach(el=>el.addEventListener('click',()=>openProfile(el.dataset.person)));
+  scrollToDirectory();
+}
+
+personalForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  const name=document.getElementById('visitorName').value.trim();
+  const island=document.getElementById('visitorIsland').value;
+  const birthValue=document.getElementById('visitorBirth').value;
+  const interests=[...personalForm.querySelectorAll('input[name="interests"]:checked')].map(el=>el.value);
+  const birthYear=birthValue?new Date(`${birthValue}T00:00:00`).getFullYear():NaN;
+
+  if(!name||!island||!Number.isFinite(birthYear)||birthYear>CURRENT_YEAR){return}
+  if(interests.length===0){
+    interestOptions.animate([{opacity:.45},{opacity:1}],{duration:420});
+    return;
+  }
+  renderPersonalConstellation({name,island,birthYear,interests});
+});
 
 document.getElementById('homeButton').addEventListener('click',()=>{renderHome();window.scrollTo({top:0,behavior:'smooth'})});
 document.getElementById('moreraDemo').addEventListener('click',()=>openProfile('luis-morera'));
