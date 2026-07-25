@@ -2,6 +2,62 @@
 const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Educación','Política','Sociedad'];
 let c8ActiveMainArea=null;
 
+/* Corrección geográfica del extremo oriental del mapa.
+   La Graciosa queda separada de Lanzarote y los islotes del Chinijo se muestran
+   como referencias geográficas no navegables. */
+(function c8CorrectChinijoGeography(){
+  const map=document.querySelector('.canary-map');
+  const graciosa=map?.querySelector('[data-island="la-graciosa"]');
+  if(!map||!graciosa||map.dataset.chinijoCorrected==='true')return;
+
+  map.dataset.chinijoCorrected='true';
+  graciosa.classList.remove('island-node-tiny');
+  graciosa.setAttribute('aria-label','La Graciosa');
+  graciosa.innerHTML=`
+    <path class="island-aura" d="M553,28 L556,26 L561,27 L564,29 L563,32 L560,34 L555,34 L552,32 Z"/>
+    <path class="island-shape" d="M553,28 L556,26 L561,27 L564,29 L563,32 L560,34 L555,34 L552,32 Z"/>
+    <circle class="tiny-hit" cx="558" cy="30" r="10"/>
+  `;
+
+  const chinijo=document.createElementNS('http://www.w3.org/2000/svg','g');
+  chinijo.setAttribute('class','chinijo-islets');
+  chinijo.setAttribute('aria-label','Islotes del archipiélago Chinijo');
+  chinijo.innerHTML=`
+    <g class="chinijo-islet" aria-label="Alegranza">
+      <path class="chinijo-shape" d="M576,2 L573,0 L570,3 L570,6 L574,6 L576,4 Z"/>
+    </g>
+    <g class="chinijo-islet" aria-label="Montaña Clara">
+      <path class="chinijo-shape" d="M558,17 L560,16 L562,18 L561,21 L558,21 L557,19 Z"/>
+    </g>
+    <circle class="chinijo-rock" cx="552" cy="14" r="1.25" aria-label="Roque del Oeste"/>
+    <circle class="chinijo-rock" cx="586" cy="22" r="1.15" aria-label="Roque del Este"/>
+  `;
+  map.appendChild(chinijo);
+
+  if(!document.getElementById('c8ChinijoStyles')){
+    const style=document.createElement('style');
+    style.id='c8ChinijoStyles';
+    style.textContent=`
+      .chinijo-islets{pointer-events:none}
+      .chinijo-shape{
+        fill:rgba(255,205,0,.09);
+        stroke:rgba(255,205,0,.62);
+        stroke-width:.72;
+        vector-effect:non-scaling-stroke;
+        filter:url(#islandGlow)
+      }
+      .chinijo-rock{
+        fill:rgba(255,205,0,.76);
+        stroke:rgba(255,205,0,.42);
+        stroke-width:.35;
+        vector-effect:non-scaling-stroke;
+        filter:drop-shadow(0 0 2px rgba(255,205,0,.7))
+      }
+    `;
+    document.head.appendChild(style);
+  }
+})();
+
 /* Limpieza editorial del tramo final: se elimina el bloque explicativo de proyecto
    y el estado vacío del directorio para que las cifras sigan inmediatamente al explorador. */
 (function c8StreamlineBottom(){
