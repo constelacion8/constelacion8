@@ -1,0 +1,140 @@
+/* Contraste reforzado para lectura en exterior y pantallas móviles. */
+:root{
+  --text:#FFFFFF;
+  --muted:#EEE7F5;
+  --soft:#D8CCE5;
+}
+
+/* Texto editorial principal y secundario */
+.hero-lead,
+.time-match-copy>p:last-of-type,
+.section-heading>p:last-child,
+.project-copy .project-definition,
+.project-copy .project-secondary,
+.directory-head p,
+.profile-bio,
+.directory-empty p{
+  color:#F4EFF8!important;
+}
+
+/* Metadatos: blanco violáceo luminoso, nunca gris oscuro */
+.time-tool-head small,
+.time-field span,
+.time-privacy,
+.time-empty,
+.time-summary span,
+.time-person small,
+.person-row small,
+.person-year,
+.profile-meta,
+.rel-card small,
+.map-gesture-hint,
+.map-tooltip small,
+.directory-count{
+  color:#DDD1E8!important;
+}
+
+/* Texto esencial: blanco puro */
+.person-row strong,
+.time-person strong,
+.rel-card strong,
+.profile h3,
+.directory-head h3,
+.directory-empty strong,
+.time-tool-head strong,
+.hero-down,
+.hero-credit-below,
+.hero-credit-below span,
+.hero-credit-below strong{
+  color:#FFFFFF!important;
+}
+
+/* Controles y filtros */
+.search,
+.time-field input,
+.time-field select{
+  color:#FFFFFF!important;
+}
+.search::placeholder,
+.time-field input::placeholder{
+  color:#CFC2DA!important;
+  opacity:1;
+}
+.island-chip,
+.chip,
+.profile-back{
+  color:#E9E0F1!important;
+}
+.island-chip.active,
+.island-chip:hover{
+  color:#1A0633!important;
+}
+.chip.active{
+  color:#FFCD00!important;
+}
+.chip small{
+  opacity:.85!important;
+}
+
+/* Etiquetas y datos de ficha */
+.fact{
+  color:#E8DFF0!important;
+}
+.profile-kicker,
+.constellation-title{
+  color:#FFFFFF!important;
+}
+.reason,
+.time-overlap{
+  color:#FFF0A8!important;
+}
+
+/* Fuentes documentales: máxima legibilidad */
+.profile-sources,
+.profile-sources h4,
+.profile-sources li,
+.profile-sources small{
+  color:#F1EAF6!important;
+}
+.profile-sources a{
+  color:#FFFFFF!important;
+  text-decoration-color:rgba(255,205,0,.72)!important;
+  text-underline-offset:3px;
+}
+.profile-sources a:hover,
+.profile-sources a:focus-visible{
+  color:#FFDF57!important;
+}
+
+/* Navegación y pie */
+.main-nav button,
+footer,
+footer small,
+footer span{
+  color:#E8DFF0!important;
+}
+
+@media(max-width:620px){
+  .hero-lead,
+  .time-match-copy>p:last-of-type,
+  .section-heading>p:last-child,
+  .project-copy .project-definition,
+  .project-copy .project-secondary,
+  .profile-bio,
+  .directory-head p,
+  .directory-empty p{
+    color:#FFFFFF!important;
+  }
+
+  .time-tool-head small,
+  .time-privacy,
+  .time-empty,
+  .time-summary span,
+  .time-person small,
+  .person-row small,
+  .person-year,
+  .profile-meta,
+  .rel-card small{
+    color:#E9E0F1!important;
+  }
+}
