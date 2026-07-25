@@ -20,14 +20,16 @@ function normalizeRemotePerson(record){
   const categories=(record.areas??[]).map(area=>area.name).filter(Boolean);
   const primaryCategory=(record.areas??[]).find(area=>area.is_primary)?.name??categories[0]??'Sin categoría';
   const disciplines=(record.disciplines??[]).map(discipline=>discipline.name).filter(Boolean);
+  const livingStatus=record.is_living===true?'living':record.is_living===false?'deceased':'unknown';
   return {
     id:record.id,
     slug:record.slug,
     name:record.known_as||record.full_name,
     fullName:record.full_name,
     born:Number.isFinite(record.birth_year)?record.birth_year:null,
-    died:record.is_living?null:(Number.isFinite(record.death_year)?record.death_year:null),
-    isLiving:record.is_living===true,
+    died:livingStatus==='living'?null:(Number.isFinite(record.death_year)?record.death_year:null),
+    isLiving:livingStatus==='living',
+    livingStatus,
     island:birthPlace?.island?.slug??null,
     islandName:birthPlace?.island?.name??null,
     municipality:birthPlace?.municipality?.name??null,
@@ -52,17 +54,18 @@ function personIslandName(person){
 
 lifeLabel=function(person){
   const born=Number.isFinite(person.born)?person.born:null;
-  if(person.isLiving){
-    return `${born??'Fecha no precisada'}–actualidad · vive actualmente`;
-  }
-  if(Number.isFinite(person.died))return `${born??'¿?'}–${person.died}`;
-  if(born)return `${born} · fallecimiento sin fecha precisada`;
-  return 'Cronología vital no precisada';
+  const status=person.livingStatus??(person.isLiving===true?'living':Number.isFinite(person.died)?'deceased':'unknown');
+  if(status==='living')return `${born??'Fecha no precisada'}–actualidad · vive actualmente`;
+  if(status==='deceased'&&Number.isFinite(person.died))return `${born??'¿?'}–${person.died}`;
+  if(status==='deceased')return born?`${born} · fallecimiento sin fecha precisada`:'Fallecimiento documentado · cronología incompleta';
+  return born?`${born} · estado vital pendiente de actualización`:'Cronología vital pendiente de actualización';
 };
 
 function endYear(person){
-  if(person.isLiving)return CURRENT_YEAR;
-  return Number.isFinite(person.died)?person.died:null;
+  const status=person.livingStatus??(person.isLiving===true?'living':Number.isFinite(person.died)?'deceased':'unknown');
+  if(status==='living')return CURRENT_YEAR;
+  if(status==='deceased'&&Number.isFinite(person.died))return person.died;
+  return null;
 }
 
 function lifeOverlap(a,b){
@@ -231,12 +234,10 @@ function renderTemporalMatches(name,birthYear){
       <span><b>${bornBefore}</b> ya habían nacido cuando llegaste</span>
     </div>
     ${matches.length?`<div class="time-match-grid">${matches.map(({person,overlap})=>{
-      const stillAlive=person.isLiving&&overlap.end===CURRENT_YEAR;
+      const stillAlive=person.livingStatus==='living'&&overlap.end===CURRENT_YEAR;
       const endLabel=stillAlive?'actualidad':overlap.end;
       const duration=overlap.years===0?'menos de un año':`${overlap.years} ${overlap.years===1?'año':'años'}`;
-      const wording=stillAlive
-        ? `Coincidís desde ${overlap.start} · sigue vivo`
-        : `Coincidisteis ${duration}`;
+      const wording=stillAlive?`Coincidís desde ${overlap.start} · sigue vivo`:`Coincidisteis ${duration}`;
       return `<button class="time-person" data-time-person="${person.id}">
         <strong>${escapeHtml(person.name)}</strong>
         <small>${escapeHtml(personIslandName(person))} · ${escapeHtml(person.discipline)} · ${escapeHtml(lifeLabel(person))}</small>
