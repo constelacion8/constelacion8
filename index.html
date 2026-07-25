@@ -3,28 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f4f2ee">
+  <meta name="theme-color" content="#07111f">
   <title>Constelación 8</title>
-  <meta name="description" content="Personas relevantes de Canarias conectadas por territorio, disciplina y época.">
+  <meta name="description" content="Personas relevantes de Canarias conectadas por categoría y coincidencia vital.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
 <div class="app">
   <header>
     <button class="brand" id="homeButton" aria-label="Volver al inicio">
-      <strong>CONSTELACIÓN 8</strong><span>personas · islas · conexiones</span>
+      <strong>CONSTELACIÓN 8</strong>
+      <span>personas · tiempo · conexiones</span>
     </button>
-    <button class="demo-btn" id="galdosDemo">Ver constelación de Galdós</button>
+    <button class="demo-btn" id="moreraDemo">Ver una conexión</button>
   </header>
 
-  <div class="workspace">
-    <main class="map-pane">
-      <div class="map-top">
-        <div>
-          <div class="eyebrow">Mapa de Canarias</div>
-          <h1 class="map-title" id="mapTitle">Ocho islas. Miles de historias conectadas.</h1>
-          <p class="map-sub" id="mapSub">Pulsa una isla para descubrir sus personas. Abre un perfil para explorar sus conexiones.</p>
-        </div>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Cartografía humana de Canarias</div>
+        <h1 id="mapTitle">Ocho islas.<br>Vidas que coincidieron.</h1>
+        <p id="mapSub">Pulsa directamente sobre una isla. El mapa no necesita explicarse: debajo aparecerán sus personas y las conexiones que compartieron en el tiempo.</p>
       </div>
 
       <div class="map-stage">
@@ -35,22 +37,13 @@
             src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_Map-Canary_Islands.svg"
             alt="Mapa del archipiélago canario"
           >
-          <svg id="network" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
-          <div id="profileNodes" aria-live="polite"></div>
         </div>
       </div>
-
-      <div class="legend" id="legend" hidden>
-        <span><i class="l-category"></i>misma disciplina</span>
-        <span><i class="l-decade"></i>misma década</span>
-        <span><i class="l-century"></i>mismo siglo</span>
-        <span><i class="l-island"></i>misma isla</span>
-      </div>
       <div class="map-credit">Base cartográfica: Wikimedia Commons · CC BY-SA.</div>
-    </main>
+    </section>
 
-    <aside class="panel" id="panel"></aside>
-  </div>
+    <section class="directory" id="directory" aria-live="polite"></section>
+  </main>
 </div>
 <script src="app.js"></script>
 </body>
