@@ -3,6 +3,9 @@ const timeName=document.getElementById('timeName');
 const timeBirth=document.getElementById('timeBirth');
 const timeResults=document.getElementById('timeResults');
 
+const heroEyebrow=document.querySelector('#inicio .hero-intro .eyebrow');
+if(heroEyebrow)heroEyebrow.textContent='DE8 Films presenta';
+
 if(timeBirth)timeBirth.max=new Date().toISOString().slice(0,10);
 
 function userOverlap(birthYear,person){
