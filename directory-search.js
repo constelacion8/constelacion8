@@ -84,7 +84,7 @@ renderIslandList=function(query){
     .filter(person=>categoryMatches(person,currentCategory))
     .filter(person=>{
       if(!normalizedQuery)return true;
-      const searchable=c8NormalizeSearchText(`${person.name??''} ${person.fullName??''} ${person.c8Alias??''}`);
+      const searchable=c8NormalizeSearchText(`${person.name??''} ${person.fullName??''} ${person.alias??''} ${person.c8Alias??''}`);
       return searchable.includes(normalizedQuery);
     })
     .sort((a,b)=>a.name.localeCompare(b.name,'es'));
@@ -156,6 +156,16 @@ renderIslandList=function(query){
   const script=document.createElement('script');
   script.src='category-browser.js?v=20260725-2145';
   script.dataset.c8CategoryBrowser='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
+
+/* Norma general: después de la capa de categorías, el nombre civil completo manda en toda la interfaz. */
+(function loadFullNameDisplay(){
+  if(document.querySelector('script[data-c8-full-name-display]'))return;
+  const script=document.createElement('script');
+  script.src='full-name-display.js?v=20260725-2245';
+  script.dataset.c8FullNameDisplay='true';
   script.async=false;
   document.body.appendChild(script);
 })();
