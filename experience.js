@@ -11,12 +11,19 @@ if(heroEyebrow){
   logoStyle.textContent=`
     #inicio .hero-intro .eyebrow::before,#inicio .hero-intro .eyebrow::after{display:none!important}
     #inicio .hero-intro .eyebrow{font-size:initial!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;color:#FFCD00!important}
-    #inicio .hero-intro .de8-presenta-logo{display:block;width:78px;height:46px;object-fit:contain;flex:none;filter:drop-shadow(0 0 12px rgba(255,255,255,.08))}
+    #inicio .hero-intro .de8-presenta-logo{display:block;width:116px;height:22px;object-fit:contain;flex:none;filter:drop-shadow(0 0 12px rgba(255,255,255,.08))}
     #inicio .hero-intro .de8-presenta-word{font-family:"Work Sans",Arial,sans-serif;font-size:8px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:#FFCD00}
-    @media(max-width:620px){#inicio .hero-intro .de8-presenta-logo{width:70px;height:41px}#inicio .hero-intro .de8-presenta-word{font-size:7px}}
+    footer .de8-footer-logo{display:block;width:100px;height:18px;object-fit:contain}
+    @media(max-width:620px){#inicio .hero-intro .de8-presenta-logo{width:102px;height:19px}#inicio .hero-intro .de8-presenta-word{font-size:7px}footer .de8-footer-logo{width:90px;height:16px}}
   `;
   document.head.appendChild(logoStyle);
-  heroEyebrow.innerHTML='<img class="de8-presenta-logo" src="assets/de8-logo.svg?v=4" alt="DE8 Films"><span class="de8-presenta-word">presenta</span>';
+  heroEyebrow.innerHTML='<img class="de8-presenta-logo" src="assets/de8-logo.svg?v=5" alt="DE8 Films"><span class="de8-presenta-word">presenta</span>';
+}
+
+// El pie usa exactamente el mismo recurso de marca.
+const footerWordmark=document.querySelector('.footer-de8 .de8-wordmark');
+if(footerWordmark){
+  footerWordmark.outerHTML='<img class="de8-footer-logo" src="assets/de8-logo.svg?v=5" alt="DE8 Films">';
 }
 
 // Taxonomía editorial principal. Se mantiene visible aunque una categoría todavía no tenga perfiles.
