@@ -72,7 +72,7 @@ footer .footer-de8{display:flex;align-items:center;gap:8px}
 }
 
 @media(max-width:620px){
-  /* Marca: exactamente la versión aprobada. No tocar. */
+  /* Marca aprobada: no modificar. */
   .hero{padding-top:86px}
   .hero-intro{margin-bottom:4px}
   .hero-intro .eyebrow::before{width:108px}
@@ -81,38 +81,38 @@ footer .footer-de8{display:flex;align-items:center;gap:8px}
   .creator-signature{display:none!important}
   footer .footer-de8 .de8-wordmark{width:90px!important}
 
-  /* Cuatro niveles claros en móvil: etiqueta / auxiliar / cuerpo / título. */
-  .hero-lead{font-size:15px!important;line-height:1.65;max-width:350px}
-  .hero-biographic-note{font-size:11px!important;line-height:1.35}
+  /* Escala móvil simplificada: 12 / 14 / 16 px. */
+  .hero-lead{font-size:16px!important;line-height:1.62;max-width:360px}
+  .hero-biographic-note{font-size:12px!important;line-height:1.35}
 
-  #coincidencias .time-match-copy>p:last-of-type{font-size:16px!important;line-height:1.68;max-width:none}
-  #coincidencias .time-tool-head strong{font-size:20px!important;line-height:1.25}
-  #coincidencias .time-tool-head small{font-size:14px!important;line-height:1.55;margin-top:7px;max-width:none}
-  #coincidencias .time-tool-badge{font-size:11px!important;padding:7px 10px}
-  #coincidencias .time-field span{font-size:11px!important;letter-spacing:.11em}
-  #coincidencias .time-field input{font-size:16px!important;min-height:54px;padding:14px 15px}
-  #coincidencias .time-submit{font-size:15px!important;min-height:54px;width:100%}
-  #coincidencias .time-privacy{font-size:12px!important;line-height:1.55;margin-top:12px}
-  #coincidencias .time-empty{font-size:15px!important;line-height:1.6;padding-top:20px}
-  #coincidencias .time-summary span{font-size:12px!important}
-  #coincidencias .time-person strong{font-size:16px!important}
-  #coincidencias .time-person small{font-size:13px!important;line-height:1.5}
-  #coincidencias .time-overlap{font-size:12px!important}
+  #coincidencias .time-match-copy>p:last-of-type{font-size:16px!important;line-height:1.65;max-width:none}
   #coincidencias .time-tool{padding:22px;border-radius:22px}
   #coincidencias .time-tool-head{flex-direction:column;gap:10px}
+  #coincidencias .time-tool-head strong{font-size:19px!important;line-height:1.25}
+  #coincidencias .time-tool-head small{font-size:14px!important;line-height:1.55;margin-top:7px;max-width:none}
+  #coincidencias .time-tool-badge{font-size:12px!important;padding:7px 10px}
   #coincidencias .time-form{grid-template-columns:1fr;gap:16px}
+  #coincidencias .time-field span{font-size:12px!important;letter-spacing:.1em}
+  #coincidencias .time-field input{font-size:16px!important;min-height:54px;padding:14px 15px}
+  #coincidencias .time-submit{font-size:16px!important;min-height:54px;width:100%}
+  #coincidencias .time-privacy{font-size:12px!important;line-height:1.55;margin-top:12px}
+  #coincidencias .time-empty{font-size:14px!important;line-height:1.6;padding-top:20px}
+  #coincidencias .time-summary span{font-size:12px!important}
+  #coincidencias .time-person strong{font-size:16px!important}
+  #coincidencias .time-person small{font-size:14px!important;line-height:1.5}
+  #coincidencias .time-overlap{font-size:12px!important}
   #coincidencias .time-match-grid{grid-template-columns:1fr;max-height:430px}
 
   #explorar .section-heading>.eyebrow,#proyecto .eyebrow{font-size:12px!important}
   #explorar .section-heading>p:last-child{font-size:16px!important;line-height:1.65}
   .directory-head p{font-size:14px!important;line-height:1.55}
-  .directory-count{font-size:11px!important}
+  .directory-count{font-size:12px!important}
   .search{font-size:16px!important;min-height:50px}
   .chip,.island-chip{font-size:12px!important;padding:9px 12px}
-  .chip small{font-size:11px!important}
+  .chip small{font-size:12px!important}
   .person-row strong{font-size:16px!important}
-  .person-row small,.person-year{font-size:13px!important;line-height:1.5}
-  .profile-meta{font-size:13px!important}
+  .person-row small,.person-year{font-size:14px!important;line-height:1.5}
+  .profile-meta{font-size:14px!important}
   .profile-bio{font-size:16px!important;line-height:1.75}
   .fact{font-size:12px!important}
   .rel-card strong{font-size:16px!important}
