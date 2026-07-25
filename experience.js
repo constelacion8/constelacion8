@@ -3,27 +3,19 @@ const timeName=document.getElementById('timeName');
 const timeBirth=document.getElementById('timeBirth');
 const timeResults=document.getElementById('timeResults');
 
-// Firma principal: logo real de DE8 Films + "presenta".
-// Se inserta como imagen real para no depender de pseudo-elementos ni de la caché de refine.css.
+// La presentación usa exactamente el mismo wordmark visual que el pie de página.
 const heroEyebrow=document.querySelector('#inicio .hero-intro .eyebrow');
 if(heroEyebrow){
-  const logoStyle=document.createElement('style');
-  logoStyle.textContent=`
+  const presenterStyle=document.createElement('style');
+  presenterStyle.textContent=`
     #inicio .hero-intro .eyebrow::before,#inicio .hero-intro .eyebrow::after{display:none!important}
-    #inicio .hero-intro .eyebrow{font-size:initial!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;color:#FFCD00!important}
-    #inicio .hero-intro .de8-presenta-logo{display:block;width:116px;height:22px;object-fit:contain;flex:none;filter:drop-shadow(0 0 12px rgba(255,255,255,.08))}
-    #inicio .hero-intro .de8-presenta-word{font-family:"Work Sans",Arial,sans-serif;font-size:8px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:#FFCD00}
-    footer .de8-footer-logo{display:block;width:100px;height:18px;object-fit:contain}
-    @media(max-width:620px){#inicio .hero-intro .de8-presenta-logo{width:102px;height:19px}#inicio .hero-intro .de8-presenta-word{font-size:7px}footer .de8-footer-logo{width:90px;height:16px}}
+    #inicio .hero-intro .eyebrow{font-size:initial!important;display:inline-flex!important;align-items:baseline!important;justify-content:center!important;gap:9px!important;margin-bottom:10px!important}
+    #inicio .hero-intro .hero-de8-wordmark{font-size:18px!important;color:#fff!important}
+    #inicio .hero-intro .hero-presenta-word{font-family:"Work Sans",Arial,sans-serif;font-size:8px;font-weight:500;letter-spacing:.23em;text-transform:uppercase;color:#FFCD00}
+    @media(max-width:620px){#inicio .hero-intro .hero-de8-wordmark{font-size:16px!important}#inicio .hero-intro .hero-presenta-word{font-size:7px}}
   `;
-  document.head.appendChild(logoStyle);
-  heroEyebrow.innerHTML='<img class="de8-presenta-logo" src="assets/de8-logo.svg?v=5" alt="DE8 Films"><span class="de8-presenta-word">presenta</span>';
-}
-
-// El pie usa exactamente el mismo recurso de marca.
-const footerWordmark=document.querySelector('.footer-de8 .de8-wordmark');
-if(footerWordmark){
-  footerWordmark.outerHTML='<img class="de8-footer-logo" src="assets/de8-logo.svg?v=5" alt="DE8 Films">';
+  document.head.appendChild(presenterStyle);
+  heroEyebrow.innerHTML='<strong class="de8-wordmark hero-de8-wordmark">DE8 Films.</strong><span class="hero-presenta-word">presenta</span>';
 }
 
 // Taxonomía editorial principal. Se mantiene visible aunque una categoría todavía no tenga perfiles.
@@ -46,8 +38,6 @@ function c8CategoryMatches(person,categoryLabel){
   return def ? def.values.includes(person.category) : person.category===categoryLabel;
 }
 
-// Sustituye el filtro provisional (que solo mostraba categorías con personas cargadas)
-// por la taxonomía completa del atlas.
 renderIslandList=function(query=''){
   const all=people.filter(p=>p.island===currentIsland);
   const q=query.trim().toLocaleLowerCase('es');
