@@ -154,7 +154,7 @@ renderIslandList=function(query){
 (function loadCategoryBrowser(){
   if(document.querySelector('script[data-c8-category-browser]'))return;
   const script=document.createElement('script');
-  script.src='category-browser.js?v=20260725-2145';
+  script.src='category-browser.js?v=20260725-2245';
   script.dataset.c8CategoryBrowser='true';
   script.async=false;
   document.body.appendChild(script);
@@ -166,6 +166,16 @@ renderIslandList=function(query){
   const script=document.createElement('script');
   script.src='full-name-display.js?v=20260725-2245';
   script.dataset.c8FullNameDisplay='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
+
+/* Estadísticas vivas: se recalculan desde Supabase y se insertan al final de la web. */
+(function loadConstellationStats(){
+  if(document.querySelector('script[data-c8-constellation-stats]'))return;
+  const script=document.createElement('script');
+  script.src='constellation-stats.js?v=20260725-2245';
+  script.dataset.c8ConstellationStats='true';
   script.async=false;
   document.body.appendChild(script);
 })();
