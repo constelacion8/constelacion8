@@ -155,18 +155,3 @@ window.addEventListener('c8:data-ready',()=>{
   else if(currentIsland)renderIslandList();
   else renderEmpty();
 });
-
-(function loadEditorialEnhancements(){
-  const assets=[
-    ['full-name-display.js?v=20260725-2245','data-c8-full-names'],
-    ['constellation-stats.js?v=20260725-2318','data-c8-constellation-stats']
-  ];
-  assets.forEach(([src,marker])=>{
-    if(document.querySelector(`script[${marker}]`))return;
-    const script=document.createElement('script');
-    script.src=src;
-    script.setAttribute(marker,'true');
-    script.async=false;
-    document.body.appendChild(script);
-  });
-})();
