@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#07111f">
   <title>Constelación 8</title>
-  <meta name="description" content="Personas relevantes de Canarias conectadas por categoría y coincidencia vital.">
+  <meta name="description" content="Descubre qué personas relevantes de Canarias coincidieron contigo en el tiempo.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -23,22 +23,60 @@
 
   <main>
     <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow">Cartografía humana de Canarias</div>
-        <h1 id="mapTitle">Ocho islas.<br>Vidas que coincidieron.</h1>
-        <p id="mapSub">Pulsa directamente sobre una isla. El mapa no necesita explicarse: debajo aparecerán sus personas y las conexiones que compartieron en el tiempo.</p>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Cartografía humana de Canarias</div>
+          <h1>¿Con quién<br>coincidiste?</h1>
+          <p id="mapSub">Tu fecha de nacimiento, tu isla y aquello que te interesa pueden situarte dentro de la historia cultural de Canarias.</p>
+        </div>
+
+        <form class="personal-card" id="personalForm">
+          <div class="form-kicker">Crea tu constelación</div>
+          <h2>Encuentra vidas que coincidieron con la tuya.</h2>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Tu nombre</span>
+              <input id="visitorName" name="name" autocomplete="given-name" placeholder="Nombre" required>
+            </label>
+
+            <label class="field">
+              <span>Isla en la que naciste</span>
+              <select id="visitorIsland" name="island" required>
+                <option value="">Selecciona una isla</option>
+                <option value="el-hierro">El Hierro</option>
+                <option value="fuerteventura">Fuerteventura</option>
+                <option value="gran-canaria">Gran Canaria</option>
+                <option value="la-gomera">La Gomera</option>
+                <option value="la-graciosa">La Graciosa</option>
+                <option value="la-palma">La Palma</option>
+                <option value="lanzarote">Lanzarote</option>
+                <option value="tenerife">Tenerife</option>
+              </select>
+            </label>
+
+            <label class="field field-date">
+              <span>Fecha de nacimiento</span>
+              <input id="visitorBirth" name="birth" type="date" required>
+            </label>
+          </div>
+
+          <fieldset class="interests">
+            <legend>¿Qué áreas te interesan?</legend>
+            <div class="interest-options" id="interestOptions"></div>
+          </fieldset>
+
+          <button class="personal-submit" type="submit">Descubrir mi constelación →</button>
+          <p class="privacy-note">Estos datos se utilizan solo en tu navegador para crear el resultado y no se guardan.</p>
+        </form>
       </div>
 
       <div class="map-stage">
         <div class="map-wrap" id="mapWrap">
-          <img
-            id="canaryMap"
-            class="map-img"
-            src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_Map-Canary_Islands.svg"
-            alt="Mapa del archipiélago canario"
-          >
+          <img id="canaryMap" class="map-img" src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Blank_Map-Canary_Islands.svg" alt="Mapa del archipiélago canario">
         </div>
       </div>
+      <div class="map-hint">O explora directamente el archipiélago pulsando sobre cualquier isla.</div>
       <div class="map-credit">Base cartográfica: Wikimedia Commons · CC BY-SA.</div>
     </section>
 
