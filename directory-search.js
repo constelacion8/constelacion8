@@ -160,7 +160,7 @@ renderIslandList=function(query){
 (function loadCategoryBrowser(){
   if(document.querySelector('script[data-c8-category-browser]'))return;
   const script=document.createElement('script');
-  script.src='category-browser.js?v=20260726-0015';
+  script.src='category-browser.js?v=20260726-0035';
   script.dataset.c8CategoryBrowser='true';
   script.async=false;
   document.body.appendChild(script);
