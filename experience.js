@@ -7,7 +7,7 @@ const timeBirth=document.getElementById('timeBirth');
 const timeResults=document.getElementById('timeResults');
 
 const C8_TIME_ISLANDS=[
-  ['all','Todas las islas canarias'],
+  ['all','Todas las Islas Canarias'],
   ['el-hierro','El Hierro'],
   ['fuerteventura','Fuerteventura'],
   ['gran-canaria','Gran Canaria'],
@@ -264,7 +264,7 @@ function renderTemporalMatches(name,birthYear,islandSlug='all'){
   const matches=temporalMatches(birthYear,islandSlug);
   const longest=matches[0]?.overlap?.years??0;
   const bornBefore=matches.filter(item=>Number.isFinite(item.person.born)&&item.person.born<=birthYear).length;
-  const selectedIslandLabel=islandSlug==='all'?'Todas las islas canarias':(islands[islandSlug]?.name??'Isla seleccionada');
+  const selectedIslandLabel=islandSlug==='all'?'Todas las Islas Canarias':(islands[islandSlug]?.name??'Isla seleccionada');
 
   timeResults.innerHTML=`
     <div class="time-summary">
