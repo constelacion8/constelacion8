@@ -131,7 +131,7 @@ renderIslandList=function(query){
           <div class="people-list">${list.map(person=>`
             <button class="person-row" data-person="${person.id}">
               <span><strong>${escapeHtml(person.name)}</strong><small>${escapeHtml(person.category)} · ${escapeHtml(person.discipline)}${person.municipality?` · ${escapeHtml(person.municipality)}`:''}</small></span>
-              <span class="person-year">${escapeHtml(lifeLabel(person))} <b class="person-arrow">↗</b></span>
+              <span class="person-year">${escapeHtml(lifeLabel(person))}</span>
             </button>`).join('')}</div>
         </div>`).join(''):noResults}</div>
     </div>`;
@@ -160,7 +160,7 @@ renderIslandList=function(query){
 (function loadCategoryBrowser(){
   if(document.querySelector('script[data-c8-category-browser]'))return;
   const script=document.createElement('script');
-  script.src='category-browser.js?v=20260726-0315';
+  script.src='category-browser.js?v=20260726-0405';
   script.dataset.c8CategoryBrowser='true';
   script.async=false;
   document.body.appendChild(script);
