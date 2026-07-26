@@ -4,7 +4,24 @@ let c8ActiveMainArea=null;
 
 (function installInterestBrowser(){
   const explorer=document.getElementById('explorar');
-  const selector=document.getElementById('islandSelector');
+  const wrap=explorer?.querySelector('.section-wrap');
+  const directoryNode=document.getElementById('directory');
+
+  if(wrap&&!wrap.querySelector('.section-heading')){
+    const headingNode=document.createElement('div');
+    headingNode.className='section-heading';
+    headingNode.innerHTML='<p class="eyebrow">Explora por categorías</p><h2>Elige por dónde entrar en la constelación.</h2><p>Las categorías son otra forma de recorrer las biografías más allá del territorio.</p>';
+    wrap.insertBefore(headingNode,directoryNode||wrap.firstChild);
+  }
+  let selector=document.getElementById('islandSelector');
+  if(wrap&&!selector){
+    selector=document.createElement('div');
+    selector.id='islandSelector';
+    selector.className='island-selector';
+    selector.setAttribute('aria-label','Explorar por categorías');
+    wrap.insertBefore(selector,directoryNode||null);
+  }
+
   const heading=explorer?.querySelector('.section-heading');
   const eyebrow=heading?.querySelector('.eyebrow');
   const title=heading?.querySelector('h2');
@@ -25,7 +42,8 @@ let c8ActiveMainArea=null;
     const style=document.createElement('style');
     style.id='c8InterestBrowserStyles';
     style.textContent=`
-      #explorar{padding-top:74px;padding-bottom:78px}
+      #explorar:has(#directory:empty){display:block!important}
+      #explorar{padding-top:74px!important;padding-bottom:78px}
       #explorar .section-heading{max-width:820px;margin-bottom:26px}
       #explorar .section-heading .eyebrow{color:#FFCD00}
       #explorar .section-heading h2{max-width:760px;font-size:clamp(31px,4.2vw,54px);line-height:1.02}
@@ -107,14 +125,14 @@ let c8ActiveMainArea=null;
       .profile-alias{margin-top:7px;font-size:12px;line-height:1.45;color:#E7DDF0}
       .profile-alias strong{font-weight:600;color:#fff}
       #explorar.c8-island-mode .section-heading,#explorar.c8-island-mode #islandSelector{display:none!important}
-      #explorar.c8-island-mode{padding-top:70px}
+      #explorar.c8-island-mode{padding-top:70px!important}
       #explorar.c8-island-mode .directory-shell{margin-top:0}
       @media(max-width:820px){
         #islandSelector.c8-interest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
         .c8-interest-card.c8-interest-featured{grid-column:1/-1}
       }
       @media(max-width:620px){
-        #explorar{padding:58px 18px 66px}
+        #explorar{padding:58px 18px 66px!important}
         #explorar .section-heading{margin-bottom:22px}
         #explorar .section-heading h2{font-size:30px!important;line-height:1.04}
         #explorar .section-heading>p:last-child{font-size:15px!important;line-height:1.58}
