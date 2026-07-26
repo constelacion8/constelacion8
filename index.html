@@ -14,10 +14,20 @@
   <link rel="stylesheet" href="contrast.css?v=20260725-2355">
   <style>
     .hero{padding-top:120px!important}
-    .c8-hero-credit-inline{order:2!important}
+    #inicio .hero-intro{display:flex!important;flex-direction:column!important;align-items:center!important}
+    #inicio .hero-atlas-title{order:1!important}
+    #inicio .c8-hero-credit-inline{order:2!important;display:flex;align-items:baseline;justify-content:center;gap:7px;margin:10px 0 8px;font-family:"Work Sans",Arial,sans-serif;color:#fff}
+    #inicio .c8-hero-credit-inline span{font-size:10px;line-height:1;font-weight:400;color:#fff;white-space:nowrap}
+    #inicio .c8-hero-credit-inline strong{font-family:"Work Sans",Arial,sans-serif;font-size:15px;line-height:1;font-weight:700;letter-spacing:-.035em;color:#fff;white-space:nowrap}
+    #inicio .hero-lead{order:3!important;margin:6px auto 0!important;color:#FFCD00!important;font-weight:500;text-align:center}
+    #inicio .hero-lead .c8-hero-lead-line{display:block;white-space:nowrap}
     @media(max-width:620px){
       .hero{padding-top:104px!important}
       .c8-stat-eyebrow{font-size:12px!important;line-height:1.35;letter-spacing:.11em}
+      #inicio .c8-hero-credit-inline{margin:9px 0 8px;gap:6px}
+      #inicio .c8-hero-credit-inline span{font-size:11px}
+      #inicio .c8-hero-credit-inline strong{font-size:15px}
+      #inicio .hero-lead{font-size:16px!important;line-height:1.48!important;max-width:none!important}
     }
   </style>
 </head>
@@ -45,7 +55,7 @@
         <div class="hero-intro">
           <h1 class="hero-atlas-title">Atlas biográfico de los canarios más influyentes de la historia.</h1>
           <div class="c8-hero-credit-inline" aria-label="Creado por DE8 Films"><span>Creado por</span><strong>DE8 Films.</strong></div>
-          <p class="hero-lead">Elige una isla del mapa y empieza el recorrido.</p>
+          <p class="hero-lead"><span class="c8-hero-lead-line">Elige una isla del mapa</span><span class="c8-hero-lead-line">y empieza el recorrido.</span></p>
         </div>
 
         <div class="archipelago-stage" id="archipelagoStage" aria-label="Mapa interactivo de las Islas Canarias">
@@ -150,7 +160,7 @@
   </div>
   <script src="app.js"></script>
   <script src="experience.js?v=20260725-1915"></script>
-  <script src="directory-search.js?v=20260726-0615"></script>
+  <script src="directory-search.js?v=20260726-0645"></script>
   <script src="map-geometry.js?v=20260726-0340"></script>
   <script src="extended-biographies.js?v=20260726-0340" data-c8-extended-biographies></script>
 </body>
