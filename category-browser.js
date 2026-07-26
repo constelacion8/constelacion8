@@ -1,4 +1,4 @@
-/* Navegación por intereses: segunda puerta de entrada a Constelación 8. */
+/* Navegación por categorías: segunda puerta de entrada a Constelación 8. */
 const C8_MAIN_AREAS=['Artes','Ciencias','Deporte','Educación','Política','Sociedad'];
 let c8ActiveMainArea=null;
 
@@ -18,81 +18,116 @@ let c8ActiveMainArea=null;
     button.dataset.scroll='archipelagoStage';
   });
 
-  if(eyebrow)eyebrow.textContent='Explora por intereses';
-  if(title)title.textContent='Busca a través de tus intereses.';
+  if(eyebrow)eyebrow.textContent='Explora por categorías';
+  if(title)title.textContent='Elige por dónde entrar en la constelación.';
 
   if(!document.getElementById('c8InterestBrowserStyles')){
     const style=document.createElement('style');
     style.id='c8InterestBrowserStyles';
     style.textContent=`
-      #explorar{padding-top:86px}
-      #explorar .section-heading{max-width:800px;margin-bottom:30px}
-      #explorar .section-heading h2{max-width:780px}
-      #explorar .section-heading>p:last-child{max-width:690px;color:#C9BBD5}
+      #explorar{padding-top:74px;padding-bottom:78px}
+      #explorar .section-heading{max-width:820px;margin-bottom:26px}
+      #explorar .section-heading .eyebrow{color:#FFCD00}
+      #explorar .section-heading h2{max-width:760px;font-size:clamp(31px,4.2vw,54px);line-height:1.02}
+      #explorar .section-heading>p:last-child{max-width:720px;color:#C9BBD5;font-size:14px;line-height:1.7}
       #islandSelector.c8-interest-grid{
         display:grid!important;
         grid-template-columns:repeat(3,minmax(0,1fr));
         gap:12px;
-        margin:0 0 34px;
+        margin:0 0 30px;
       }
       .c8-interest-card{
         position:relative;overflow:hidden;
-        min-height:122px;padding:20px 20px 18px;
+        min-height:118px;padding:18px 19px 17px;
         display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;
         border:1px solid rgba(157,78,221,.34);border-radius:20px;
-        background:linear-gradient(145deg,rgba(59,10,106,.34),rgba(21,4,39,.78));
+        background:linear-gradient(145deg,rgba(59,10,106,.34),rgba(21,4,39,.82));
         box-shadow:0 18px 55px rgba(0,0,0,.12);
         color:#fff;text-align:left;transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;
       }
       .c8-interest-card:before{
         content:"";position:absolute;width:150px;height:150px;right:-72px;top:-80px;border-radius:50%;
-        background:radial-gradient(circle,rgba(255,205,0,.13),transparent 68%);pointer-events:none;
+        background:radial-gradient(circle,rgba(157,78,221,.18),transparent 68%);pointer-events:none;
       }
       .c8-interest-card:hover,.c8-interest-card:focus-visible{
         transform:translateY(-3px);border-color:rgba(255,205,0,.7);
-        background:linear-gradient(145deg,rgba(79,15,139,.48),rgba(27,5,48,.9));
+        background:linear-gradient(145deg,rgba(79,15,139,.48),rgba(27,5,48,.92));
         box-shadow:0 22px 60px rgba(0,0,0,.2),0 0 30px rgba(255,205,0,.06);outline:none;
       }
       .c8-interest-card.active{
         border-color:#FFCD00;background:linear-gradient(145deg,#FFCD00,#EFC000);color:#1A0633;
         box-shadow:0 18px 46px rgba(255,205,0,.15)
       }
-      .c8-interest-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
+      .c8-interest-card.c8-interest-featured{
+        grid-column:span 2;min-height:154px;padding:22px 23px 20px;
+        border-color:rgba(255,205,0,.64);
+        background:
+          radial-gradient(circle at 83% 18%,rgba(255,205,0,.19),transparent 27%),
+          linear-gradient(135deg,rgba(78,20,127,.82),rgba(29,5,51,.94));
+        box-shadow:0 24px 70px rgba(0,0,0,.2),0 0 42px rgba(255,205,0,.08);
+      }
+      .c8-interest-card.c8-interest-featured:before{
+        width:220px;height:220px;right:-62px;top:-112px;
+        background:radial-gradient(circle,rgba(255,205,0,.30),rgba(255,205,0,.07) 37%,transparent 69%);
+      }
+      .c8-interest-card.c8-interest-featured:after{
+        content:"✦  ·  ✦  ·  ✦";position:absolute;right:23px;bottom:21px;
+        font-family:"Work Sans",Arial,sans-serif;font-size:13px;letter-spacing:.32em;color:rgba(255,205,0,.66);
+        text-shadow:0 0 15px rgba(255,205,0,.48);pointer-events:none;
+      }
+      .c8-interest-card.c8-interest-featured:hover,.c8-interest-card.c8-interest-featured:focus-visible{
+        border-color:#FFCD00;box-shadow:0 27px 76px rgba(0,0,0,.23),0 0 52px rgba(255,205,0,.13)
+      }
+      .c8-interest-card.c8-interest-featured.active{background:linear-gradient(145deg,#FFCD00,#EFC000);color:#1A0633}
+      .c8-interest-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;position:relative;z-index:2}
       .c8-interest-badge{
         min-height:24px;display:inline-flex;align-items:center;border:1px solid rgba(255,205,0,.26);border-radius:999px;
         padding:5px 8px;font-family:"Work Sans",Arial,sans-serif;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:#FFCD00
       }
-      .c8-interest-card.active .c8-interest-badge{border-color:rgba(26,6,51,.22);color:#1A0633}
+      .c8-interest-featured .c8-interest-badge{background:rgba(255,205,0,.09);border-color:rgba(255,205,0,.52);font-weight:600}
+      .c8-interest-card.active .c8-interest-badge{border-color:rgba(26,6,51,.22);color:#1A0633;background:transparent}
       .c8-interest-arrow{
         width:29px;height:29px;border-radius:50%;display:grid;place-items:center;
         border:1px solid rgba(255,255,255,.16);font-size:15px;color:#FFCD00;transition:transform .2s ease
       }
       .c8-interest-card:hover .c8-interest-arrow{transform:translate(2px,-2px)}
       .c8-interest-card.active .c8-interest-arrow{border-color:rgba(26,6,51,.22);color:#1A0633}
+      .c8-interest-body{position:relative;z-index:2}
       .c8-interest-label{
-        display:block;margin-top:18px;font-family:"Work Sans",Arial,sans-serif;font-size:clamp(21px,2.1vw,29px);
+        display:block;margin-top:16px;font-family:"Work Sans",Arial,sans-serif;font-size:clamp(21px,2.1vw,29px);
         line-height:1;font-weight:600;letter-spacing:-.045em;color:inherit
       }
+      .c8-interest-featured .c8-interest-label{font-size:clamp(30px,3.5vw,45px);margin-top:20px}
       .c8-interest-count{display:block;margin-top:8px;font-size:11px;color:#CBBBD8}
+      .c8-interest-featured .c8-interest-count{font-size:13px;color:#F1E8F7}
       .c8-interest-card.active .c8-interest-count{color:rgba(26,6,51,.72)}
+      .c8-interest-feature-copy{display:block;margin-top:7px;max-width:430px;font-size:10px;line-height:1.5;color:#DCCFE5}
+      .c8-interest-card.active .c8-interest-feature-copy{color:rgba(26,6,51,.72)}
       .area-directory{margin-top:8px}
       .profile-alias{margin-top:7px;font-size:12px;line-height:1.45;color:#E7DDF0}
       .profile-alias strong{font-weight:600;color:#fff}
       #explorar.c8-island-mode .section-heading,#explorar.c8-island-mode #islandSelector{display:none!important}
+      #explorar.c8-island-mode{padding-top:70px}
       #explorar.c8-island-mode .directory-shell{margin-top:0}
       @media(max-width:820px){
         #islandSelector.c8-interest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+        .c8-interest-card.c8-interest-featured{grid-column:1/-1}
       }
       @media(max-width:620px){
-        #explorar{padding-top:68px}
-        #explorar .section-heading{margin-bottom:24px}
-        #explorar .section-heading h2{font-size:34px!important;line-height:1.02}
-        #explorar .section-heading>p:last-child{font-size:16px!important;line-height:1.6}
-        #islandSelector.c8-interest-grid{gap:9px;margin-bottom:26px}
-        .c8-interest-card{min-height:108px;padding:16px;border-radius:17px}
-        .c8-interest-label{font-size:20px;margin-top:14px}
+        #explorar{padding:58px 18px 66px}
+        #explorar .section-heading{margin-bottom:22px}
+        #explorar .section-heading h2{font-size:30px!important;line-height:1.04}
+        #explorar .section-heading>p:last-child{font-size:15px!important;line-height:1.58}
+        #islandSelector.c8-interest-grid{gap:9px;margin-bottom:24px}
+        .c8-interest-card{min-height:105px;padding:15px;border-radius:17px}
+        .c8-interest-card.c8-interest-featured{min-height:146px;padding:18px 19px 17px}
+        .c8-interest-featured .c8-interest-label{font-size:32px;margin-top:18px}
+        .c8-interest-featured .c8-interest-count{font-size:13px}
+        .c8-interest-feature-copy{font-size:11px;max-width:285px}
+        .c8-interest-card.c8-interest-featured:after{right:18px;bottom:18px;font-size:10px}
+        .c8-interest-label{font-size:19px;margin-top:13px}
         .c8-interest-count{font-size:12px;margin-top:7px}
-        .c8-interest-badge{font-size:9px;padding:4px 7px}
+        .c8-interest-badge{font-size:8px;padding:4px 7px}
         .c8-interest-arrow{width:27px;height:27px}
         .profile-alias{font-size:14px}
       }
@@ -121,7 +156,7 @@ let c8ActiveMainArea=null;
   function c8UpdateInterestCopy(counts){
     const top=c8TopArea(counts);
     if(!copy||!top)return;
-    copy.textContent=`${top.area} es ahora mismo la categoría más poblada, con ${top.count} ${top.count===1?'perfil':'perfiles'}. Elige el ámbito que más te interese y empieza por ahí.`;
+    copy.textContent=`${top.area} es la categoría que más brilla ahora mismo en la constelación, con ${top.count} ${top.count===1?'perfil':'perfiles'}. También puedes entrar por cualquiera de los otros ámbitos.`;
   }
 
   function c8UseCivilNamesForLucha(){
@@ -140,13 +175,13 @@ let c8ActiveMainArea=null;
     c8UpdateInterestCopy(counts);
     selector.className='island-selector c8-interest-grid';
     selector.removeAttribute('aria-hidden');
-    selector.setAttribute('aria-label','Explorar por intereses');
+    selector.setAttribute('aria-label','Explorar por categorías');
     selector.innerHTML=C8_MAIN_AREAS.map(area=>{
       const isTop=top?.area===area;
       const count=counts[area]??0;
-      return `<button class="c8-interest-card ${c8ActiveMainArea===area?'active':''}" data-main-area="${escapeHtml(area)}" type="button">
-        <span class="c8-interest-topline"><span class="c8-interest-badge">${isTop?'Más poblada':'Explorar'}</span><span class="c8-interest-arrow" aria-hidden="true">↗</span></span>
-        <span><strong class="c8-interest-label">${escapeHtml(area)}</strong><small class="c8-interest-count">${count} ${count===1?'perfil':'perfiles'}</small></span>
+      return `<button class="c8-interest-card ${isTop?'c8-interest-featured':''} ${c8ActiveMainArea===area?'active':''}" data-main-area="${escapeHtml(area)}" type="button">
+        <span class="c8-interest-topline"><span class="c8-interest-badge">${isTop?'La que más brilla':'Explorar'}</span><span class="c8-interest-arrow" aria-hidden="true">↗</span></span>
+        <span class="c8-interest-body"><strong class="c8-interest-label">${escapeHtml(area)}</strong><small class="c8-interest-count">${count} ${count===1?'perfil':'perfiles'}</small>${isTop?'<small class="c8-interest-feature-copy">La categoría más poblada de Constelación 8.</small>':''}</span>
       </button>`;
     }).join('');
     selector.querySelectorAll('[data-main-area]').forEach(button=>button.addEventListener('click',()=>{
