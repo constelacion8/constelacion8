@@ -18,29 +18,29 @@
       .c8-legal-links a:hover,.c8-legal-links a:focus-visible{color:#FFCD00;outline:none}
       footer{gap:20px;flex-wrap:wrap}
       @media(max-width:620px){
-        body:not(.c8-island-page) .hero{padding-bottom:20px!important}
-        body:not(.c8-island-page) .archipelago-stage{margin-bottom:44px!important}
-        body:not(.c8-island-page) .map-mobile-ui{bottom:-42px!important;width:100%!important;justify-content:center!important}
+        body:not(.c8-island-page) .hero{padding-bottom:14px!important}
+        body:not(.c8-island-page) .archipelago-stage{margin-bottom:38px!important}
+        body:not(.c8-island-page) .map-mobile-ui{bottom:-36px!important;width:100%!important;justify-content:center!important}
         body:not(.c8-island-page) .map-controls{margin:0 auto!important}
-        body:not(.c8-island-page) .hero-credit-below{margin-top:0!important;margin-bottom:2px!important}
+        body:not(.c8-island-page) .hero-credit-below{margin-top:0!important;margin-bottom:0!important}
 
-        body:not(.c8-island-page) #coincidencias.time-match{padding:44px 18px 48px!important}
-        body:not(.c8-island-page) #coincidencias .time-match-inner{gap:20px!important}
-        body:not(.c8-island-page) #coincidencias .time-match-copy h2{margin-bottom:12px!important}
+        body:not(.c8-island-page) #coincidencias.time-match{padding:36px 18px 40px!important}
+        body:not(.c8-island-page) #coincidencias .time-match-inner{gap:16px!important}
+        body:not(.c8-island-page) #coincidencias .time-match-copy h2{margin-bottom:10px!important}
         body:not(.c8-island-page) #coincidencias .time-match-copy>p:last-of-type{margin-bottom:0!important}
         body:not(.c8-island-page) #coincidencias .time-tool{margin-top:0!important}
 
-        body:not(.c8-island-page) #explorar{padding:44px 18px 50px!important}
-        body:not(.c8-island-page) #explorar .section-heading{margin-bottom:18px!important}
-        body:not(.c8-island-page) #islandSelector.c8-interest-grid{margin-bottom:18px!important}
+        body:not(.c8-island-page) #explorar{padding:36px 18px 40px!important}
+        body:not(.c8-island-page) #explorar .section-heading{margin-bottom:16px!important}
+        body:not(.c8-island-page) #islandSelector.c8-interest-grid{margin-bottom:14px!important}
 
-        body:not(.c8-island-page) #cifras.c8-stats{padding:48px 0 52px!important}
-        body:not(.c8-island-page) #cifras .c8-stats-head{gap:14px!important;margin-bottom:24px!important}
-        body:not(.c8-island-page) #cifras .c8-extra-metrics{margin-top:10px!important}
-        body:not(.c8-island-page) #cifras .c8-ranking{margin-top:32px!important;padding-top:26px!important}
-        body:not(.c8-island-page) #cifras .c8-ranking-head{gap:14px!important;margin-bottom:18px!important}
+        body:not(.c8-island-page) #cifras.c8-stats{padding:40px 0 44px!important}
+        body:not(.c8-island-page) #cifras .c8-stats-head{gap:12px!important;margin-bottom:20px!important}
+        body:not(.c8-island-page) #cifras .c8-extra-metrics{margin-top:8px!important}
+        body:not(.c8-island-page) #cifras .c8-ranking{margin-top:28px!important;padding-top:22px!important}
+        body:not(.c8-island-page) #cifras .c8-ranking-head{gap:12px!important;margin-bottom:16px!important}
 
-        footer{min-height:0!important;padding:24px 18px!important;gap:10px!important;align-items:flex-start!important}
+        footer{min-height:0!important;padding:22px 18px!important;gap:10px!important;align-items:flex-start!important}
         .c8-legal-links{gap:10px 14px;font-size:11px;line-height:1.45}
       }
     `;
