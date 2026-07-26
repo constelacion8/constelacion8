@@ -21,7 +21,47 @@
     const explorer=document.getElementById('explorar');
     const wrap=explorer.querySelector('.section-wrap');
     const directory=document.getElementById('directory');
-    const map=document.getElementById('archipelagoStage');
+    const hero=document.getElementById('inicio');
+
+    /* La firma vive entre el titular principal y la invitación a elegir isla. */
+    (function placeHeroCredit(){
+      const intro=hero?.querySelector('.hero-intro');
+      const title=intro?.querySelector('.hero-atlas-title');
+      const lead=intro?.querySelector('.hero-lead');
+      let credit=hero?.querySelector('.hero-presenter,.hero-credit-below');
+
+      hero?.querySelector('.creator-signature')?.remove();
+      hero?.querySelector('.hero-down')?.remove();
+      hero?.querySelector('.map-gesture-hint')?.remove();
+
+      if(!intro||!title||!lead)return;
+      if(!credit){
+        credit=document.createElement('div');
+      }
+      credit.className='c8-hero-credit-inline';
+      credit.setAttribute('aria-label','Creado por DE8 Films');
+      credit.innerHTML='<span>Creado por</span><strong>DE8 Films.</strong>';
+      title.insertAdjacentElement('afterend',credit);
+
+      if(!document.getElementById('c8HeroCreditInlineStyles')){
+        const creditStyle=document.createElement('style');
+        creditStyle.id='c8HeroCreditInlineStyles';
+        creditStyle.textContent=`
+          .c8-hero-credit-inline{
+            display:flex;align-items:baseline;justify-content:center;gap:7px;
+            margin:11px 0 10px;font-family:"Work Sans",Arial,sans-serif;color:#fff
+          }
+          .c8-hero-credit-inline span{font-size:10px;line-height:1;font-weight:400;color:#fff}
+          .c8-hero-credit-inline strong{font-size:15px;line-height:1;font-weight:700;letter-spacing:-.035em;color:#fff}
+          @media(max-width:620px){
+            .c8-hero-credit-inline{margin:9px 0 9px;gap:6px}
+            .c8-hero-credit-inline span{font-size:11px}
+            .c8-hero-credit-inline strong{font-size:15px}
+          }
+        `;
+        document.head.appendChild(creditStyle);
+      }
+    })();
 
     const style=document.createElement('style');
     style.id='c8IslandViewStyles';
@@ -73,6 +113,19 @@
       wrap.insertBefore(nav,directory);
     }
 
+    function returnToPageTop(){
+      requestAnimationFrame(()=>{
+        window.scrollTo(0,0);
+        document.documentElement.scrollTop=0;
+        document.body.scrollTop=0;
+        setTimeout(()=>{
+          window.scrollTo(0,0);
+          document.documentElement.scrollTop=0;
+          document.body.scrollTop=0;
+        },30);
+      });
+    }
+
     function closeIslandView(scroll=true){
       document.body.classList.remove('c8-island-page');
       explorer.classList.remove('c8-island-mode');
@@ -82,10 +135,13 @@
       setTooltip(null);
       directory.innerHTML='';
       if(typeof renderIslandSelector==='function')renderIslandSelector();
-      if(scroll)requestAnimationFrame(()=>map?.scrollIntoView({behavior:'smooth',block:'center'}));
+      if(scroll)returnToPageTop();
     }
 
-    nav.querySelector('#c8IslandViewBack')?.addEventListener('click',()=>closeIslandView(true));
+    nav.querySelector('#c8IslandViewBack')?.addEventListener('click',event=>{
+      event.preventDefault();
+      closeIslandView(true);
+    });
 
     /* Sustituye el comportamiento de "lista debajo del home" por una pantalla interna dedicada. */
     openIsland=function(slug,scroll=true){
@@ -100,13 +156,15 @@
       const label=document.getElementById('c8IslandViewName');
       if(label)label.textContent=islands[slug].name;
       renderIslandList('');
-      if(scroll)requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'smooth'}));
+      if(scroll)requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'auto'}));
     };
 
-    /* El logo y el botón Explorar también sirven como salida natural desde una vista de isla. */
+    /* El logo y Explorar funcionan también como salida desde la vista de isla. */
     document.querySelector('.site-header')?.addEventListener('click',event=>{
       if(!document.body.classList.contains('c8-island-page'))return;
       if(event.target.closest('#homeButton')||event.target.closest('[data-scroll="archipelagoStage"]')){
+        event.preventDefault();
+        event.stopImmediatePropagation();
         closeIslandView(true);
       }
     },true);
