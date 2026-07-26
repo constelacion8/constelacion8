@@ -135,6 +135,21 @@
     document.head.appendChild(style);
   }
 
+  function scrollRankingProfileToTop(){
+    const doScroll=()=>{
+      const profile=document.querySelector('#directory article.profile');
+      if(!profile)return;
+      const headerHeight=document.querySelector('.site-header')?.getBoundingClientRect().height??72;
+      const top=Math.max(0,profile.getBoundingClientRect().top+window.scrollY-headerHeight-10);
+      window.scrollTo({top,left:0,behavior:'auto'});
+    };
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      doScroll();
+      setTimeout(doScroll,80);
+      setTimeout(doScroll,220);
+    }));
+  }
+
   function render(records){
     installStyles();
     const inner=document.querySelector('#cifras .c8-stats-inner');
@@ -202,7 +217,10 @@
     ranking.insertAdjacentElement('afterend',womenRanking);
 
     inner.querySelectorAll('[data-c8-rank-person]').forEach(button=>button.addEventListener('click',()=>{
-      if(typeof openProfile==='function')openProfile(button.dataset.c8RankPerson);
+      if(typeof openProfile==='function'){
+        openProfile(button.dataset.c8RankPerson);
+        scrollRankingProfileToTop();
+      }
     }));
     return true;
   }
