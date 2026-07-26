@@ -199,3 +199,13 @@ renderIslandList=function(query){
   script.async=false;
   document.body.appendChild(script);
 })();
+
+/* Ranking editorial de discos esenciales vinculados a artistas de la constelación. */
+(function loadMusicAlbumsRanking(){
+  if(document.querySelector('script[data-c8-music-albums-ranking]'))return;
+  const script=document.createElement('script');
+  script.src='music-albums-ranking.js?v=20260726-1715';
+  script.dataset.c8MusicAlbumsRanking='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
