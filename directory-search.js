@@ -72,14 +72,14 @@ renderIslandList=function(query){
   }).join('');
 
   const noResults=normalizedQuery
-    ? `<div class="directory-empty"><strong>Esta persona no está incluida ahora mismo en Constelación 8.</strong><p>No hemos encontrado «${escapeHtml(c8DirectorySearchQuery)}» entre los perfiles verificados de ${escapeHtml(islands[currentIsland].name)}. Vuelve pronto: la base de datos se amplía continuamente con nuevas biografías.</p></div>`
+    ? `<div class="directory-empty"><strong>Esta persona no está incluida ahora mismo en Constelación 8.</strong><p>No hemos encontrado «${escapeHtml(c8DirectorySearchQuery)}» entre los perfiles publicados de ${escapeHtml(islands[currentIsland].name)}. Vuelve pronto: la base de datos se amplía continuamente con nuevas biografías.</p></div>`
     : '<div class="directory-empty"><strong>No hay perfiles en este filtro.</strong><p>Prueba con otra categoría.</p></div>';
 
   directory.innerHTML=`
     <div class="directory-inner">
       <div class="directory-head">
         <div><h3>${escapeHtml(islands[currentIsland].name)}</h3><p>Personas nacidas en la isla · orden alfabético · datos sincronizados con Supabase</p></div>
-        <div class="directory-count">${all.length} ${all.length===1?'perfil verificado':'perfiles verificados'}</div>
+        <div class="directory-count">${all.length} ${all.length===1?'perfil publicado':'perfiles publicados'}</div>
       </div>
       <div class="toolbar">
         <form id="directorySearchForm" role="search" style="display:flex;flex:1;align-items:center;gap:8px;min-width:min(100%,360px);width:100%">
@@ -134,7 +134,7 @@ renderIslandList=function(query){
 (function loadAborigenesCategory(){
   if(document.querySelector('script[data-c8-aborigenes-category]'))return;
   const script=document.createElement('script');
-  script.src='aborigenes-category.js?v=20260726-1210';
+  script.src='aborigenes-category.js?v=20260726-1245';
   script.dataset.c8AborigenesCategory='true';
   script.async=false;
   document.body.appendChild(script);
