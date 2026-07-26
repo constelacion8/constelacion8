@@ -28,35 +28,39 @@
       const intro=hero?.querySelector('.hero-intro');
       const title=intro?.querySelector('.hero-atlas-title');
       const lead=intro?.querySelector('.hero-lead');
-      let credit=hero?.querySelector('.hero-presenter,.hero-credit-below');
+      let credit=hero?.querySelector('.c8-hero-credit-inline,.hero-presenter,.hero-credit-below');
 
       hero?.querySelector('.creator-signature')?.remove();
       hero?.querySelector('.hero-down')?.remove();
       hero?.querySelector('.map-gesture-hint')?.remove();
 
       if(!intro||!title||!lead)return;
-      if(!credit){
-        credit=document.createElement('div');
-      }
+      if(!credit)credit=document.createElement('div');
       credit.className='c8-hero-credit-inline';
       credit.setAttribute('aria-label','Creado por DE8 Films');
       credit.innerHTML='<span>Creado por</span><strong>DE8 Films.</strong>';
       title.insertAdjacentElement('afterend',credit);
 
+      lead.innerHTML='<span class="c8-hero-lead-line">Elige una isla del mapa</span><span class="c8-hero-lead-line">y empieza el recorrido.</span>';
+
       if(!document.getElementById('c8HeroCreditInlineStyles')){
         const creditStyle=document.createElement('style');
         creditStyle.id='c8HeroCreditInlineStyles';
         creditStyle.textContent=`
+          #inicio .hero-atlas-title{order:1!important}
           .c8-hero-credit-inline{
-            display:flex;align-items:baseline;justify-content:center;gap:7px;
-            margin:11px 0 10px;font-family:"Work Sans",Arial,sans-serif;color:#fff
+            order:2!important;display:flex;align-items:baseline;justify-content:center;gap:7px;
+            margin:10px 0 8px;font-family:"Work Sans",Arial,sans-serif;color:#fff
           }
-          .c8-hero-credit-inline span{font-size:10px;line-height:1;font-weight:400;color:#fff}
-          .c8-hero-credit-inline strong{font-size:15px;line-height:1;font-weight:700;letter-spacing:-.035em;color:#fff}
+          .c8-hero-credit-inline span{font-size:10px;line-height:1;font-weight:400;color:#fff;white-space:nowrap}
+          .c8-hero-credit-inline strong{font-size:15px;line-height:1;font-weight:700;letter-spacing:-.035em;color:#fff;white-space:nowrap}
+          #inicio .hero-lead{order:3!important;margin:6px auto 0!important;color:#FFCD00!important;font-weight:500;text-align:center}
+          #inicio .hero-lead .c8-hero-lead-line{display:block;white-space:nowrap}
           @media(max-width:620px){
-            .c8-hero-credit-inline{margin:9px 0 9px;gap:6px}
+            .c8-hero-credit-inline{margin:9px 0 8px;gap:6px}
             .c8-hero-credit-inline span{font-size:11px}
             .c8-hero-credit-inline strong{font-size:15px}
+            #inicio .hero-lead{font-size:16px!important;line-height:1.48!important;max-width:none!important}
           }
         `;
         document.head.appendChild(creditStyle);
