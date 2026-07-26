@@ -166,6 +166,16 @@ renderIslandList=function(query){
   document.body.appendChild(script);
 })();
 
+/* Los directorios de isla se abren en una vista interna independiente del home. */
+(function loadIslandView(){
+  if(document.querySelector('script[data-c8-island-view]'))return;
+  const script=document.createElement('script');
+  script.src='island-view.js?v=20260726-0445';
+  script.dataset.c8IslandView='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
+
 /* Norma general: después de la capa de categorías, el nombre civil completo manda en toda la interfaz. */
 (function loadFullNameDisplay(){
   if(document.querySelector('script[data-c8-full-name-display]'))return;
