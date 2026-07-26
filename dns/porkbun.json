@@ -1,0 +1,12 @@
+{
+  "enabled": false,
+  "dryRun": true,
+  "domain": "constelacion8.com",
+  "records": [
+    { "type": "A", "name": "", "content": "185.199.108.153", "ttl": "600" },
+    { "type": "A", "name": "", "content": "185.199.109.153", "ttl": "600" },
+    { "type": "A", "name": "", "content": "185.199.110.153", "ttl": "600" },
+    { "type": "A", "name": "", "content": "185.199.111.153", "ttl": "600" },
+    { "type": "CNAME", "name": "www", "content": "constelacion8.github.io", "ttl": "600" }
+  ]
+}
