@@ -35,12 +35,12 @@
       source:'https://www.bibliotecadecanarias.org/lectura/letras-canarias-2023'
     },
     {
-      slug:'tomas-morales',
-      work:'Las rosas de Hércules',
-      year:'1919–1922',
-      hook:'El Atlántico convertido en música, deseo, viaje y memoria.',
-      why:'La gran obra de Tomás Morales hizo del mar una de las imágenes esenciales de la literatura canaria moderna. Su lenguaje modernista exige una lectura más pausada, pero recompensa con una experiencia sensorial poderosísima: puertos, océano, infancia, erotismo y una manera monumental de sentir el Atlántico.',
-      source:'https://www.bibliotecadecanarias.org/escritores-as/tomas-morales'
+      slug:'natalia-sosa-ayala',
+      work:'Muchacha sin nombre y otros poemas',
+      year:'1980',
+      hook:'Identidad, deseo y silencio: una voz íntima que lucha por poder nombrarse.',
+      why:'Natalia Sosa Ayala convierte la escritura en búsqueda de identidad y resistencia íntima. En este poemario aparecen el desdoblamiento, la soledad, el deseo, la sensación de no encajar y la necesidad de construir una voz propia frente a los límites impuestos por su tiempo. Es una lectura vulnerable, valiente y profundamente humana.',
+      source:'https://portal.academiacanarialengua.org/archipielago-letras/natalia-sosa-ayala/'
     }
   ];
 
@@ -101,7 +101,7 @@
     section.innerHTML=`
       <header class="c8-ranking-head">
         <div><h3>TOP 5 · <span>Libros canarios que deberías leer este verano</span></h3></div>
-        <p>Cinco obras para leer despacio: isla, memoria, deseo, juventud y Atlántico. Una selección de libros y poemarios especialmente sensibles de la literatura canaria.</p>
+        <p>Cinco obras para leer despacio: isla, memoria, deseo, juventud e identidad. Una selección de libros y poemarios especialmente sensibles de la literatura canaria.</p>
       </header>
       <div class="c8-summer-list">${available.map(({item,person},index)=>`
         <article class="c8-summer-card">
