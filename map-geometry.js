@@ -56,3 +56,16 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});
   else apply();
 })();
+
+/* Jerarquía editorial consistente en las tarjetas de "La constelación en cifras". */
+(function installStatsNameHierarchy(){
+  if(document.getElementById('c8StatsNameHierarchy'))return;
+  const style=document.createElement('style');
+  style.id='c8StatsNameHierarchy';
+  style.textContent=`
+    .c8-stat-person{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:4px!important}
+    .c8-stat-person strong{display:block}
+    .c8-stat-person small{display:block;line-height:1.35}
+  `;
+  document.head.appendChild(style);
+})();
