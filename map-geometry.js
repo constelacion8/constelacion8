@@ -56,13 +56,3 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});
   else apply();
 })();
-
-/* Capa editorial: las biografías extensas viven en un módulo separado y se hidratan desde Supabase. */
-(function loadExtendedBiographies(){
-  if(document.querySelector('script[data-c8-extended-biographies]'))return;
-  const script=document.createElement('script');
-  script.src='extended-biographies.js?v=20260726-0335';
-  script.dataset.c8ExtendedBiographies='true';
-  script.async=false;
-  document.body.appendChild(script);
-})();
