@@ -130,6 +130,16 @@ renderIslandList=function(query){
   document.body.appendChild(script);
 })();
 
+/* Aborígenes funciona como una categoría histórica especial dentro del mismo directorio. */
+(function loadAborigenesCategory(){
+  if(document.querySelector('script[data-c8-aborigenes-category]'))return;
+  const script=document.createElement('script');
+  script.src='aborigenes-category.js?v=20260726-1210';
+  script.dataset.c8AborigenesCategory='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
+
 /* Los directorios de isla se abren en una vista interna independiente del home. */
 (function loadIslandView(){
   if(document.querySelector('script[data-c8-island-view]'))return;
