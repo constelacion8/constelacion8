@@ -179,3 +179,13 @@ renderIslandList=function(query){
   script.async=false;
   document.body.appendChild(script);
 })();
+
+/* Ranking narrativo de personajes con vidas de gran potencial cinematográfico. */
+(function loadLegendaryLivesRanking(){
+  if(document.querySelector('script[data-c8-legendary-lives-ranking]'))return;
+  const script=document.createElement('script');
+  script.src='legendary-lives-ranking.js?v=20260726-1335';
+  script.dataset.c8LegendaryLivesRanking='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
