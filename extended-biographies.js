@@ -76,3 +76,13 @@
   hydrate().then(()=>wrapOpenProfile());
   window.addEventListener('c8:data-ready',()=>{hydrate().then(()=>wrapOpenProfile());});
 })();
+
+/* Pulido final de portada, ritmo móvil y accesos legales. */
+(function loadSitePolish(){
+  if(document.querySelector('script[data-c8-site-polish]'))return;
+  const script=document.createElement('script');
+  script.src='site-polish.js?v=20260726-0525';
+  script.dataset.c8SitePolish='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
