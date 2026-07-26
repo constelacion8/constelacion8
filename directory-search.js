@@ -189,3 +189,13 @@ renderIslandList=function(query){
   script.async=false;
   document.body.appendChild(script);
 })();
+
+/* Ranking editorial de libros y poemarios canarios para el verano. */
+(function loadSummerReadingRanking(){
+  if(document.querySelector('script[data-c8-summer-reading-ranking]'))return;
+  const script=document.createElement('script');
+  script.src='summer-reading-ranking.js?v=20260726-1605';
+  script.dataset.c8SummerReadingRanking='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
