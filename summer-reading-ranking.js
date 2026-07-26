@@ -144,3 +144,13 @@
   window.addEventListener('c8:data-ready',refresh);
   window.setInterval(refresh,REFRESH_MS);
 })();
+
+/* El ranking musical se carga después del ranking de lecturas para conservar el orden editorial. */
+(function loadMusicAlbumsRanking(){
+  if(document.querySelector('script[data-c8-music-albums-ranking]'))return;
+  const script=document.createElement('script');
+  script.src='music-albums-ranking.js?v=20260726-1645';
+  script.dataset.c8MusicAlbumsRanking='true';
+  script.async=false;
+  document.body.appendChild(script);
+})();
