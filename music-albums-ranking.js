@@ -27,10 +27,10 @@
       source:'https://www3.gobiernodecanarias.org/medusa/wiki/index.php?title=Taburiente'
     },
     {
-      slug:'quevedo', artist:'Quevedo', album:'DONDE QUIERO ESTAR', year:'2023',
-      hook:'La nueva Canarias urbana entrando de lleno en la música global.',
-      why:'El debut largo de Quevedo consolidó el salto internacional iniciado por sus primeros éxitos. El álbum alcanzó el número uno en España y situó a un artista grancanario en el centro de la nueva música urbana en español. Su presencia cierra este ranking mostrando cuánto ha cambiado el paisaje sonoro canario.',
-      source:'https://open.spotify.com/album/7menGlTCTcVnCbUMKRgu3Z'
+      slug:'jose-antonio-ramos', artist:'José Antonio Ramos', album:'Los Cuatro Gigantes', year:'1998',
+      hook:'El timple dejó de ser acompañante y empezó a viajar por el mundo como solista.',
+      why:'Su primer álbum en solitario fue una declaración de futuro para el timple. José Antonio Ramos partió de la raíz canaria para llevar el instrumento hacia la fusión, el jazz y las músicas del mundo, acompañado por músicos como Kepa Junkera, Luis Morera y Béla Fleck. Un disco clave para entender la modernización del instrumento.',
+      source:'https://www3.gobiernodecanarias.org/noticias/hemeroteca/canarias-crea-lleva-cuenca-timplista-jose-antonio-ramos/'
     }
   ];
 
@@ -68,7 +68,7 @@
     const bySlug=new Map(verified.map(person=>[person.slug,person]));
     const available=RANKING.map(item=>({item,person:bySlug.get(item.slug)})).filter(row=>row.person);if(!available.length)return false;
     const section=document.createElement('section');section.id='c8MusicAlbumsRanking';section.className='c8-ranking c8-music-ranking';
-    section.innerHTML=`<header class="c8-ranking-head"><div><h3>TOP 5 · <span>Discos esenciales de la constelación</span></h3></div><p>Cinco álbumes para recorrer medio siglo de música hecha desde Canarias: vanguardia, canción de autor, identidad, pop y cultura urbana.</p></header><div class="c8-music-list">${available.map(({item,person},index)=>`<article class="c8-music-card"><div class="c8-music-num">0${index+1}</div><button type="button" class="c8-music-person" data-c8-music-person="${esc(person.id)}"><span class="c8-music-album">${esc(item.album)}</span><strong>${esc(item.artist)}</strong><small>${esc(item.year)} · ${esc(islandName(person))}</small><span class="c8-music-hook">${esc(item.hook)}</span></button><div class="c8-music-copy"><p>${esc(item.why)}</p><p><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">Fuente / escucha de referencia ↗</a></p></div></article>`).join('')}</div><div class="c8-music-note"><strong>Selección editorial C8.</strong> El orden valora influencia, singularidad artística, impacto cultural y capacidad para representar distintos momentos de la música vinculada a Canarias. No pretende ser un canon definitivo.</div>`;
+    section.innerHTML=`<header class="c8-ranking-head"><div><h3>TOP 5 · <span>Discos esenciales de la constelación</span></h3></div><p>Cinco álbumes para recorrer distintas formas de hacer música desde Canarias: vanguardia, canción de autor, identidad, pop y la revolución contemporánea del timple.</p></header><div class="c8-music-list">${available.map(({item,person},index)=>`<article class="c8-music-card"><div class="c8-music-num">0${index+1}</div><button type="button" class="c8-music-person" data-c8-music-person="${esc(person.id)}"><span class="c8-music-album">${esc(item.album)}</span><strong>${esc(item.artist)}</strong><small>${esc(item.year)} · ${esc(islandName(person))}</small><span class="c8-music-hook">${esc(item.hook)}</span></button><div class="c8-music-copy"><p>${esc(item.why)}</p><p><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">Fuente / escucha de referencia ↗</a></p></div></article>`).join('')}</div><div class="c8-music-note"><strong>Selección editorial C8.</strong> El orden valora influencia, singularidad artística, impacto cultural y capacidad para representar distintos momentos de la música vinculada a Canarias. No pretende ser un canon definitivo.</div>`;
     const summer=document.getElementById('c8SummerReadingRanking');const legendary=document.getElementById('c8LegendaryLivesRanking');if(summer)summer.insertAdjacentElement('afterend',section);else if(legendary)legendary.insertAdjacentElement('afterend',section);else inner.appendChild(section);
     section.querySelectorAll('[data-c8-music-person]').forEach(button=>button.addEventListener('click',()=>{if(typeof openProfile==='function'){openProfile(button.dataset.c8MusicPerson);scrollProfileToTop();}}));return true;
   }
