@@ -114,3 +114,14 @@
 
   install();
 })();
+
+/* Coincidencias: una sola instrucción, sin repetir el mismo mensaje dentro del formulario. */
+(function simplifyCoincidenceCopy(){
+  const intro=document.querySelector('#coincidencias .time-match-copy>p:last-of-type');
+  const help=document.querySelector('#coincidencias .time-tool-head small');
+  const results=document.getElementById('timeResults');
+
+  if(intro)intro.textContent='Introduce tu nombre, fecha e isla de nacimiento para descubrir qué figuras canarias coincidieron contigo en el tiempo.';
+  if(help)help.textContent='Compara tu cronología vital con las personas incorporadas al atlas.';
+  if(results&&results.querySelector('.time-empty')&&!results.querySelector('.time-summary'))results.innerHTML='';
+})();
