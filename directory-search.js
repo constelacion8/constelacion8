@@ -164,7 +164,7 @@ renderIslandList=function(query){
 (function loadConstellationRanking(){
   if(document.querySelector('script[data-c8-constellation-ranking]'))return;
   const script=document.createElement('script');
-  script.src='constellation-ranking.js?v=20260726-0110';
+  script.src='constellation-ranking.js?v=20260726-0835';
   script.dataset.c8ConstellationRanking='true';
   script.async=false;
   document.body.appendChild(script);
