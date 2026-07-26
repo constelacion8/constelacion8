@@ -1,5 +1,6 @@
-/* Geometría cartográfica corregida para Lanzarote, La Graciosa y el Archipiélago Chinijo.
-   La silueta prioriza proporciones y separación geográfica legibles dentro del mapa estilizado. */
+/* Corrección conservadora del extremo oriental del mapa.
+   Lanzarote conserva exactamente su silueta vectorial original; este archivo solo
+   separa La Graciosa y sitúa referencias discretas del Archipiélago Chinijo. */
 (function installEasternCanaryGeometry(){
   const NS='http://www.w3.org/2000/svg';
 
@@ -11,52 +12,44 @@
     const graciosa=map.querySelector('[data-island="la-graciosa"]');
     if(!lanzarote||!graciosa)return;
 
-    /* Lanzarote: eje NE–SO, norte estrecho y mitad meridional más ancha. */
-    const lanzarotePath='M580 25 L576 23 L573 25 L571 29 L570 33 L567 36 L565 40 L561 43 L559 47 L555 49 L553 53 L550 56 L548 60 L544 63 L542 67 L538 70 L535 74 L531 77 L529 80 L534 82 L539 82 L544 79 L549 77 L553 74 L558 72 L561 69 L565 67 L568 63 L572 60 L575 56 L578 52 L580 47 L582 43 L583 39 L585 35 L585 31 L583 27 Z';
+    /* Silueta ORIGINAL de Lanzarote: no volver a reinterpretarla ni simplificarla. */
+    const lanzarotePath='M577,19 L573,18 L572,16 L569,16 L569,19 L572,20 L571,24 L568,28 L569,29 L573,28 L575,29 L573,31 L571,39 L569,41 L567,41 L565,39 L555,41 L551,46 L543,48 L536,54 L534,60 L535,62 L534,67 L535,68 L529,73 L529,79 L539,79 L540,81 L542,81 L549,71 L559,70 L563,68 L564,66 L571,65 L573,62 L578,59 L580,56 L580,51 L582,47 L582,44 L580,41 L585,36 L585,29 L577,24 L579,22 Z';
     lanzarote.querySelectorAll('.island-aura,.island-shape').forEach(path=>path.setAttribute('d',lanzarotePath));
 
-    /* La Graciosa: al NNO de Lanzarote, separada por El Río y con eje similar. */
-    const graciosaPath='M553 14 L557 12 L562 12 L566 14 L568 17 L568 20 L565 22 L562 24 L558 25 L554 23 L551 21 L550 18 L551 16 Z';
+    /* La Graciosa: pieza independiente al NNO, con agua visible respecto a Lanzarote. */
+    const graciosaPath='M544 19 L548 17 L553 17 L557 19 L559 22 L558 25 L555 27 L551 29 L547 28 L543 26 L541 23 L542 21 Z';
     graciosa.querySelectorAll('.island-aura,.island-shape').forEach(path=>path.setAttribute('d',graciosaPath));
     const hit=graciosa.querySelector('.tiny-hit');
-    if(hit){hit.setAttribute('cx','559');hit.setAttribute('cy','19');hit.setAttribute('r','11');}
+    if(hit){hit.setAttribute('cx','550');hit.setAttribute('cy','23');hit.setAttribute('r','10');}
 
-    /* Retiramos referencias provisionales anteriores para no duplicar islotes. */
     map.querySelectorAll('.chinijo-reference').forEach(node=>node.remove());
-
     const chinijo=document.createElementNS(NS,'g');
     chinijo.setAttribute('class','chinijo-reference');
     chinijo.setAttribute('aria-label','Archipiélago Chinijo');
     chinijo.setAttribute('pointer-events','none');
 
-    const referenceStyle='fill:rgba(255,205,0,.07);stroke:rgba(255,205,0,.52);stroke-width:.55;vector-effect:non-scaling-stroke';
-    const addPath=(d,label)=>{
-      const p=document.createElementNS(NS,'path');
-      p.setAttribute('d',d);p.setAttribute('style',referenceStyle);p.setAttribute('aria-label',label);chinijo.appendChild(p);
-    };
-    const addCircle=(cx,cy,r,label)=>{
-      const c=document.createElementNS(NS,'circle');
-      c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);c.setAttribute('style',referenceStyle);c.setAttribute('aria-label',label);chinijo.appendChild(c);
-    };
+    const style='fill:rgba(255,205,0,.07);stroke:rgba(255,205,0,.52);stroke-width:.55;vector-effect:non-scaling-stroke';
+    const addPath=(d,label)=>{const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('style',style);p.setAttribute('aria-label',label);chinijo.appendChild(p);};
+    const addCircle=(cx,cy,r,label)=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',r);c.setAttribute('style',style);c.setAttribute('aria-label',label);chinijo.appendChild(c);};
 
-    /* Alegranza al norte; Montaña Clara al oeste de La Graciosa; roques como hitos mínimos. */
-    addPath('M548 2 L551 1 L554 3 L554 6 L552 8 L548 8 L546 6 L546 4 Z','Alegranza');
-    addPath('M547 10 L550 9 L552 11 L551 14 L548 14 L546 12 Z','Montaña Clara');
-    addCircle('543.5','12.8','0.85','Roque del Oeste');
-    addCircle('574','17.2','0.75','Roque del Este');
+    /* Alegranza al norte; Montaña Clara al oeste de La Graciosa; roques mínimos. */
+    addPath('M550 5 L553 3 L557 4 L558 7 L556 10 L552 10 L549 8 Z','Alegranza');
+    addPath('M536 18 L539 16 L542 17 L543 20 L541 22 L537 22 L535 20 Z','Montaña Clara');
+    addCircle('533','18','0.8','Roque del Oeste');
+    addCircle('565','20','0.75','Roque del Este');
     map.appendChild(chinijo);
 
-    /* La red decorativa acompaña ahora a las posiciones reales de Lanzarote y La Graciosa. */
+    /* Solo recolocamos los nodos decorativos; no alteramos más geometría insular. */
     const network=document.querySelector('.network-layer');
     if(network){
       const violet=[...network.querySelectorAll('.violet-line')];
-      if(violet[1])violet[1].setAttribute('d','M510 141 C532 107, 550 79, 559 53 C563 39, 562 28, 559 19');
+      if(violet[1])violet[1].setAttribute('d','M510 141 C532 107,548 82,559 58 C565 45,568 33,573 25 C562 22,556 22,550 23');
       const nodes=[...network.querySelectorAll('.network-nodes circle')];
-      if(nodes[6]){nodes[6].setAttribute('cx','559');nodes[6].setAttribute('cy','53');}
-      if(nodes[7]){nodes[7].setAttribute('cx','559');nodes[7].setAttribute('cy','19');}
+      if(nodes[6]){nodes[6].setAttribute('cx','559');nodes[6].setAttribute('cy','58');}
+      if(nodes[7]){nodes[7].setAttribute('cx','550');nodes[7].setAttribute('cy','23');}
     }
 
-    document.documentElement.dataset.c8MapGeometry='chinijo-corrected';
+    document.documentElement.dataset.c8MapGeometry='lanzarote-original-graciosa-separated';
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});
