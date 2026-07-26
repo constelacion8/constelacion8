@@ -14,7 +14,8 @@
     'María Lasso Morales','Rosana Arbelo Gopar','Ana Bautista Reyes','Antonia del Carmen Acosta León',
     'Carolina Martínez Pulido','Cecilia Domínguez Luis','Dolores Campos-Herrero Navas','Dolores Covadonga Corbella Díaz',
     'Francisca Balbina Rivero Pimienta','María Belén Morales Gómez','María del Carmen Betancourt y Molina',
-    'María del Rosario Álvarez Martínez','María Joaquina Viera y Clavijo','María Rosa Alonso Rodríguez','Mercedes Pinto Armas de la Rosa y Clós','Michelle Alonso Morales'
+    'María del Rosario Álvarez Martínez','María Joaquina Viera y Clavijo','María Rosa Alonso Rodríguez','Mercedes Pinto Armas de la Rosa y Clós','Michelle Alonso Morales',
+    'Valentina Hernández Rodríguez'
   ]);
 
   const RANKING=[
@@ -47,6 +48,34 @@
       parts:[['Aportación histórica',23,25],['Proyección exterior',19,20],['Permanencia',18,20],['Historia de Canarias',13,15],['Arraigo',8,10],['Reconocimiento actual',8,10]],
       why:'Fue una de las grandes figuras españolas de la física del siglo XX, referente internacional en magnetismo e integrante de las redes científicas europeas de su tiempo.',
       source:'https://rac.es/sobre-nosotros/miembros/academicos-historicos/numerarios/217/'
+    }
+  ];
+
+  const WOMEN_RANKING=[
+    {
+      slug:'mercedes-pinto',
+      why:'Escritora, periodista y activista de amplia proyección hispanoamericana. Su trayectoria convirtió la literatura y la intervención pública en herramientas de transformación social y dejó una huella que rebasa el ámbito insular.',
+      source:'https://www.bibliotecadecanarias.org/escritores-as/mercedes-pinto'
+    },
+    {
+      slug:'josefina-de-la-torre',
+      why:'Poeta, actriz, cantante y novelista vinculada a la Generación del 27. Su trayectoria multidisciplinar la sitúa entre las creadoras canarias con mayor presencia en la cultura española del siglo XX.',
+      source:'https://portal.academiacanarialengua.org/archipielago-letras/josefina-de-la-torre/'
+    },
+    {
+      slug:'maria-rosa-alonso',
+      why:'Filóloga, ensayista, docente e investigadora fundamental para el estudio de la literatura y la cultura de Canarias. Su obra intelectual atravesó buena parte del siglo XX y dejó un legado académico duradero.',
+      source:'https://www.ull.es/portal/hipotesis/calendario-investigaull/figurag_investigaull/mariarosaalonso/'
+    },
+    {
+      slug:'maria-joaquina-viera-y-clavijo',
+      why:'Figura pionera de las letras canarias en el siglo XVIII. Su obra posee un valor singular tanto por su aportación literaria como por haber desarrollado una voz intelectual propia en un contexto especialmente restrictivo para las mujeres.',
+      source:'https://portal.academiacanarialengua.org/archipielago-letras/maria-joaquina-viera-y-clavijo/'
+    },
+    {
+      slug:'valentina-la-de-sabinosa',
+      why:'Figura esencial para la conservación y transmisión del patrimonio musical y oral de El Hierro. Su voz y su memoria contribuyeron decisivamente a proyectar una parte fundamental de la cultura tradicional canaria.',
+      source:'https://www.gobiernodecanarias.org/igualdad/documentos/publicaciones/mujer_cultura_canarias.pdf'
     }
   ];
 
@@ -93,8 +122,15 @@
       .c8-rank-parts{display:flex;flex-wrap:wrap;gap:5px}.c8-rank-parts span{padding:5px 7px;border:1px solid rgba(255,205,0,.25);border-radius:999px;font-size:9px;color:#F7F0FA}
       .c8-method{margin-top:16px;padding:18px 20px;border-left:2px solid #FFCD00;background:rgba(255,205,0,.04);font-size:11px;line-height:1.65;color:#EDE4F3}
       .c8-method strong{color:#fff}
-      @media(max-width:860px){.c8-ranking-head{grid-template-columns:1fr}.c8-rank-card{grid-template-columns:54px 1fr 90px}.c8-rank-copy{grid-column:2/-1}}
-      @media(max-width:620px){.c8-extra-metrics{grid-template-columns:1fr}.c8-rank-card{grid-template-columns:42px 1fr}.c8-rank-score{grid-column:2;font-size:26px}.c8-rank-copy{grid-column:2}.c8-ranking{margin-top:42px}.c8-extra-card{padding:21px}}
+      .c8-women-ranking{margin-top:48px;padding-top:40px;border-top:1px solid rgba(255,205,0,.18)}
+      .c8-women-ranking .c8-ranking-head{margin-bottom:22px}
+      .c8-women-ranking .c8-ranking-head h3 span{color:#FFCD00}
+      .c8-women-ranking .c8-rank-card{grid-template-columns:74px minmax(200px,.8fr) minmax(280px,1.5fr);background:linear-gradient(145deg,rgba(59,10,106,.24),rgba(26,6,51,.62));border-color:rgba(255,205,0,.14)}
+      .c8-women-ranking .c8-rank-num{color:#FFCD00}
+      .c8-women-note{margin-top:16px;padding:18px 20px;border-left:2px solid #FFCD00;background:rgba(255,205,0,.035);font-size:11px;line-height:1.65;color:#EDE4F3}
+      .c8-women-note strong{color:#fff}
+      @media(max-width:860px){.c8-ranking-head{grid-template-columns:1fr}.c8-rank-card{grid-template-columns:54px 1fr 90px}.c8-rank-copy{grid-column:2/-1}.c8-women-ranking .c8-rank-card{grid-template-columns:54px 1fr}.c8-women-ranking .c8-rank-copy{grid-column:2}}
+      @media(max-width:620px){.c8-extra-metrics{grid-template-columns:1fr}.c8-rank-card{grid-template-columns:42px 1fr}.c8-rank-score{grid-column:2;font-size:26px}.c8-rank-copy{grid-column:2}.c8-ranking{margin-top:42px}.c8-extra-card{padding:21px}.c8-women-ranking{margin-top:38px;padding-top:34px}.c8-women-ranking .c8-rank-card{grid-template-columns:42px 1fr}.c8-women-ranking .c8-rank-copy{grid-column:2}}
     `;
     document.head.appendChild(style);
   }
@@ -105,6 +141,7 @@
     if(!inner)return false;
     inner.querySelector('#c8ExtraMetrics')?.remove();
     inner.querySelector('#c8InfluenceRanking')?.remove();
+    inner.querySelector('#c8WomenInfluenceRanking')?.remove();
 
     const verified=records.filter(p=>!p.editorial_status||p.editorial_status==='verified'||p.editorial_status==='published');
     const islandLeader=topIsland(verified);
@@ -142,7 +179,29 @@
       <div class="c8-method"><strong>Cómo se calcula.</strong> Aportación histórica 25 puntos · proyección exterior 20 · permanencia del legado 20 · importancia para la historia de Canarias 15 · arraigo e identificación con Canarias 10 · reconocimiento e impacto contemporáneo 10. El índice es experimental, argumentado y revisable. La influencia no equivale a superioridad moral ni a popularidad en internet; los indicadores digitales solo forman una parte menor del último bloque.</div>`;
     metrics.insertAdjacentElement('afterend',ranking);
 
-    ranking.querySelectorAll('[data-c8-rank-person]').forEach(button=>button.addEventListener('click',()=>{
+    const womenRanking=document.createElement('section');
+    womenRanking.id='c8WomenInfluenceRanking';
+    womenRanking.className='c8-ranking c8-women-ranking';
+    womenRanking.innerHTML=`
+      <header class="c8-ranking-head">
+        <div><h3>TOP 5 · <span>Mujeres más influyentes de Canarias</span></h3></div>
+        <p>Cinco trayectorias fundamentales para comprender la cultura, el pensamiento y la memoria de Canarias. Una selección editorial que busca hacer visible una parte de nuestra historia que durante mucho tiempo recibió menos atención.</p>
+      </header>
+      <div class="c8-ranking-list">${WOMEN_RANKING.map((item,index)=>{
+        const person=bySlug.get(item.slug);
+        if(!person)return '';
+        const island=birthIsland(person)||'Canarias';
+        const alias=person.known_as&&person.known_as!==person.full_name?person.known_as:null;
+        return `<article class="c8-rank-card">
+          <div class="c8-rank-num">0${index+1}</div>
+          <button type="button" class="c8-rank-person" data-c8-rank-person="${esc(person.id)}"><strong>${esc(fullName(person))}</strong>${alias?`<small>${esc(alias)}</small>`:''}<small class="c8-rank-island">${esc(island)}</small></button>
+          <div class="c8-rank-copy"><p>${esc(item.why)}</p><p><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">Fuente de referencia ↗</a></p></div>
+        </article>`;
+      }).join('')}</div>
+      <div class="c8-women-note"><strong>Selección editorial C8.</strong> Este ranking es provisional y revisable a medida que crece la investigación de Constelación 8. No modifica el Top 5 general ni aplica una cuota matemática: ordena cinco trayectorias femeninas especialmente relevantes para darles una lectura y visibilidad propias.</div>`;
+    ranking.insertAdjacentElement('afterend',womenRanking);
+
+    inner.querySelectorAll('[data-c8-rank-person]').forEach(button=>button.addEventListener('click',()=>{
       if(typeof openProfile==='function')openProfile(button.dataset.c8RankPerson);
     }));
     return true;
