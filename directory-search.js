@@ -170,7 +170,7 @@ renderIslandList=function(query){
 (function loadIslandView(){
   if(document.querySelector('script[data-c8-island-view]'))return;
   const script=document.createElement('script');
-  script.src='island-view.js?v=20260726-0445';
+  script.src='island-view.js?v=20260726-0500';
   script.dataset.c8IslandView='true';
   script.async=false;
   document.body.appendChild(script);
