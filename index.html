@@ -14,8 +14,11 @@
   <link rel="stylesheet" href="contrast.css?v=20260725-2355">
   <style>
     .hero{padding-top:120px!important}
+    #explorar:has(#directory:empty){display:none!important}
+    #explorar{padding-top:34px!important}
     @media(max-width:620px){
       .hero{padding-top:104px!important}
+      #explorar{padding-top:22px!important}
       .c8-stat-eyebrow{font-size:12px!important;line-height:1.35;letter-spacing:.11em}
     }
   </style>
@@ -31,9 +34,9 @@
       <nav class="main-nav" aria-label="Navegación principal">
         <button data-scroll="inicio">Inicio</button>
         <button data-scroll="coincidencias">Coincidencias</button>
-        <button data-scroll="explorar">Islas</button>
+        <button data-scroll="archipelagoStage">Islas</button>
       </nav>
-      <button class="header-cta" data-scroll="explorar">Explorar</button>
+      <button class="header-cta" data-scroll="archipelagoStage">Explorar</button>
     </header>
 
     <main>
@@ -143,8 +146,6 @@
 
       <section class="explorer" id="explorar">
         <div class="section-wrap">
-          <div class="section-heading"><p class="eyebrow">Explora por territorio</p><h2>Ocho islas. Un atlas de biografías.</h2><p>Elige una isla y recorre, por orden alfabético, las personas nacidas en ella. Filtra por áreas y abre cada biografía para descubrir después sus conexiones con otras vidas.</p></div>
-          <div class="island-selector" id="islandSelector" aria-label="Selector de isla"></div>
           <div class="directory-shell" id="directory" aria-live="polite"></div>
         </div>
       </section>
@@ -154,7 +155,7 @@
   </div>
   <script src="app.js"></script>
   <script src="experience.js?v=20260725-1915"></script>
-  <script src="directory-search.js?v=20260726-0220"></script>
+  <script src="directory-search.js?v=20260726-0255"></script>
   <script src="map-geometry.js?v=20260726-0340"></script>
   <script src="extended-biographies.js?v=20260726-0340" data-c8-extended-biographies></script>
 </body>
