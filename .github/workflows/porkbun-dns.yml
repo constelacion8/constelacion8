@@ -1,0 +1,35 @@
+name: Sync Porkbun DNS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dns/porkbun.json'
+      - 'scripts/porkbun-dns.mjs'
+      - '.github/workflows/porkbun-dns.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: porkbun-dns
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Sync DNS through Porkbun API
+        env:
+          PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
+          PORKBUN_SECRET_API_KEY: ${{ secrets.PORKBUN_SECRET_API_KEY }}
+        run: node scripts/porkbun-dns.mjs
