@@ -23,6 +23,11 @@
   border-color:rgba(255,205,0,.78)!important;
 }
 
+/* Nota editorial bajo el mapa: casi blanca, discreta pero plenamente legible */
+#inicio .c8-inclusion-note{
+  color:rgba(255,255,255,.92)!important;
+}
+
 /* Metadatos: blanco violáceo luminoso, nunca gris oscuro */
 .time-tool-head small,
 .time-field span,
@@ -120,6 +125,29 @@ footer span{
   color:#E8DFF0!important;
 }
 
+/* Origen del proyecto: una nota de autor antes del cierre legal/de marca. */
+footer{
+  min-height:auto!important;
+  padding:88px 5vw 28px!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  border-top:0!important;
+}
+footer::before{
+  content:"Constelación 8 nació de una necesidad muy sencilla. En DE8 Films, productora canaria de cine documental, queríamos una herramienta propia que nos permitiera tener a mano, ordenar y descubrir las biografías de las personas de Canarias y de quienes han dejado una huella profunda en las islas. De esa necesidad de trabajo nació este atlas: una idea original de Enrique Roda, cofundador y director creativo de DE8 Films.\A\A Muy pronto entendimos que una herramienta así no tenía sentido si se quedaba dentro de una productora. Nuestra vocación es divulgar: compartir historias, despertar curiosidad y hacer que conocer nuestro pasado también pueda ser entretenido. Por eso Constelación 8 se comparte como un proyecto abierto a la comunidad, dispuesto a crecer con nuevas fuentes, correcciones y propuestas. Ojalá sirva también para recordarnos lo afortunados que somos de compartir —o haber compartido— tiempo y territorio con tantas personas interesantes que, desde disciplinas muy distintas, han contribuido a hacer de este archipiélago un lugar mejor.\A\A Y hay una convicción personal detrás de esta constelación: Canarias también se construye con quienes la eligieron. Algunas personas nacieron fuera por azar o circunstancias familiares y crecieron aquí desde muy pequeñas; otras llegaron después y decidieron entregar a estas islas lo mejor de sus carreras, su talento y su vida. Siempre he creído que hay muchas maneras de ser canario. En este atlas también están quienes, sin haber nacido en las islas, lo demostraron con su arraigo, su compromiso y su aportación. Porque también hay quienes se hacen canarios eligiendo Canarias. — Enrique Roda";
+  display:block;
+  flex:0 0 100%;
+  max-width:940px;
+  margin:0 auto 30px;
+  padding:0 0 54px;
+  border-bottom:1px solid rgba(255,255,255,.075);
+  white-space:pre-line;
+  text-align:left;
+  font:400 13px/1.86 "Open Sans",Arial,sans-serif;
+  color:rgba(244,239,248,.86);
+  letter-spacing:0;
+}
+
 /* Wordmark de cabecera inspirado en DE8 Films: Work Sans, blanco y punto final. */
 .brand{
   gap:11px!important;
@@ -185,6 +213,10 @@ footer span{
     color:#FFFFFF!important;
   }
 
+  #inicio .c8-inclusion-note{
+    color:rgba(255,255,255,.95)!important;
+  }
+
   .time-tool-head small,
   .time-privacy,
   .time-empty,
@@ -195,6 +227,17 @@ footer span{
   .profile-meta,
   .rel-card small{
     color:#E9E0F1!important;
+  }
+
+  footer{
+    padding:64px 22px 24px!important;
+  }
+  footer::before{
+    margin-bottom:32px;
+    padding-bottom:38px;
+    font-size:12px;
+    line-height:1.82;
+    color:rgba(255,255,255,.88);
   }
 
   .brand{
