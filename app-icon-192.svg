@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Constelación 8">
+  <rect width="192" height="192" rx="42" fill="#1A0633"/>
+  <circle cx="96" cy="96" r="56" fill="none" stroke="#9D4EDD" stroke-width="2" opacity=".35"/>
+  <circle cx="96" cy="62" r="20" fill="none" stroke="#FFCD00" stroke-width="8"/>
+  <circle cx="96" cy="126" r="25" fill="none" stroke="#FFCD00" stroke-width="8"/>
+  <g fill="#FFCD00">
+    <circle cx="96" cy="24" r="4"/><circle cx="147" cy="45" r="4"/><circle cx="168" cy="96" r="4"/><circle cx="147" cy="147" r="4"/>
+    <circle cx="96" cy="168" r="4"/><circle cx="45" cy="147" r="4"/><circle cx="24" cy="96" r="4"/><circle cx="45" cy="45" r="4"/>
+  </g>
+</svg>
