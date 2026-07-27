@@ -106,3 +106,8 @@
     // La web debe seguir funcionando aunque la analítica no cargue.
   });
 })();
+
+/* Jerarquía editorial del directorio: los canarios prehispánicos se muestran tras la Z. */
+import('./prehispanic-ordering.js?v=20260727-2355').catch(() => {
+  // El directorio principal debe seguir operativo aunque este refinamiento no cargue.
+});
