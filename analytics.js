@@ -9,6 +9,8 @@ import { supabase } from './supabase-client.js';
 const VISITOR_KEY = 'c8-visitor-v1';
 const SESSION_KEY = 'c8-session-v1';
 const VISITOR_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+let activeProfileSlug = null;
+let activeProfileName = null;
 
 function createId() {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
@@ -109,21 +111,24 @@ document.addEventListener('click', (event) => {
 
   const islandNode = target.closest('.island-node');
   if (islandNode?.dataset.island) {
+    activeProfileSlug = null;
+    activeProfileName = null;
     track('island_open', { islandSlug: islandNode.dataset.island });
     return;
   }
 
   const islandChip = target.closest('[data-island-select]');
   if (islandChip?.dataset.islandSelect) {
+    activeProfileSlug = null;
+    activeProfileName = null;
     track('island_open', { islandSlug: islandChip.dataset.islandSelect });
     return;
   }
 
   const related = target.closest('[data-related]');
   if (related?.dataset.related) {
-    const sourceProfile = document.querySelector('.profile');
-    const sourceName = sourceProfile?.querySelector('h3')?.textContent || null;
-    const sourceSlug = sourceProfile?.dataset.personSlug || null;
+    const sourceName = activeProfileName || document.querySelector('.profile h3')?.textContent || null;
+    const sourceSlug = activeProfileSlug;
     const personName = related.querySelector('strong')?.textContent || null;
     const personSlug = related.dataset.related;
 
@@ -134,14 +139,18 @@ document.addEventListener('click', (event) => {
       sourcePersonName: sourceName
     });
     track('profile_open', { personSlug, personName });
+    activeProfileSlug = personSlug;
+    activeProfileName = personName;
     return;
   }
 
   const person = target.closest('[data-person]');
   if (person?.dataset.person) {
+    activeProfileSlug = person.dataset.person;
+    activeProfileName = person.querySelector('strong')?.textContent || null;
     track('profile_open', {
-      personSlug: person.dataset.person,
-      personName: person.querySelector('strong')?.textContent || null
+      personSlug: activeProfileSlug,
+      personName: activeProfileName
     });
   }
 }, true);
