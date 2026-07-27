@@ -89,3 +89,20 @@
     });
   }
 })();
+
+/* Enlace discreto al panel privado y carga de la analítica propia. */
+(() => {
+  const footer = document.querySelector('footer');
+  if (footer && !footer.querySelector('.c8-footer-admin')) {
+    const link = document.createElement('a');
+    link.className = 'c8-footer-admin';
+    link.href = './admin/';
+    link.rel = 'nofollow';
+    link.textContent = 'Admin';
+    footer.appendChild(link);
+  }
+
+  import('./analytics.js?v=20260727-2320').catch(() => {
+    // La web debe seguir funcionando aunque la analítica no cargue.
+  });
+})();
