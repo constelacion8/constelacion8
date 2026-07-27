@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10021f">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Admin · Constelación 8</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css?v=20260727-2315">
+</head>
+<body>
+  <div class="admin-noise" aria-hidden="true"></div>
+
+  <header class="admin-header">
+    <a class="admin-brand" href="../" aria-label="Volver a Constelación 8">
+      <span class="admin-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span>CONSTELACIÓN <b>8</b></span>
+    </a>
+    <span class="admin-badge">ADMIN</span>
+    <a class="admin-back" href="../">Volver al atlas</a>
+  </header>
+
+  <main class="admin-main">
+    <section class="auth-shell" id="authScreen">
+      <div class="auth-card">
+        <p class="eyebrow">Panel privado</p>
+        <h1>Centro de control</h1>
+        <p class="auth-lead">Accede para consultar las estadísticas de Constelación 8.</p>
+
+        <form class="auth-form" id="loginForm">
+          <label>
+            <span>Correo electrónico</span>
+            <input id="loginEmail" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>Contraseña</span>
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="primary-button" type="submit">Entrar</button>
+        </form>
+
+        <p class="form-message" id="loginMessage" aria-live="polite"></p>
+        <button class="text-button" id="showSetup" type="button">Primera configuración</button>
+      </div>
+
+      <div class="auth-card setup-card" id="setupPanel" hidden>
+        <p class="eyebrow">Solo la primera vez</p>
+        <h2>Crear acceso</h2>
+        <p class="auth-lead">Crea tu usuario con correo y contraseña. Después usarás el código privado de activación para convertirlo en administrador.</p>
+        <form class="auth-form" id="signupForm">
+          <label>
+            <span>Correo electrónico</span>
+            <input id="signupEmail" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>Contraseña</span>
+            <input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" required>
+          </label>
+          <button class="primary-button" type="submit">Crear usuario</button>
+        </form>
+        <p class="form-message" id="signupMessage" aria-live="polite"></p>
+        <button class="text-button" id="hideSetup" type="button">Ya tengo usuario</button>
+      </div>
+    </section>
+
+    <section class="claim-shell" id="claimScreen" hidden>
+      <div class="auth-card claim-card">
+        <p class="eyebrow">Último paso</p>
+        <h1>Activar administrador</h1>
+        <p class="auth-lead">Has iniciado sesión como <strong id="claimEmail"></strong>. Introduce el código privado de activación.</p>
+        <form class="auth-form" id="claimForm">
+          <label>
+            <span>Código de activación</span>
+            <input id="claimCode" type="password" autocomplete="one-time-code" required>
+          </label>
+          <button class="primary-button" type="submit">Activar panel</button>
+        </form>
+        <p class="form-message" id="claimMessage" aria-live="polite"></p>
+        <button class="text-button" id="claimLogout" type="button">Cerrar sesión</button>
+      </div>
+    </section>
+
+    <section class="dashboard" id="dashboard" hidden>
+      <div class="dashboard-head">
+        <div>
+          <p class="eyebrow">Constelación 8</p>
+          <h1>Panel de control</h1>
+          <p class="dashboard-subtitle">Visitas, descubrimiento de perfiles y uso de la constelación.</p>
+        </div>
+        <div class="dashboard-account">
+          <span id="adminEmail"></span>
+          <button id="logoutButton" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div class="period-bar" aria-label="Periodo de estadísticas">
+        <span>Periodo</span>
+        <div class="period-buttons">
+          <button type="button" data-days="7">7 días</button>
+          <button type="button" data-days="30" class="active">30 días</button>
+          <button type="button" data-days="90">90 días</button>
+        </div>
+        <button class="refresh-button" id="refreshButton" type="button">Actualizar</button>
+      </div>
+
+      <p class="dashboard-message" id="dashboardMessage" aria-live="polite"></p>
+
+      <div class="kpi-grid">
+        <article class="kpi-card kpi-featured">
+          <span>Visitantes únicos</span>
+          <strong id="kpiVisitors">—</strong>
+          <small id="kpiVisitorsPeriod">últimos 30 días</small>
+        </article>
+        <article class="kpi-card">
+          <span>Páginas vistas</span>
+          <strong id="kpiPageViews">—</strong>
+          <small id="kpiTodayViews">— hoy</small>
+        </article>
+        <article class="kpi-card">
+          <span>Perfiles abiertos</span>
+          <strong id="kpiProfiles">—</strong>
+          <small>fichas consultadas</small>
+        </article>
+        <article class="kpi-card">
+          <span>Conexiones exploradas</span>
+          <strong id="kpiConnections">—</strong>
+          <small>saltos entre personas</small>
+        </article>
+        <article class="kpi-card">
+          <span>Sesiones</span>
+          <strong id="kpiSessions">—</strong>
+          <small id="kpiTodayVisitors">— visitantes hoy</small>
+        </article>
+        <article class="kpi-card">
+          <span>Islas abiertas</span>
+          <strong id="kpiIslands">—</strong>
+          <small id="kpiSearches">— búsquedas</small>
+        </article>
+      </div>
+
+      <div class="dashboard-grid dashboard-grid-wide">
+        <article class="panel-card traffic-panel">
+          <div class="panel-head">
+            <div><span class="panel-kicker">Evolución</span><h2>Tráfico diario</h2></div>
+            <span class="panel-legend"><i></i> páginas vistas</span>
+          </div>
+          <div class="traffic-chart" id="dailyChart"></div>
+        </article>
+
+        <article class="panel-card today-panel">
+          <div class="panel-head"><div><span class="panel-kicker">Ahora</span><h2>Hoy</h2></div></div>
+          <div class="today-number"><strong id="todayVisitors">—</strong><span>visitantes únicos</span></div>
+          <div class="today-number secondary"><strong id="todayViews">—</strong><span>páginas vistas</span></div>
+        </article>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="panel-card">
+          <div class="panel-head"><div><span class="panel-kicker">Interés</span><h2>Perfiles más vistos</h2></div></div>
+          <div class="rank-list" id="topProfiles"></div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-head"><div><span class="panel-kicker">Territorio</span><h2>Islas más exploradas</h2></div></div>
+          <div class="rank-list" id="topIslands"></div>
+        </article>
+      </div>
+
+      <article class="panel-card connections-panel">
+        <div class="panel-head">
+          <div><span class="panel-kicker">La constelación</span><h2>Conexiones más utilizadas</h2></div>
+          <span class="panel-note">Cómo descubre la gente una persona a través de otra</span>
+        </div>
+        <div class="connection-list" id="topConnections"></div>
+      </article>
+
+      <div class="dashboard-grid">
+        <article class="panel-card">
+          <div class="panel-head"><div><span class="panel-kicker">Dispositivos</span><h2>Cómo entran</h2></div></div>
+          <div class="breakdown-list" id="deviceBreakdown"></div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-head"><div><span class="panel-kicker">Procedencia</span><h2>De dónde llegan</h2></div></div>
+          <div class="breakdown-list" id="referrerBreakdown"></div>
+        </article>
+      </div>
+
+      <p class="privacy-note">La analítica propia guarda identificadores seudónimos y navegación interna. No muestra direcciones IP ni el contenido de las búsquedas.</p>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js?v=20260727-2315"></script>
+</body>
+</html>
