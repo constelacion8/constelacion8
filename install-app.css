@@ -128,6 +128,15 @@
 .c8-install-step span{padding-top:5px;color:rgba(255,255,255,.88);font:500 12px/1.5 "Open Sans",Arial,sans-serif}
 .c8-install-dialog-foot{margin-top:18px;color:rgba(245,237,250,.48);font:400 9px/1.5 "Open Sans",Arial,sans-serif}
 
+.c8-footer-admin{
+  color:#725F81;
+  font:500 9px/1 "Work Sans",Arial,sans-serif;
+  letter-spacing:.08em;
+  text-decoration:none;
+  transition:color .18s ease;
+}
+.c8-footer-admin:hover,.c8-footer-admin:focus-visible{color:#FFCD00;outline:none}
+
 @media(max-width:620px){
   .c8-install{padding:0 18px 58px}
   .c8-install-head{margin-bottom:20px;text-align:left}
@@ -139,4 +148,5 @@
   .c8-install-logo{width:39px;height:39px;border-radius:12px}
   .c8-install-platform strong{font-size:15px}
   .c8-install-dialog-inner{padding:21px}
+  .c8-footer-admin{margin-top:2px}
 }
