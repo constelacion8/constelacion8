@@ -5,14 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1A0633">
   <meta name="description" content="Constelación 8 — atlas biográfico de los canarios más interesantes de la historia, conectado por territorio, época y relaciones.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Constelación 8">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Constelación 8</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="app-icon-192.svg">
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="refine.css?v=20260725-1926">
   <link rel="stylesheet" href="contrast.css?v=20260725-2355">
   <link rel="stylesheet" href="origin-note.css?v=20260726-1530">
+  <link rel="stylesheet" href="install-app.css?v=20260727-2100">
   <style>
     .hero{padding-top:120px!important}
     #inicio .hero-intro{display:flex!important;flex-direction:column!important;align-items:center!important}
@@ -174,6 +181,51 @@
       </div>
     </section>
 
+    <section class="c8-install" aria-labelledby="c8InstallTitle">
+      <div class="c8-install-inner">
+        <div class="c8-install-head">
+          <p class="c8-install-kicker">Llévala contigo</p>
+          <h2 id="c8InstallTitle">Constelación 8 también puede vivir en tu móvil.</h2>
+          <p>Instálala en tu pantalla de inicio y entra al atlas con un solo toque, sin pasar por una tienda de aplicaciones.</p>
+        </div>
+        <div class="c8-install-grid">
+          <article class="c8-install-card">
+            <div class="c8-install-platform">
+              <span class="c8-install-logo c8-install-logo-android" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.6 7.4 5.9 4.5a.7.7 0 0 1 1.2-.7l1.7 2.9A8.2 8.2 0 0 1 12 6c1.1 0 2.2.2 3.2.7l1.7-2.9a.7.7 0 1 1 1.2.7l-1.7 2.9A7.1 7.1 0 0 1 19.2 13H4.8a7.1 7.1 0 0 1 2.8-5.6ZM8.5 10.7a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm7 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM4.8 14.2h14.4v5.1c0 .9-.7 1.7-1.7 1.7h-11c-.9 0-1.7-.8-1.7-1.7v-5.1Z"/></svg>
+              </span>
+              <span><strong>Android</strong><small>Chrome y navegadores compatibles</small></span>
+            </div>
+            <button class="c8-install-button" id="installAndroid" type="button">Instalar en Android</button>
+            <p class="c8-install-note">Si el navegador permite instalación directa, aparecerá el aviso del sistema.</p>
+          </article>
+
+          <article class="c8-install-card">
+            <div class="c8-install-platform">
+              <span class="c8-install-logo c8-install-logo-apple" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.7 19.5c-.8 1.2-1.7 2.4-3 2.5-1.3 0-1.7-.8-3.2-.8s-2 .8-3.2.8c-1.3.1-2.3-1.3-3.1-2.5-1.7-2.4-3-6.9-1.2-9.9.8-1.5 2.4-2.4 4.1-2.4 1.3 0 2.5.9 3.2.9.7 0 2.1-1.1 3.5-.9.6 0 2.3.2 3.4 1.8-.1.1-2 1.2-2 3.6 0 2.9 2.6 3.9 2.6 3.9 0 .1-.4 1.4-1.1 3ZM14.8 4.6c.7-.9 1.9-1.5 2.8-1.6.1 1.2-.3 2.3-1 3.2-.6.8-1.7 1.4-2.8 1.3-.1-1.1.4-2.3 1-2.9Z"/></svg>
+              </span>
+              <span><strong>iPhone</strong><small>Safari · App web en pantalla de inicio</small></span>
+            </div>
+            <button class="c8-install-button" id="installIOS" type="button">Instalar en iPhone</button>
+            <p class="c8-install-note">Te mostramos los tres pasos de Safari para dejarla instalada como app web.</p>
+          </article>
+        </div>
+        <p class="c8-install-status" id="installStatus" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <dialog class="c8-install-dialog" id="installGuide" aria-labelledby="installGuideTitle">
+      <div class="c8-install-dialog-inner">
+        <div class="c8-install-dialog-top">
+          <div><h3 id="installGuideTitle">Instalar Constelación 8</h3><p id="installGuideLead"></p></div>
+          <button class="c8-install-dialog-close" id="installGuideClose" type="button" aria-label="Cerrar">×</button>
+        </div>
+        <div class="c8-install-steps" id="installGuideSteps"></div>
+        <div class="c8-install-dialog-foot">La instalación no crea una cuenta ni añade ningún pago. Es un acceso directo a la versión web instalable de Constelación 8.</div>
+      </div>
+    </dialog>
+
     <footer><span>CONSTELACIÓN 8</span><div class="footer-de8"><small>Creado por</small><strong class="de8-wordmark">DE8 Films.</strong></div></footer>
   </div>
   <script src="app.js"></script>
@@ -181,5 +233,6 @@
   <script src="directory-search.js?v=20260726-1405"></script>
   <script src="map-geometry.js?v=20260726-0340"></script>
   <script src="extended-biographies.js?v=20260726-0340" data-c8-extended-biographies></script>
+  <script src="install-app.js?v=20260727-2100"></script>
 </body>
 </html>
