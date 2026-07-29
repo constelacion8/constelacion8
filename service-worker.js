@@ -1,4 +1,4 @@
-const C8_CACHE = 'constelacion8-shell-v1';
+const C8_CACHE = 'constelacion8-shell-v2';
 const C8_SHELL = [
   './',
   './index.html',
