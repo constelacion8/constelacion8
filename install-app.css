@@ -95,6 +95,179 @@
 .c8-install-note{margin:13px 2px 0;color:rgba(245,237,250,.46);font:400 9px/1.5 "Open Sans",Arial,sans-serif}
 .c8-install-status{min-height:18px;margin:14px auto 0;text-align:center;color:rgba(255,205,0,.78);font:500 10px/1.5 "Open Sans",Arial,sans-serif}
 
+/* Invitación a compartir el proyecto. */
+.c8-share{
+  position:relative;
+  padding:0 5vw 38px;
+  background:linear-gradient(180deg,rgba(10,1,20,.36),rgba(10,1,20,.46));
+}
+.c8-share-inner{max-width:940px;margin:0 auto}
+.c8-share-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);
+  gap:34px;
+  align-items:center;
+  padding:34px 36px;
+  border:1px solid rgba(255,205,0,.24);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 85% 15%,rgba(255,205,0,.10),transparent 27%),
+    radial-gradient(circle at 10% 110%,rgba(157,78,221,.22),transparent 40%),
+    linear-gradient(145deg,rgba(43,8,77,.92),rgba(15,2,29,.96));
+  box-shadow:0 24px 72px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.c8-share-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(105deg,rgba(255,255,255,.025),transparent 42%);
+  pointer-events:none;
+}
+.c8-share-constellation{
+  position:absolute;
+  right:-18px;
+  top:-18px;
+  z-index:-1;
+  width:min(46%,390px);
+  opacity:.35;
+  pointer-events:none;
+}
+.c8-share-constellation path{fill:none;stroke:rgba(255,205,0,.38);stroke-width:1}
+.c8-share-constellation circle{fill:#FFCD00;filter:drop-shadow(0 0 6px rgba(255,205,0,.45))}
+.c8-share-copy{max-width:570px}
+.c8-share-kicker{
+  margin:0 0 9px;
+  color:#FFCD00;
+  font:600 10px/1.2 "Work Sans",Arial,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.c8-share-copy h2{
+  max-width:620px;
+  margin:0;
+  color:#fff;
+  font:600 clamp(27px,3.4vw,40px)/1.03 "Work Sans",Arial,sans-serif;
+  letter-spacing:-.05em;
+}
+.c8-share-copy>p:not(.c8-share-kicker){
+  max-width:610px;
+  margin:15px 0 0;
+  color:rgba(245,237,250,.74);
+  font:400 13px/1.68 "Open Sans",Arial,sans-serif;
+}
+.c8-share-apps{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.c8-share-apps span{
+  display:inline-flex;
+  align-items:center;
+  min-height:27px;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  color:rgba(255,255,255,.62);
+  font:500 9px/1 "Work Sans",Arial,sans-serif;
+}
+.c8-share-actions{display:flex;flex-direction:column;align-items:stretch;position:relative;z-index:1}
+.c8-share-symbol{
+  width:50px;
+  height:50px;
+  display:grid;
+  place-items:center;
+  align-self:center;
+  margin-bottom:15px;
+  border:1px solid rgba(255,205,0,.25);
+  border-radius:17px;
+  background:rgba(255,205,0,.08);
+  box-shadow:0 0 34px rgba(255,205,0,.06);
+}
+.c8-share-symbol svg{width:23px;height:23px;fill:#FFCD00}
+.c8-share-button{
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:14px 18px;
+  border:1px solid #FFCD00;
+  border-radius:14px;
+  background:#FFCD00;
+  color:#16052a;
+  cursor:pointer;
+  font:700 13px/1.15 "Work Sans",Arial,sans-serif;
+  letter-spacing:-.02em;
+  box-shadow:0 13px 34px rgba(255,205,0,.12);
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.c8-share-button svg{width:19px;height:19px;fill:currentColor}
+.c8-share-button:hover{transform:translateY(-2px);filter:brightness(1.04);box-shadow:0 17px 38px rgba(255,205,0,.18)}
+.c8-share-button:focus-visible,.c8-share-copy-button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.c8-share-copy-button{
+  align-self:center;
+  margin-top:12px;
+  padding:3px 7px;
+  border:0;
+  background:transparent;
+  color:rgba(255,255,255,.68);
+  cursor:pointer;
+  font:500 10px/1.2 "Open Sans",Arial,sans-serif;
+  text-decoration:underline;
+  text-decoration-color:rgba(255,255,255,.2);
+  text-underline-offset:3px;
+}
+.c8-share-copy-button:hover{color:#FFCD00;text-decoration-color:rgba(255,205,0,.45)}
+.c8-share-hint{margin:12px auto 0;text-align:center;color:rgba(245,237,250,.44);font:400 9px/1.5 "Open Sans",Arial,sans-serif}
+.c8-share-status{min-height:16px;margin:8px 0 0;text-align:center;color:#FFCD00;font:500 9px/1.4 "Open Sans",Arial,sans-serif}
+
+.c8-share-dialog{
+  width:min(92vw,540px);
+  padding:0;
+  border:1px solid rgba(255,205,0,.28);
+  border-radius:20px;
+  background:#16052a;
+  color:#fff;
+  box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 70px rgba(157,78,221,.14);
+}
+.c8-share-dialog::backdrop{background:rgba(4,0,9,.76);backdrop-filter:blur(5px)}
+.c8-share-dialog-inner{padding:26px}
+.c8-share-dialog-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.c8-share-dialog h3{margin:0;color:#fff;font:600 22px/1.15 "Work Sans",Arial,sans-serif;letter-spacing:-.04em}
+.c8-share-dialog p{margin:8px 0 0;color:rgba(245,237,250,.7);font:400 12px/1.6 "Open Sans",Arial,sans-serif}
+.c8-share-dialog-close{
+  flex:none;
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  cursor:pointer;
+  font-size:19px;
+}
+.c8-share-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:22px}
+.c8-share-options a,.c8-share-option-copy{
+  min-width:0;
+  display:block;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:13px;
+  background:rgba(255,255,255,.025);
+  color:#fff;
+  text-align:left;
+  text-decoration:none;
+  cursor:pointer;
+  transition:border-color .18s ease,background .18s ease,transform .18s ease;
+}
+.c8-share-option-copy{font:inherit}
+.c8-share-options a:hover,.c8-share-option-copy:hover{transform:translateY(-1px);border-color:rgba(255,205,0,.38);background:rgba(255,205,0,.045)}
+.c8-share-options strong{display:block;color:#fff;font:600 12px/1.2 "Work Sans",Arial,sans-serif}
+.c8-share-options span{display:block;margin-top:5px;color:rgba(245,237,250,.48);font:400 9px/1.4 "Open Sans",Arial,sans-serif}
+
 .c8-install-dialog{
   width:min(92vw,520px);
   padding:0;
@@ -137,7 +310,25 @@
 }
 .c8-footer-admin:hover,.c8-footer-admin:focus-visible{color:#FFCD00;outline:none}
 
+@media(max-width:760px){
+  .c8-share-card{grid-template-columns:1fr;gap:24px}
+  .c8-share-actions{max-width:340px;width:100%;margin:0 auto}
+  .c8-share-constellation{width:70%;opacity:.27}
+}
+
 @media(max-width:620px){
+  .c8-share{padding:0 18px 28px}
+  .c8-share-card{gap:21px;padding:24px 20px;border-radius:19px}
+  .c8-share-copy h2{font-size:29px}
+  .c8-share-copy>p:not(.c8-share-kicker){font-size:12px;line-height:1.62}
+  .c8-share-apps{gap:6px;margin-top:15px}
+  .c8-share-apps span{font-size:8px}
+  .c8-share-symbol{display:none}
+  .c8-share-button{min-height:50px;font-size:12px}
+  .c8-share-hint{max-width:260px}
+  .c8-share-dialog-inner{padding:21px}
+  .c8-share-options{grid-template-columns:1fr}
+
   .c8-install{padding:0 18px 58px}
   .c8-install-head{margin-bottom:20px;text-align:left}
   .c8-install-head h2{font-size:25px}
