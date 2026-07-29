@@ -107,7 +107,7 @@
   });
 })();
 
-/* Jerarquía editorial del directorio: los canarios prehispánicos se muestran tras la Z. */
-import('./prehispanic-ordering.js?v=20260727-2355').catch(() => {
+/* Jerarquía editorial del directorio: los Antiguos Canarios se muestran tras la Z. */
+import('./aborigenes-ordering.js?v=20260729-1012').catch(() => {
   // El directorio principal debe seguir operativo aunque este refinamiento no cargue.
 });
