@@ -1,10 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Constelación 8">
-  <rect width="512" height="512" rx="112" fill="#1A0633"/>
-  <circle cx="256" cy="256" r="150" fill="none" stroke="#9D4EDD" stroke-width="5" opacity=".35"/>
-  <circle cx="256" cy="165" r="53" fill="none" stroke="#FFCD00" stroke-width="22"/>
-  <circle cx="256" cy="336" r="67" fill="none" stroke="#FFCD00" stroke-width="22"/>
-  <g fill="#FFCD00">
-    <circle cx="256" cy="64" r="11"/><circle cx="392" cy="120" r="11"/><circle cx="448" cy="256" r="11"/><circle cx="392" cy="392" r="11"/>
-    <circle cx="256" cy="448" r="11"/><circle cx="120" cy="392" r="11"/><circle cx="64" cy="256" r="11"/><circle cx="120" cy="120" r="11"/>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="72%">
+      <stop offset="0" stop-color="#35105B"/>
+      <stop offset="1" stop-color="#160329"/>
+    </radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <g transform="translate(0 2)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 120C181 120 155 174 184 217c19 29 48 45 72 61 27 18 56 35 72 61 27 43 0 94-72 94-70 0-98-51-72-94 16-26 45-43 72-61 24-16 53-32 72-61 29-43 3-97-72-97Z" stroke="#F8F4FF" stroke-width="11" opacity=".96" filter="url(#glow)"/>
+    <path d="M208 138c-24 14-38 35-38 59M304 416c24-14 38-35 38-59" stroke="#B88BE6" stroke-width="5" opacity=".55"/>
   </g>
+  <g fill="#F8F4FF" filter="url(#glow)">
+    <circle cx="256" cy="120" r="13"/>
+    <circle cx="181" cy="193" r="11"/>
+    <circle cx="216" cy="249" r="11"/>
+    <circle cx="256" cy="278" r="15"/>
+    <circle cx="296" cy="307" r="11"/>
+    <circle cx="331" cy="363" r="11"/>
+    <circle cx="256" cy="430" r="13"/>
+    <circle cx="181" cy="363" r="11"/>
+  </g>
+  <path d="M256 254l8 17 17 8-17 8-8 17-8-17-17-8 17-8Z" fill="#FFCD00" filter="url(#glow)"/>
 </svg>
