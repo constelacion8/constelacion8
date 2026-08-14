@@ -81,7 +81,7 @@
 (function loadSitePolish(){
   if(document.querySelector('script[data-c8-site-polish]'))return;
   const script=document.createElement('script');
-  script.src='site-polish.js?v=20260726-0535';
+  script.src='site-polish.js?v=20260814-1914';
   script.dataset.c8SitePolish='true';
   script.async=false;
   document.body.appendChild(script);
