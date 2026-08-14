@@ -1,10 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Constelación 8">
-  <rect width="192" height="192" rx="42" fill="#1A0633"/>
-  <circle cx="96" cy="96" r="56" fill="none" stroke="#9D4EDD" stroke-width="2" opacity=".35"/>
-  <circle cx="96" cy="62" r="20" fill="none" stroke="#FFCD00" stroke-width="8"/>
-  <circle cx="96" cy="126" r="25" fill="none" stroke="#FFCD00" stroke-width="8"/>
-  <g fill="#FFCD00">
-    <circle cx="96" cy="24" r="4"/><circle cx="147" cy="45" r="4"/><circle cx="168" cy="96" r="4"/><circle cx="147" cy="147" r="4"/>
-    <circle cx="96" cy="168" r="4"/><circle cx="45" cy="147" r="4"/><circle cx="24" cy="96" r="4"/><circle cx="45" cy="45" r="4"/>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="72%">
+      <stop offset="0" stop-color="#35105B"/>
+      <stop offset="1" stop-color="#160329"/>
+    </radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="192" height="192" rx="44" fill="url(#bg)"/>
+  <g transform="translate(0 1)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M96 45C68 45 58 65 69 81c7 11 18 17 27 23 10 7 21 13 27 23 10 16 0 35-27 35-26 0-37-19-27-35 6-10 17-16 27-23 9-6 20-12 27-23 11-16 1-36-27-36Z" stroke="#F8F4FF" stroke-width="4.2" opacity=".96" filter="url(#glow)"/>
+    <path d="M78 52c-9 5-14 13-14 22M114 155c9-5 14-13 14-22" stroke="#B88BE6" stroke-width="2" opacity=".55"/>
   </g>
+  <g fill="#F8F4FF" filter="url(#glow)">
+    <circle cx="96" cy="45" r="5"/>
+    <circle cx="68" cy="72" r="4"/>
+    <circle cx="81" cy="93" r="4"/>
+    <circle cx="96" cy="104" r="5.5"/>
+    <circle cx="111" cy="115" r="4"/>
+    <circle cx="124" cy="136" r="4"/>
+    <circle cx="96" cy="161" r="5"/>
+    <circle cx="68" cy="136" r="4"/>
+  </g>
+  <path d="M96 95l2.8 6.2L105 104l-6.2 2.8L96 113l-2.8-6.2L87 104l6.2-2.8Z" fill="#FFCD00" filter="url(#glow)"/>
 </svg>
