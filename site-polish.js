@@ -1,4 +1,4 @@
-/* Ajustes finales de navegación, ritmo móvil y pie legal. */
+/* Ajustes finales de navegación, ritmo móvil, marca y pie legal. */
 (function installSitePolish(){
   document.querySelector('.hero-down')?.remove();
   document.querySelector('.map-gesture-hint')?.remove();
@@ -9,15 +9,48 @@
     credit.innerHTML='<span>Creado por</span><strong>DE8 Films.</strong>';
   }
 
+  const brandMark=document.querySelector('.brand-mark');
+  if(brandMark&&!brandMark.classList.contains('c8-brand-mark-new')){
+    brandMark.classList.add('c8-brand-mark-new');
+    brandMark.innerHTML=`
+      <svg class="c8-brand-symbol" viewBox="0 0 38 34" aria-hidden="true">
+        <defs>
+          <filter id="c8BrandGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation=".8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M19 4.5C12.7 4.5 10.1 9.1 12.7 12.9c1.7 2.5 4.2 3.9 6.3 5.3 2.2 1.5 4.7 2.9 6.1 5.3 2.3 3.8-.1 8-6.1 8-5.9 0-8.4-4.2-6.1-8 1.4-2.4 3.9-3.8 6.1-5.3 2.1-1.4 4.6-2.8 6.3-5.3C27.9 9.1 25.3 4.5 19 4.5Z" fill="none" stroke="#F8F4FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" filter="url(#c8BrandGlow)"/>
+        <circle cx="19" cy="4.5" r="1.9" fill="#F8F4FF"/>
+        <circle cx="12.5" cy="11.2" r="1.45" fill="#F8F4FF"/>
+        <circle cx="15.6" cy="16" r="1.4" fill="#F8F4FF"/>
+        <circle cx="19" cy="18.2" r="2" fill="#F8F4FF"/>
+        <circle cx="22.4" cy="20.7" r="1.4" fill="#F8F4FF"/>
+        <circle cx="25.5" cy="26" r="1.45" fill="#F8F4FF"/>
+        <circle cx="19" cy="31.5" r="1.9" fill="#F8F4FF"/>
+        <circle cx="12.5" cy="26" r="1.45" fill="#F8F4FF"/>
+        <path d="M19 14.4l1 2.3 2.3 1-2.3 1-1 2.3-1-2.3-2.3-1 2.3-1Z" fill="#FFCD00" filter="url(#c8BrandGlow)"/>
+      </svg>`;
+  }
+
   if(!document.getElementById('c8SitePolishStyles')){
     const style=document.createElement('style');
     style.id='c8SitePolishStyles';
     style.textContent=`
+      .brand{min-width:0;overflow:visible}
+      .brand-mark.c8-brand-mark-new{position:relative;width:38px;height:34px;display:grid;place-items:center;flex:0 0 38px;overflow:visible}
+      .brand-mark.c8-brand-mark-new:before,.brand-mark.c8-brand-mark-new:after,.brand-mark.c8-brand-mark-new i{display:none!important}
+      .c8-brand-symbol{display:block;width:38px;height:34px;overflow:visible}
       .c8-legal-links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:9px}
       .c8-legal-links a{color:#A997B7;text-decoration:none;transition:color .18s ease}
       .c8-legal-links a:hover,.c8-legal-links a:focus-visible{color:#FFCD00;outline:none}
       footer{gap:20px;flex-wrap:wrap}
       @media(max-width:620px){
+        .brand{gap:9px!important}
+        .brand-mark.c8-brand-mark-new{width:32px;height:29px;flex-basis:32px}
+        .c8-brand-symbol{width:32px;height:29px}
+        .brand-name{font-size:12px!important;letter-spacing:.11em!important}
+
         body:not(.c8-island-page) .hero{padding-bottom:14px!important}
         body:not(.c8-island-page) .archipelago-stage{margin-bottom:38px!important}
         body:not(.c8-island-page) .map-mobile-ui{bottom:-36px!important;width:100%!important;justify-content:center!important}
