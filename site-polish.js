@@ -29,7 +29,7 @@
         <circle cx="25.5" cy="26" r="1.45" fill="#F8F4FF"/>
         <circle cx="19" cy="31.5" r="1.9" fill="#F8F4FF"/>
         <circle cx="12.5" cy="26" r="1.45" fill="#F8F4FF"/>
-        <path d="M19 14.4l1 2.3 2.3 1-2.3 1-1 2.3-1-2.3-2.3-1 2.3-1Z" fill="#FFCD00" filter="url(#c8BrandGlow)"/>
+        <path d="M19 14.4l1 2.3 2.3 1-2.3 1-1 2.3-1-2.3-2.3-1 2.3-1Z" fill="#CBA8FF" filter="url(#c8BrandGlow)"/>
       </svg>`;
   }
 
@@ -37,18 +37,19 @@
     const style=document.createElement('style');
     style.id='c8SitePolishStyles';
     style.textContent=`
-      .brand{min-width:0;overflow:visible}
+      .brand{min-width:0;overflow:visible;gap:11px!important}
       .brand-mark.c8-brand-mark-new{position:relative;width:38px;height:34px;display:grid;place-items:center;flex:0 0 38px;overflow:visible}
       .brand-mark.c8-brand-mark-new:before,.brand-mark.c8-brand-mark-new:after,.brand-mark.c8-brand-mark-new i{display:none!important}
       .c8-brand-symbol{display:block;width:38px;height:34px;overflow:visible}
+      .brand-name b{color:#F8F4FF!important}
       .c8-legal-links{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:9px}
       .c8-legal-links a{color:#A997B7;text-decoration:none;transition:color .18s ease}
       .c8-legal-links a:hover,.c8-legal-links a:focus-visible{color:#FFCD00;outline:none}
       footer{gap:20px;flex-wrap:wrap}
       @media(max-width:620px){
-        .brand{gap:9px!important}
-        .brand-mark.c8-brand-mark-new{width:32px;height:29px;flex-basis:32px}
-        .c8-brand-symbol{width:32px;height:29px}
+        .brand{gap:9px!important;max-width:calc(100vw - 118px)}
+        .brand-mark.c8-brand-mark-new{width:31px;height:28px;flex-basis:31px}
+        .c8-brand-symbol{width:31px;height:28px}
         .brand-name{font-size:12px!important;letter-spacing:.11em!important}
 
         body:not(.c8-island-page) .hero{padding-bottom:14px!important}
