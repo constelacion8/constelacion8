@@ -19,57 +19,35 @@ jobs:
           set -euo pipefail
           mkdir -p m88/assets/parties
 
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://upload.wikimedia.org/wikipedia/commons/9/92/PSOE_LOGO.png' \
-            -o m88/assets/parties/psoe.png
+          curl -fL --retry 3 --connect-timeout 20 'https://upload.wikimedia.org/wikipedia/commons/9/92/PSOE_LOGO.png' -o m88/assets/parties/psoe.png
+          curl -fL --retry 3 --connect-timeout 20 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Coalici%C3%B3n_Canaria.svg?width=640' -o m88/assets/parties/cc.png
+          curl -fL --retry 3 --connect-timeout 20 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_del_PP_%282022%29.svg?width=640' -o m88/assets/parties/pp.png
+          curl -fL --retry 3 --connect-timeout 20 'https://commons.wikimedia.org/wiki/Special:Redirect/file/VOX_logo.svg?width=640' -o m88/assets/parties/vox.png
+          curl -fL --retry 3 --connect-timeout 20 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_AI.jpg?width=640' -o m88/assets/parties/alternativa-icodense.jpg
+          curl -fL --retry 3 --connect-timeout 20 'https://irverdes.com/wp-content/uploads/2023/03/IR_VERDES-IC-20_anos-horiz.png' -o m88/assets/parties/ir-verdes.png
+          curl -fL --retry 3 --connect-timeout 20 'https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg' -o m88/assets/parties/si-se-puede.jpg
 
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Coalici%C3%B3n_Canaria.svg?width=640' \
-            -o m88/assets/parties/cc.png
-
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_del_PP_%282022%29.svg?width=640' \
-            -o m88/assets/parties/pp.png
-
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/VOX_logo.svg?width=640' \
-            -o m88/assets/parties/vox.png
-
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_AI.jpg?width=640' \
-            -o m88/assets/parties/alternativa-icodense.jpg
-
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://irverdes.com/wp-content/uploads/2023/03/IR_VERDES-IC-20_anos-horiz.png' \
-            -o m88/assets/parties/ir-verdes.png
-
-          curl -fL --retry 3 --connect-timeout 20 \
-            'https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg' \
-            -o m88/assets/parties/si-se-puede.jpg
-
-          # Discover AISU's own logo from its official website when available.
+          # AISU blocks some automated requests. Try to discover the official logo, but never fail the main cache job because of it.
           python - <<'PY'
-          import re
-          import urllib.parse
-          import urllib.request
-          page='https://www.aisusantaursula.com/'
-          html=urllib.request.urlopen(page, timeout=30).read().decode('utf-8','ignore')
-          urls=re.findall(r'(?:src|href)=["\']([^"\']+\.(?:png|jpe?g|webp))(?:\?[^"\']*)?["\']', html, re.I)
-          candidates=[]
-          for url in urls:
-              absolute=urllib.parse.urljoin(page,url)
-              low=absolute.lower()
-              if 'aisu' in low or 'logo' in low:
-                  if absolute not in candidates:
-                      candidates.append(absolute)
-          print('AISU candidates:', candidates[:10])
-          if candidates:
-              try:
+          try:
+              import re, urllib.parse, urllib.request
+              page='https://www.aisusantaursula.com/'
+              req=urllib.request.Request(page,headers={'User-Agent':'Mozilla/5.0'})
+              html=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','ignore')
+              urls=re.findall(r'(?:src|href)=["\']([^"\']+\.(?:png|jpe?g|webp))(?:\?[^"\']*)?["\']', html, re.I)
+              candidates=[]
+              for url in urls:
+                  absolute=urllib.parse.urljoin(page,url)
+                  low=absolute.lower()
+                  if 'aisu' in low or 'logo' in low:
+                      if absolute not in candidates:
+                          candidates.append(absolute)
+              print('AISU candidates:', candidates[:10])
+              if candidates:
                   req=urllib.request.Request(candidates[0],headers={'User-Agent':'Mozilla/5.0'})
-                  data=urllib.request.urlopen(req,timeout=30).read()
-                  open('/tmp/aisu-logo','wb').write(data)
-              except Exception as exc:
-                  print('AISU download skipped:', exc)
+                  open('/tmp/aisu-logo','wb').write(urllib.request.urlopen(req,timeout=30).read())
+          except Exception as exc:
+              print('AISU discovery skipped:', exc)
           PY
 
           if [ -f /tmp/aisu-logo ]; then
