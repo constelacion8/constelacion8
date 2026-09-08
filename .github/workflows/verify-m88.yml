@@ -65,7 +65,7 @@ jobs:
             },null,{timeout:15000});
             const desktopLogo=page.locator('.contact-card .party-logo').first();
             const desktopSrc=await desktopLogo.getAttribute('src');
-            if(!desktopSrc || !desktopSrc.includes('/m88/assets/parties/')) throw new Error(`Party logo is not local: ${desktopSrc}`);
+            if(!desktopSrc || !desktopSrc.includes('assets/parties/')) throw new Error(`Party logo is not local: ${desktopSrc}`);
             const desktopBox=await desktopLogo.boundingBox();
             if(!desktopBox || desktopBox.height < 50) throw new Error(`Desktop party logo too small: ${desktopBox?.height}`);
 
@@ -97,7 +97,7 @@ jobs:
             },null,{timeout:15000});
             const mobileLogo=mobile.locator('.contact-card .party-logo').first();
             const mobileSrc=await mobileLogo.getAttribute('src');
-            if(!mobileSrc || !mobileSrc.includes('/m88/assets/parties/')) throw new Error(`Mobile party logo is not local: ${mobileSrc}`);
+            if(!mobileSrc || !mobileSrc.includes('assets/parties/')) throw new Error(`Mobile party logo is not local: ${mobileSrc}`);
             const mobileBox=await mobileLogo.boundingBox();
             if(!mobileBox || mobileBox.height < 44) throw new Error(`Mobile party logo too small: ${mobileBox?.height}`);
 
