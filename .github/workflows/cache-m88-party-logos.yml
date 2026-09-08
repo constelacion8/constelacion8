@@ -47,16 +47,44 @@ jobs:
             'https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg' \
             -o m88/assets/parties/si-se-puede.jpg
 
-          # Try to locate AISU's own site logo. Failure is allowed; the UI will keep its labelled fallback.
-          AISU_URL=$(curl -fsL 'https://www.aisusantaursula.com/' | grep -Eo 'https?[^"'"' ]+\.(png|jpg|jpeg|webp)' | grep -Ei 'logo|aisu' | head -n 1 || true)
-          if [ -n "${AISU_URL:-}" ]; then
-            curl -fL --retry 2 "$AISU_URL" -o m88/assets/parties/aisu.img || true
+          # Discover AISU's own logo from its official website when available.
+          python - <<'PY'
+          import re
+          import urllib.parse
+          import urllib.request
+          page='https://www.aisusantaursula.com/'
+          html=urllib.request.urlopen(page, timeout=30).read().decode('utf-8','ignore')
+          urls=re.findall(r'(?:src|href)=["\']([^"\']+\.(?:png|jpe?g|webp))(?:\?[^"\']*)?["\']', html, re.I)
+          candidates=[]
+          for url in urls:
+              absolute=urllib.parse.urljoin(page,url)
+              low=absolute.lower()
+              if 'aisu' in low or 'logo' in low:
+                  if absolute not in candidates:
+                      candidates.append(absolute)
+          print('AISU candidates:', candidates[:10])
+          if candidates:
+              try:
+                  req=urllib.request.Request(candidates[0],headers={'User-Agent':'Mozilla/5.0'})
+                  data=urllib.request.urlopen(req,timeout=30).read()
+                  open('/tmp/aisu-logo','wb').write(data)
+              except Exception as exc:
+                  print('AISU download skipped:', exc)
+          PY
+
+          if [ -f /tmp/aisu-logo ]; then
+            MIME=$(file -b --mime-type /tmp/aisu-logo)
+            case "$MIME" in
+              image/png) mv /tmp/aisu-logo m88/assets/parties/aisu.png ;;
+              image/jpeg) mv /tmp/aisu-logo m88/assets/parties/aisu.jpg ;;
+              image/webp) mv /tmp/aisu-logo m88/assets/parties/aisu.webp ;;
+              *) echo "AISU candidate was not a supported image: $MIME" ;;
+            esac
           fi
 
           echo 'Downloaded files:'
           find m88/assets/parties -maxdepth 1 -type f -print -exec file {} \;
 
-          # Reject accidental HTML error pages.
           for f in m88/assets/parties/psoe.png m88/assets/parties/cc.png m88/assets/parties/pp.png m88/assets/parties/vox.png m88/assets/parties/alternativa-icodense.jpg m88/assets/parties/ir-verdes.png m88/assets/parties/si-se-puede.jpg; do
             file "$f" | grep -Eiq 'PNG image|JPEG image|SVG Scalable Vector Graphics' || { echo "Invalid logo payload: $f"; exit 1; }
           done
