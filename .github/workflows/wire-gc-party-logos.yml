@@ -1,0 +1,67 @@
+name: Wire GC party logos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wire-gc-party-logos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Replace external logo URLs with local assets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('m88/app.js')
+          s=p.read_text()
+          replacements={
+            "https://www.google.com/s2/favicons?domain_url=https://roqueaguayro.com&sz=256":"./assets/parties/roque-aguayro.png",
+            "https://www.google.com/s2/favicons?domain_url=https://tejedanosmueve.es&sz=256":"./assets/parties/aet.png",
+            "https://transparencia.mogan.es/wp-content/themes/portal-transparencia-child/img/partidos-politicos/juntos-por-Mogan.png":"./assets/parties/jpm.png",
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Unidos_por_Gran_Canaria_logo.svg":"./assets/parties/uxgc.svg",
+            "https://www.google.com/s2/favicons?domain_url=https://andosataute.es&sz=256":"./assets/parties/ando-sataute.png",
+            "https://www.google.com/s2/favicons?domain_url=https://asambleavalsequillera.org&sz=256":"./assets/parties/asamblea-valsequillera.png",
+            "https://www.google.com/s2/favicons?domain_url=https://avesan2011.blogspot.com&sz=256":"./assets/parties/avesan.jpg",
+            "https://www.google.com/s2/favicons?domain_url=https://bloquenacionalistarural.org&sz=256":"./assets/parties/bnr.png",
+            "https://www.masportelde.com/images/logov2.png":"./assets/parties/mas-telde.png",
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_Drago_Canarias_2025.svg":"./assets/parties/drago.png",
+            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nueva_Canarias_Bloque_Canarista_logo_completo.svg":"./assets/parties/nueva-canarias.png",
+            "https://www.google.com/s2/favicons?domain_url=https://valsequillogc.es&sz=256":"./assets/parties/el-cambio-necesario.png"
+          }
+          missing=[]
+          for old,new in replacements.items():
+            if old not in s: missing.append(old)
+            s=s.replace(old,new)
+          if missing:
+            raise SystemExit('Expected logo URL(s) missing from app.js: '+repr(missing))
+          p.write_text(s)
+
+          index=Path('m88/index.html')
+          h=index.read_text()
+          old='app.js?v=20260909-logosgc'
+          new='app.js?v=20260909-logosgc-local1'
+          if old not in h:
+            raise SystemExit('Expected app.js cache version not found')
+          index.write_text(h.replace(old,new))
+          PY
+          node --check m88/app.js
+          grep -q './assets/parties/jpm.png' m88/app.js
+          grep -q './assets/parties/asamblea-valsequillera.png' m88/app.js
+          grep -q './assets/parties/el-cambio-necesario.png' m88/app.js
+          if grep -q 'google.com/s2/favicons' m88/app.js; then echo 'Unexpected Google favicon dependency remains'; exit 1; fi
+      - name: Commit wiring
+        shell: bash
+        run: |
+          git config user.name 'constelacion8'
+          git config user.email 'info@enriquerodda.com'
+          git add m88/app.js m88/index.html
+          git commit -m 'Use local Gran Canaria party logos'
+          git push
