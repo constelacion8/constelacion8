@@ -17,47 +17,47 @@ const PARTY_MARKS = [
   {
     test: /iniciativa por el rosario|ir-?verdes/i,
     short: 'IR-VERDES',
-    src: 'https://irverdes.com/wp-content/uploads/2023/03/IR_VERDES-IC-20_anos-horiz.png'
+    src: './assets/parties/ir-verdes.png'
   },
   {
     test: /alternativa icodense/i,
     short: 'AI',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Logo_AI.jpg'
+    src: './assets/parties/alternativa-icodense.jpg'
   },
   {
     test: /asamblea unificada|aup-?ssp|sí se puede|si se puede/i,
     short: 'AUP-SSP',
-    src: 'https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg'
+    src: './assets/parties/si-se-puede.jpg'
   },
   {
     test: /agrupación independiente de santa úrsula|agrupacion independiente de santa ursula|\baisu\b/i,
     short: 'AISU',
-    src: null
+    src: './assets/parties/aisu.png'
   },
   {
     test: /agrupación independiente de arafo|agrupacion independiente de arafo|ai ?arafo/i,
     short: 'AIA-CC',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Coalici%C3%B3n_Canaria.svg/400px-Coalici%C3%B3n_Canaria.svg.png'
+    src: './assets/parties/cc.png'
   },
   {
     test: /coalición canaria|coalicion canaria/i,
     short: 'CC',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Coalici%C3%B3n_Canaria.svg/400px-Coalici%C3%B3n_Canaria.svg.png'
+    src: './assets/parties/cc.png'
   },
   {
     test: /partido popular|\bpp\b/i,
     short: 'PP',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Logo_del_PP_%282022%29.svg/512px-Logo_del_PP_%282022%29.svg.png'
+    src: './assets/parties/pp.png'
   },
   {
     test: /\bvox\b/i,
     short: 'VOX',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/VOX_logo.svg/500px-VOX_logo.svg.png'
+    src: './assets/parties/vox.png'
   },
   {
     test: /partido socialista|psoe/i,
     short: 'PSOE',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/9/92/PSOE_LOGO.png'
+    src: './assets/parties/psoe.png'
   }
 ];
 
