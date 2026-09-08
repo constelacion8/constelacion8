@@ -24,27 +24,28 @@ jobs:
           app = Path('m88/app.js')
           text = app.read_text()
           if "./assets/parties/ahi.svg" not in text:
-              block = r"""  {
-    test: /agrupaci[oó]n herre[nñ]a independiente|\bahi\b/i,
-    short: 'AHI',
-    src: './assets/parties/ahi.svg'
-  },
-  {
-    test: /agrupaci[oó]n socialista gomera|\basg\b/i,
-    short: 'ASG',
-    src: './assets/parties/asg.svg'
-  },
-  {
-    test: /unidos por betancuria|\bupbe\b/i,
-    short: 'UPBE',
-    src: './assets/parties/upbe.svg'
-  },
-  {
-    test: /unidos por yaiza|\bupy\b/i,
-    short: 'UPY',
-    src: './assets/parties/upy.jpg'
-  },
-"""
+              block = (
+                  "  {\n"
+                  "    test: /agrupaci[oó]n herre[nñ]a independiente|\\bahi\\b/i,\n"
+                  "    short: 'AHI',\n"
+                  "    src: './assets/parties/ahi.svg'\n"
+                  "  },\n"
+                  "  {\n"
+                  "    test: /agrupaci[oó]n socialista gomera|\\basg\\b/i,\n"
+                  "    short: 'ASG',\n"
+                  "    src: './assets/parties/asg.svg'\n"
+                  "  },\n"
+                  "  {\n"
+                  "    test: /unidos por betancuria|\\bupbe\\b/i,\n"
+                  "    short: 'UPBE',\n"
+                  "    src: './assets/parties/upbe.svg'\n"
+                  "  },\n"
+                  "  {\n"
+                  "    test: /unidos por yaiza|\\bupy\\b/i,\n"
+                  "    short: 'UPY',\n"
+                  "    src: './assets/parties/upy.jpg'\n"
+                  "  },\n"
+              )
               marker = "const PARTY_MARKS = [\n"
               if marker not in text:
                   raise SystemExit('PARTY_MARKS marker not found')
@@ -53,13 +54,10 @@ jobs:
 
           index = Path('m88/index.html')
           html = index.read_text()
-          if re.search(r'app\.js\?v=[^\"\']+', html):
-              html = re.sub(r'app\.js\?v=[^\"\']+', 'app.js?v=20260909-all-islands-1', html)
-          elif 'app.js' in html:
-              html = html.replace('app.js', 'app.js?v=20260909-all-islands-1', 1)
-          else:
+          html2, n = re.subn(r'app\.js(?:\?v=[^\"\']+)?', 'app.js?v=20260909-all-islands-1', html, count=1)
+          if n != 1:
               raise SystemExit('app.js reference not found')
-          index.write_text(html)
+          index.write_text(html2)
           PY
       - name: Commit wiring
         run: |
