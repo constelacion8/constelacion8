@@ -1,0 +1,94 @@
+name: Install GC party logos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-gc-party-logos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download and prepare party logos
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq imagemagick >/dev/null
+          mkdir -p m88/assets/parties /tmp/gc-logo-src
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/127 Safari/537.36'
+          get(){ curl -fL --retry 3 --connect-timeout 20 -A "$UA" "$1" -o "$2"; }
+
+          # Official/local-party sources
+          get 'https://roqueaguayro.com/wp-content/uploads/2022/05/cropped-logo-roqueaguayro.png' /tmp/gc-logo-src/roque.png
+          convert /tmp/gc-logo-src/roque.png -resize '600x260>' m88/assets/parties/roque-aguayro.png
+
+          get 'https://tejedanosmueve.es/wp-content/uploads/2023/05/LogoTejedaNosMueve.png' /tmp/gc-logo-src/aet.png
+          convert /tmp/gc-logo-src/aet.png -resize '600x260>' m88/assets/parties/aet.png
+
+          get 'https://andosataute.es/wp-content/uploads/2023/01/ando-logo-web.png' /tmp/gc-logo-src/ando.png
+          convert /tmp/gc-logo-src/ando.png -resize '600x260>' m88/assets/parties/ando-sataute.png
+
+          get 'https://bloquenacionalistarural.org/wp-content/uploads/2026/04/logo-scaled.png' /tmp/gc-logo-src/bnr.png
+          convert /tmp/gc-logo-src/bnr.png -resize '600x260>' m88/assets/parties/bnr.png
+
+          get 'https://www.masportelde.com/images/logov2.png' /tmp/gc-logo-src/mas-telde.png
+          convert /tmp/gc-logo-src/mas-telde.png -resize '600x260>' m88/assets/parties/mas-telde.png
+
+          get 'https://www.nuevacanariasbc.org/wp-content/uploads/2023/05/LOGOS-NC-WebColor-Negro.png' /tmp/gc-logo-src/nc.png
+          convert /tmp/gc-logo-src/nc.png -resize '600x260>' m88/assets/parties/nueva-canarias.png
+
+          get 'https://www.dragocanarias.com/wp-content/uploads/2024/07/Logo-DC-HORIZONTAL-NEGRO-e1721755936465.png' /tmp/gc-logo-src/drago.png
+          convert /tmp/gc-logo-src/drago.png -resize '600x260>' m88/assets/parties/drago.png
+
+          get 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Unidos_por_Gran_Canaria_logo.svg' /tmp/gc-logo-src/uxgc.svg
+          cp /tmp/gc-logo-src/uxgc.svg m88/assets/parties/uxgc.svg
+
+          # AVESAN header from the formation's own historic official blog.
+          get 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfvlgJ80ehq5h37UL5QWYj6YYBYIh1GG3DgXmeycKCpV1zRtUk8TW16WDYF_fc9AXVETmAmeNoWXpUz_HUkCDZy6PEUsZaP4RobbYruB1BA3ZXeBEhMDKtkRMp8A2yHDkFnFPl7Escd17e/s400/Cabecera+Avesan---.jpg' /tmp/gc-logo-src/avesan.jpg
+          convert /tmp/gc-logo-src/avesan.jpg -resize '600x260>' m88/assets/parties/avesan.jpg
+
+          # Juntos por Mogán: extract the circular party emblem from a 2023 JPM campaign creative.
+          get 'https://www.digitalfarocanarias.com/wp-content/uploads/2023/05/luis-becerra-juntos-por-mogan.jpg' /tmp/gc-logo-src/jpm-source.jpg
+          convert /tmp/gc-logo-src/jpm-source.jpg -resize '512x512^' -gravity center -extent 512x512 /tmp/gc-logo-src/jpm-512.jpg
+          convert /tmp/gc-logo-src/jpm-512.jpg -crop 190x190+160+245 +repage -fuzz 4% -trim +repage -resize '500x500>' m88/assets/parties/jpm.png
+
+          # Asamblea Valsequillera: extract its current AV emblem from the formation's April 2025 bulletin.
+          get 'https://valsequilloactualidad.es/upload/images/04_2025/7499_gpilp2fxaaa7rfa.jpeg' /tmp/gc-logo-src/asava-source.jpg
+          convert /tmp/gc-logo-src/asava-source.jpg -resize '512x512^' -gravity center -extent 512x512 /tmp/gc-logo-src/asava-512.jpg
+          convert /tmp/gc-logo-src/asava-512.jpg -crop 90x70+415+0 +repage -fuzz 10% -trim +repage -resize '420x320>' m88/assets/parties/asamblea-valsequillera.png
+
+          # El Cambio Necesario is PSOE + Valsequillo Plural. No separate published coalition logo was found;
+          # create a factual two-logo treatment rather than inventing an official mark.
+          get 'https://valsequilloplural.com/logo-valsequillo-plural.png' /tmp/gc-logo-src/vpl.png
+          convert m88/assets/parties/psoe.png -resize '280x150>' -background white -gravity center -extent 320x180 /tmp/gc-logo-src/psoe-panel.png
+          convert /tmp/gc-logo-src/vpl.png -resize '420x150>' -background white -gravity center -extent 460x180 /tmp/gc-logo-src/vpl-panel.png
+          convert +append /tmp/gc-logo-src/psoe-panel.png /tmp/gc-logo-src/vpl-panel.png -background white -splice 24x0+320+0 m88/assets/parties/el-cambio-necesario.png
+
+          # Validate all downloaded outputs are real images, not HTML error pages.
+          for f in m88/assets/parties/roque-aguayro.png m88/assets/parties/aet.png m88/assets/parties/ando-sataute.png m88/assets/parties/bnr.png m88/assets/parties/mas-telde.png m88/assets/parties/nueva-canarias.png m88/assets/parties/drago.png m88/assets/parties/avesan.jpg m88/assets/parties/jpm.png m88/assets/parties/asamblea-valsequillera.png m88/assets/parties/el-cambio-necesario.png; do
+            identify "$f" >/dev/null
+            test -s "$f"
+          done
+          grep -qi '<svg' m88/assets/parties/uxgc.svg
+          echo 'LOCAL_GC_LOGOS_READY'
+
+      - name: Commit local party logos
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'constelacion8'
+          git config user.email 'info@enriquerodda.com'
+          git add m88/assets/parties/
+          if git diff --cached --quiet; then
+            echo 'No logo changes to commit'
+          else
+            git commit -m 'Host Gran Canaria party logos locally'
+            git push
+          fi
