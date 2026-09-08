@@ -1,0 +1,121 @@
+name: Verify remaining islands
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'm88/**'
+      - '.github/workflows/verify-remaining-islands.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.57.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+      - name: Verify remaining islands and logos
+        run: |
+          cat > verify-remaining.cjs <<'NODE'
+          const { chromium } = require('playwright');
+          const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+          async function imageLoaded(img){
+            return img.evaluate(el => new Promise(resolve => {
+              const done = () => resolve(el.naturalWidth > 0 && getComputedStyle(el).display !== 'none');
+              if (el.complete) return done();
+              el.addEventListener('load', done, { once:true });
+              el.addEventListener('error', () => resolve(false), { once:true });
+              setTimeout(() => resolve(false), 8000);
+            }));
+          }
+
+          (async()=>{
+            const browser = await chromium.launch({ headless:true });
+            const page = await browser.newPage({ viewport:{ width:1280, height:900 } });
+            let ready = false;
+            for(let attempt=0; attempt<12; attempt++){
+              await page.goto(`https://constelacion8.com/m88/?allIslandsCheck=${Date.now()}`, { waitUntil:'networkidle', timeout:90000 });
+              const src = await page.locator('script[src*="app.js"]').getAttribute('src').catch(()=>null);
+              if(src && src.includes('all-islands-1')) { ready = true; break; }
+              await sleep(5000);
+            }
+            if(!ready) throw new Error('Latest all-islands build not visible yet');
+
+            const expected = [
+              ['el-hierro',3],
+              ['fuerteventura',6],
+              ['la-gomera',6],
+              ['la-palma',14],
+              ['lanzarote',7]
+            ];
+            const failures = [];
+            let contacts = 0;
+            let municipalitiesChecked = 0;
+
+            for(const [slug, expectedCount] of expected){
+              await page.click(`[data-island="${slug}"]`);
+              await page.waitForSelector('.municipality-card', { timeout:30000 });
+              const count = await page.locator('.municipality-card').count();
+              if(count !== expectedCount) failures.push(`${slug}: expected ${expectedCount} municipalities, got ${count}`);
+              const names = await page.locator('.municipality-card').evaluateAll(els => els.map(el => el.dataset.name));
+
+              for(const name of names){
+                const card = page.locator('.municipality-card').filter({ hasText:name }).first();
+                await card.click();
+                await page.waitForFunction(()=>{
+                  const value = document.querySelector('#contactCount')?.textContent || '';
+                  return value && value !== 'Cargando…';
+                }, null, { timeout:30000 });
+
+                const contactCards = page.locator('.contact-card');
+                const n = await contactCards.count();
+                contacts += n;
+                municipalitiesChecked += 1;
+                if(n < 1) failures.push(`${name}: no contact cards rendered`);
+
+                for(let i=0; i<n; i++){
+                  const contact = contactCards.nth(i);
+                  const person = (await contact.locator('h3').textContent() || '').trim();
+                  const row = contact.locator('.party-row');
+                  if(await row.count() !== 1){
+                    failures.push(`${name}: ${person}: no party row`);
+                    continue;
+                  }
+                  const img = row.locator('img.party-logo');
+                  if(await img.count() !== 1){
+                    failures.push(`${name}: ${person}: no logo image`);
+                    continue;
+                  }
+                  if(!(await imageLoaded(img))){
+                    failures.push(`${name}: ${person}: broken/hidden logo ${await img.getAttribute('src')}`);
+                  }
+                }
+
+                await page.click('#backToMunicipalities');
+                await page.waitForSelector('.municipality-card', { timeout:30000 });
+              }
+
+              await page.click('#backToMap');
+            }
+
+            await page.click('#navAll');
+            await page.waitForSelector('.municipality-card', { timeout:30000 });
+            const allCount = await page.locator('.municipality-card').count();
+            if(allCount !== 88) failures.push(`All-municipalities view: expected 88, got ${allCount}`);
+            if(municipalitiesChecked !== 36) failures.push(`Expected 36 remaining municipalities checked, got ${municipalitiesChecked}`);
+            if(contacts !== 36) failures.push(`Expected 36 remaining-island contacts, got ${contacts}`);
+
+            if(failures.length) throw new Error(`Remaining-island verification failures:\n${failures.join('\n')}`);
+            console.log(`REMAINING_ISLANDS_OK: ${municipalitiesChecked} municipalities, ${contacts} contacts, every party logo loads; all view has ${allCount} municipalities`);
+            await browser.close();
+          })().catch(e => { console.error(e); process.exit(1); });
+          NODE
+          node verify-remaining.cjs
