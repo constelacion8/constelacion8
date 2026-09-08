@@ -1,0 +1,75 @@
+name: Verify GC party logos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'm88/**'
+      - '.github/workflows/verify-gc-party-logos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.57.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+      - name: Verify every Gran Canaria party logo
+        run: |
+          cat > verify-gc.cjs <<'NODE'
+          const { chromium } = require('playwright');
+          const sleep = ms => new Promise(r=>setTimeout(r,ms));
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1280,height:900}});
+            let ready=false;
+            for(let attempt=0;attempt<12;attempt++){
+              await page.goto(`https://constelacion8.com/m88/?gcLogoCheck=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
+              const src=await page.locator('script[src*="app.js"]').getAttribute('src').catch(()=>null);
+              if(src && src.includes('logosgc')) { ready=true; break; }
+              await sleep(5000);
+            }
+            if(!ready) throw new Error('Gran Canaria logo build not visible yet');
+            await page.click('[data-island="gran-canaria"]');
+            await page.waitForSelector('.municipality-card',{timeout:30000});
+            const municipalities=await page.locator('.municipality-card').allTextContents();
+            if(municipalities.length!==21) throw new Error(`Expected 21 municipalities, got ${municipalities.length}`);
+            const failures=[];
+            let contacts=0;
+            for(const raw of municipalities){
+              const name=raw.replace(/^\s*\d+\s*·\s*Gran Canaria\s*/i,'').replace(/Ver contactos\s*→?\s*$/i,'').trim();
+              await page.locator('.municipality-card').filter({hasText:name}).click();
+              await page.waitForFunction(()=>document.querySelector('#contactCount')?.textContent!=='Cargando…',null,{timeout:30000});
+              const cards=page.locator('.contact-card');
+              const n=await cards.count();
+              contacts+=n;
+              for(let i=0;i<n;i++){
+                const card=cards.nth(i);
+                const person=(await card.locator('h3').textContent()||'').trim();
+                const row=card.locator('.party-row');
+                if(await row.count()!==1){failures.push(`${name}: ${person}: no party row`);continue;}
+                const img=row.locator('img.party-logo');
+                if(await img.count()!==1){failures.push(`${name}: ${person}: no logo image`);continue;}
+                const ok=await img.evaluate(el=>el.complete && el.naturalWidth>0 && getComputedStyle(el).display!=='none');
+                if(!ok){
+                  const src=await img.getAttribute('src');
+                  failures.push(`${name}: ${person}: broken/hidden logo ${src}`);
+                }
+              }
+              await page.click('#backToMunicipalities');
+              await page.waitForSelector('.municipality-card',{timeout:30000});
+            }
+            if(contacts!==60) failures.push(`Expected 60 contacts, got ${contacts}`);
+            if(failures.length) throw new Error(`GC logo failures:\n${failures.join('\n')}`);
+            console.log(`GC_LOGOS_OK: ${contacts} contacts across 21 municipalities, all logos load`);
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          node verify-gc.cjs
