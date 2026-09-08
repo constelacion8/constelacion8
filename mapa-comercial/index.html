@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Mapa Comercial · DE8 Films</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="cosmic-noise" aria-hidden="true"></div>
+
+  <section class="auth-screen" id="authScreen">
+    <div class="login-card">
+      <div class="brand brand-login" aria-label="DE8 Films">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="brand-name">DE8 <b>FILMS</b></span>
+      </div>
+      <p class="eyebrow">Acceso privado</p>
+      <h1>Mapa<br><span>Comercial</span></h1>
+      <p class="login-copy">Directorio interno de contactos institucionales de Canarias.</p>
+      <form id="loginForm" class="login-form">
+        <label>Usuario / correo
+          <input id="loginEmail" type="email" autocomplete="username" required>
+        </label>
+        <label>Contraseña
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit">Acceder</button>
+        <p id="loginMessage" class="form-message" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="app" id="app" hidden>
+    <header class="site-header">
+      <button class="brand" id="homeButton" aria-label="Volver al mapa">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="brand-name">MAPA COMERCIAL <b>DE8</b></span>
+      </button>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <button id="mapNav">Islas</button>
+        <button id="municipalitiesNav">Municipios</button>
+      </nav>
+      <button class="header-cta" id="logoutButton">Salir</button>
+    </header>
+
+    <main>
+      <section class="hero" id="mapSection">
+        <div class="hero-halo hero-halo-a" aria-hidden="true"></div>
+        <div class="hero-halo hero-halo-b" aria-hidden="true"></div>
+        <div class="hero-intro">
+          <p class="eyebrow">DE8 Films · Uso interno</p>
+          <h2>Mapa comercial<br><span>de Canarias</span></h2>
+          <p class="hero-lead">Elige una isla para acceder a sus municipios y contactos institucionales.</p>
+        </div>
+
+        <div class="archipelago-stage" id="archipelagoStage">
+          <svg class="network-layer" viewBox="0 0 588 246" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <filter id="networkGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <linearGradient id="lineGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".10"/><stop offset=".48" stop-color="#FFCD00" stop-opacity=".9"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".12"/></linearGradient>
+            </defs>
+            <g class="constellation-lines" filter="url(#networkGlow)">
+              <path d="M22 229 C70 197,92 187,119 179 S168 151,203 156 S275 200,321 203 S432 172,510 141 S544 78,552 61"/>
+              <path d="M43 98 C92 121,135 141,203 156 C278 172,397 157,510 141 C536 116,546 82,552 61"/>
+              <path d="M119 179 C153 198,197 207,321 203 C393 201,449 176,510 141"/>
+              <path d="M203 156 C235 132,276 121,321 203 C355 146,431 116,510 141" class="secondary-line"/>
+              <path d="M510 141 C532 107,543 82,552 61 C559 44,562 34,563.5 26.6" class="secondary-line"/>
+            </g>
+            <g class="network-nodes">
+              <circle cx="22" cy="229" r="2"/><circle cx="43" cy="98" r="2"/><circle cx="119" cy="179" r="2"/>
+              <circle cx="203" cy="156" r="2.4"/><circle cx="321" cy="203" r="2"/><circle cx="510" cy="141" r="2"/>
+              <circle cx="552" cy="61" r="2"/><circle cx="563.5" cy="26.6" r="1.5"/>
+            </g>
+          </svg>
+
+          <svg class="canary-map" viewBox="0 0 588 246" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa interactivo de Canarias">
+            <defs><filter id="islandGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3.1" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <g class="island-node" data-island="el-hierro" role="button" tabindex="0" aria-label="El Hierro"><path class="island-aura" d="M37,217 L33,214 L28,215 L23,218 L24,220 L23,222 L15,227 L12,227 L6,224 L3,226 L2,233 L4,235 L9,235 L16,237 L20,243 L25,245 L27,243 L28,233 L32,232 L34,226 L38,222 Z"/><path class="island-shape" d="M37,217 L33,214 L28,215 L23,218 L24,220 L23,222 L15,227 L12,227 L6,224 L3,226 L2,233 L4,235 L9,235 L16,237 L20,243 L25,245 L27,243 L28,233 L32,232 L34,226 L38,222 Z"/></g>
+            <g class="island-node" data-island="la-palma" role="button" tabindex="0" aria-label="La Palma"><path class="island-aura" d="M36,74 L30,78 L28,82 L25,84 L25,90 L28,94 L30,100 L29,101 L34,108 L34,112 L38,116 L40,122 L40,128 L42,131 L45,132 L56,115 L57,107 L55,101 L61,91 L57,87 L54,77 L50,76 L44,78 L38,74 Z"/><path class="island-shape" d="M36,74 L30,78 L28,82 L25,84 L25,90 L28,94 L30,100 L29,101 L34,108 L34,112 L38,116 L40,122 L40,128 L42,131 L45,132 L56,115 L57,107 L55,101 L61,91 L57,87 L54,77 L50,76 L44,78 L38,74 Z"/></g>
+            <g class="island-node" data-island="la-gomera" role="button" tabindex="0" aria-label="La Gomera"><path class="island-aura" d="M108,166 L106,169 L106,172 L104,174 L104,183 L107,186 L107,188 L112,191 L113,193 L117,194 L118,193 L124,193 L136,183 L134,175 L123,167 L118,167 L116,165 Z"/><path class="island-shape" d="M108,166 L106,169 L106,172 L104,174 L104,183 L107,186 L107,188 L112,191 L113,193 L117,194 L118,193 L124,193 L136,183 L134,175 L123,167 L118,167 L116,165 Z"/></g>
+            <g class="island-node" data-island="tenerife" role="button" tabindex="0" aria-label="Tenerife"><path class="island-aura" d="M255,116 L251,115 L246,118 L230,117 L228,120 L223,121 L218,126 L218,128 L208,138 L203,138 L198,141 L189,141 L188,140 L185,141 L184,143 L182,142 L179,144 L174,145 L169,141 L162,145 L157,146 L156,148 L160,151 L167,161 L166,162 L167,169 L171,174 L174,181 L179,185 L179,190 L183,193 L183,197 L187,198 L192,197 L196,194 L204,194 L206,190 L219,177 L219,171 L220,170 L219,169 L224,161 L224,158 L228,153 L226,150 L227,146 L241,135 L243,130 L246,130 L249,127 L254,126 L256,124 L257,119 Z"/><path class="island-shape" d="M255,116 L251,115 L246,118 L230,117 L228,120 L223,121 L218,126 L218,128 L208,138 L203,138 L198,141 L189,141 L188,140 L185,141 L184,143 L182,142 L179,144 L174,145 L169,141 L162,145 L157,146 L156,148 L160,151 L167,161 L166,162 L167,169 L171,174 L174,181 L179,185 L179,190 L183,193 L183,197 L187,198 L192,197 L196,194 L204,194 L206,190 L219,177 L219,171 L220,170 L219,169 L224,161 L224,158 L228,153 L226,150 L227,146 L241,135 L243,130 L246,130 L249,127 L254,126 L256,124 L257,119 Z"/></g>
+            <g class="island-node" data-island="gran-canaria" role="button" tabindex="0" aria-label="Gran Canaria"><path class="island-aura" d="M345,172 L342,171 L339,173 L340,177 L337,179 L334,176 L331,175 L320,176 L316,172 L313,174 L310,172 L306,173 L307,176 L306,185 L302,189 L300,189 L296,194 L295,193 L293,194 L293,197 L291,199 L291,209 L293,211 L296,219 L311,232 L314,231 L318,232 L320,234 L323,234 L326,230 L333,226 L342,224 L343,219 L347,217 L348,214 L346,212 L347,207 L348,206 L350,207 L350,205 L348,203 L349,195 L343,188 L344,187 L344,182 L342,179 L345,178 Z"/><path class="island-shape" d="M345,172 L342,171 L339,173 L340,177 L337,179 L334,176 L331,175 L320,176 L316,172 L313,174 L310,172 L306,173 L307,176 L306,185 L302,189 L300,189 L296,194 L295,193 L293,194 L293,197 L291,199 L291,209 L293,211 L296,219 L311,232 L314,231 L318,232 L320,234 L323,234 L326,230 L333,226 L342,224 L343,219 L347,217 L348,214 L346,212 L347,207 L348,206 L350,207 L350,205 L348,203 L349,195 L343,188 L344,187 L344,182 L342,179 L345,178 Z"/></g>
+            <g class="island-node" data-island="fuerteventura" role="button" tabindex="0" aria-label="Fuerteventura"><path class="island-aura" d="M538,90 L534,93 L535,94 L534,96 L530,92 L526,93 L524,92 L512,98 L513,105 L511,107 L510,115 L507,119 L503,130 L496,137 L494,147 L489,152 L489,164 L488,166 L476,177 L472,178 L470,180 L463,182 L455,181 L454,183 L455,184 L453,188 L460,187 L464,189 L476,191 L490,174 L497,173 L500,171 L505,171 L508,169 L512,169 L517,166 L522,166 L526,162 L529,157 L528,155 L531,150 L532,145 L534,143 L534,137 L532,130 L535,127 L537,121 L537,109 L536,108 L536,98 L535,96 L538,95 L539,93 Z"/><path class="island-shape" d="M538,90 L534,93 L535,94 L534,96 L530,92 L526,93 L524,92 L512,98 L513,105 L511,107 L510,115 L507,119 L503,130 L496,137 L494,147 L489,152 L489,164 L488,166 L476,177 L472,178 L470,180 L463,182 L455,181 L454,183 L455,184 L453,188 L460,187 L464,189 L476,191 L490,174 L497,173 L500,171 L505,171 L508,169 L512,169 L517,166 L522,166 L526,162 L529,157 L528,155 L531,150 L532,145 L534,143 L534,137 L532,130 L535,127 L537,121 L537,109 L536,108 L536,98 L535,96 L538,95 L539,93 Z"/></g>
+            <g class="island-node" data-island="lanzarote" role="button" tabindex="0" aria-label="Lanzarote"><path class="island-aura" d="M575.5 33.9 L573.0 31.7 L571.2 32.6 L570.2 30.0 L567.3 32.3 L563.6 42.8 L559.8 46.5 L558.4 46.5 L558.4 44.8 L556.1 43.2 L551.7 45.4 L548.5 44.9 L548.0 47.6 L546.1 47.4 L542.9 50.4 L537.3 50.9 L532.4 54.6 L528.4 60.0 L527.9 70.9 L522.0 76.2 L522.9 79.8 L527.1 80.0 L527.4 78.2 L529.0 77.9 L529.9 80.0 L532.7 80.6 L533.0 82.3 L537.3 77.5 L538.7 73.6 L544.1 71.6 L549.5 71.7 L554.4 68.6 L554.4 66.4 L556.1 67.3 L559.3 66.7 L559.8 64.9 L562.1 65.2 L567.9 62.1 L570.6 58.5 L570.6 53.5 L572.4 49.0 L570.1 42.9 L575.5 39.3 Z"/><path class="island-shape" d="M575.5 33.9 L573.0 31.7 L571.2 32.6 L570.2 30.0 L567.3 32.3 L563.6 42.8 L559.8 46.5 L558.4 46.5 L558.4 44.8 L556.1 43.2 L551.7 45.4 L548.5 44.9 L548.0 47.6 L546.1 47.4 L542.9 50.4 L537.3 50.9 L532.4 54.6 L528.4 60.0 L527.9 70.9 L522.0 76.2 L522.9 79.8 L527.1 80.0 L527.4 78.2 L529.0 77.9 L529.9 80.0 L532.7 80.6 L533.0 82.3 L537.3 77.5 L538.7 73.6 L544.1 71.6 L549.5 71.7 L554.4 68.6 L554.4 66.4 L556.1 67.3 L559.3 66.7 L559.8 64.9 L562.1 65.2 L567.9 62.1 L570.6 58.5 L570.6 53.5 L572.4 49.0 L570.1 42.9 L575.5 39.3 Z"/></g>
+            <g class="island-node" data-island="la-graciosa" role="button" tabindex="0" aria-label="La Graciosa"><path class="island-aura" d="M567.6 24.2 L566.5 23.2 L565.3 23.1 L564.4 22.2 L563.6 22.0 L563.3 22.6 L563.3 23.2 L562.2 25.0 L562.2 26.4 L561.6 26.8 L561.6 28.2 L559.4 29.5 L559.5 30.9 L560.1 30.9 L560.9 31.2 L561.2 30.9 L561.9 30.9 L563.0 30.2 L563.0 29.9 L563.3 29.6 L564.2 29.6 L564.4 29.5 L564.4 28.8 L565.0 28.7 L565.8 27.8 L565.8 26.7 L565.9 26.4 L567.8 24.8 Z"/><path class="island-shape" d="M567.6 24.2 L566.5 23.2 L565.3 23.1 L564.4 22.2 L563.6 22.0 L563.3 22.6 L563.3 23.2 L562.2 25.0 L562.2 26.4 L561.6 26.8 L561.6 28.2 L559.4 29.5 L559.5 30.9 L560.1 30.9 L560.9 31.2 L561.2 30.9 L561.9 30.9 L563.0 30.2 L563.0 29.9 L563.3 29.6 L564.2 29.6 L564.4 29.5 L564.4 28.8 L565.0 28.7 L565.8 27.8 L565.8 26.7 L565.9 26.4 L567.8 24.8 Z"/></g>
+          </svg>
+          <div class="map-tooltip" id="mapTooltip"><span class="tooltip-dot"></span><strong>Elige una isla</strong><small>para ver sus municipios</small></div>
+        </div>
+      </section>
+
+      <section class="directory" id="directorySection" hidden>
+        <div class="section-wrap">
+          <button class="back-button" id="backToMap">← Volver a Canarias</button>
+          <div class="directory-heading">
+            <div><p class="eyebrow" id="islandEyebrow">Isla</p><h2 id="islandTitle">Tenerife</h2><p id="islandCount"></p></div>
+            <input class="search" id="municipalitySearch" type="search" placeholder="Buscar municipio…" autocomplete="off">
+          </div>
+          <div class="municipality-grid" id="municipalityGrid"></div>
+        </div>
+      </section>
+
+      <section class="contact-view" id="contactSection" hidden>
+        <div class="section-wrap">
+          <button class="back-button" id="backToMunicipalities">← Volver a municipios</button>
+          <p class="eyebrow" id="municipalityIsland"></p>
+          <h2 id="municipalityTitle"></h2>
+          <div class="contact-empty" id="contactEmpty">
+            <span>Directorio preparado</span>
+            <strong>Sin contactos cargados todavía.</strong>
+            <p>Los concejales y responsables aparecerán aquí agrupados por área conforme incorporemos la investigación.</p>
+          </div>
+          <div class="contacts-list" id="contactsList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
