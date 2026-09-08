@@ -1,0 +1,52 @@
+name: Verify Mapa Comercial Preview
+
+on:
+  push:
+    branches: [mapa-comercial-preview]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify CDN wrapper
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://cdn.jsdelivr.net/gh/constelacion8/constelacion8@mapa-comercial-preview/mapa-comercial-preview/index.html'
+          curl -fsSL -D /tmp/cdn-headers.txt "$URL" -o /tmp/wrapper.html
+          grep -qi '^content-type:.*text/html' /tmp/cdn-headers.txt
+          grep -q 'Mapa Comercial · DE8 Films' /tmp/wrapper.html
+          grep -q 'hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial' /tmp/wrapper.html
+          echo 'CDN_WRAPPER_OK'
+
+      - name: Verify Supabase web app
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial'
+          curl -fsSL -D /tmp/app-headers.txt "$URL" -o /tmp/app.html
+          grep -qi '^content-type:.*text/html' /tmp/app-headers.txt
+          if grep -qi '^x-frame-options:.*deny\|^x-frame-options:.*sameorigin' /tmp/app-headers.txt; then
+            echo 'Supabase blocks iframe embedding'; exit 1
+          fi
+          if grep -qi '^content-security-policy:.*frame-ancestors.*none' /tmp/app-headers.txt; then
+            echo 'Supabase CSP blocks iframe embedding'; exit 1
+          fi
+          grep -q 'Mapa Comercial · DE8 Films' /tmp/app.html
+          grep -q 'mc_login' /tmp/app.html
+          grep -q 'Tenerife' /tmp/app.html
+          grep -q 'Vilaflor de Chasna' /tmp/app.html
+          echo 'SUPABASE_APP_OK'
+
+      - name: Verify login RPC is externally reachable
+        shell: bash
+        run: |
+          set -euo pipefail
+          STATUS=$(curl -sS -o /tmp/login-response.json -w '%{http_code}' \
+            -X POST 'https://hhruwnbhogbslhcmpktu.supabase.co/rest/v1/rpc/mc_login' \
+            -H 'apikey: sb_publishable_SftrWcHM4Ovcsvxmyt5rDg_kN2Te2Qm' \
+            -H 'Content-Type: application/json' \
+            --data '{"p_username":"__verification_invalid__","p_password":"__verification_invalid__"}')
+          test "$STATUS" = '200'
+          echo 'LOGIN_RPC_REACHABLE'
