@@ -18,7 +18,6 @@ const directorySection = document.getElementById('directorySection');
 const contactSection = document.getElementById('contactSection');
 const grid = document.getElementById('municipalityGrid');
 const search = document.getElementById('municipalitySearch');
-const tooltip = document.getElementById('mapTooltip');
 const empty = document.getElementById('contactEmpty');
 const list = document.getElementById('contactsList');
 let activeIsland = null;
@@ -116,23 +115,13 @@ search.addEventListener('input',()=>{
 });
 
 document.querySelectorAll('.island-node').forEach(node=>{
-  const island = islands.find(item=>item.slug===node.dataset.island);
   const activate = ()=>showIsland(node.dataset.island);
   node.addEventListener('click',activate);
   node.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();activate();}});
-  node.addEventListener('mouseenter',()=>updateTooltip(island));
-  node.addEventListener('focus',()=>updateTooltip(island));
 });
 
-function updateTooltip(island){
-  if(!island) return;
-  tooltip.querySelector('strong').textContent = island.name;
-  tooltip.querySelector('small').textContent = island.municipalities.length ? `${island.municipalities.length} municipios` : 'Administración: Teguise';
-}
-
-document.getElementById('homeButton').addEventListener('click',showMap);
-document.getElementById('navMap').addEventListener('click',showMap);
-document.getElementById('navAll').addEventListener('click',showAll);
+const navAll = document.getElementById('navAll');
+if(navAll) navAll.addEventListener('click',showAll);
 document.getElementById('backToMap').addEventListener('click',showMap);
 document.getElementById('backToMunicipalities').addEventListener('click',()=>activeMode==='all'?showAll():activeIsland&&showIsland(activeIsland.slug));
 
