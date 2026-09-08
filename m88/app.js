@@ -15,6 +15,66 @@ if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
 
 const PARTY_MARKS = [
   {
+    test: /roque aguayro/i,
+    short: 'RA',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://roqueaguayro.com&sz=256'
+  },
+  {
+    test: /agrupaci[oó]n de electores por tejeda|\baet\b/i,
+    short: 'AET',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://tejedanosmueve.es&sz=256'
+  },
+  {
+    test: /juntos por mog[aá]n|\bjpm\b/i,
+    short: 'JPM',
+    src: 'https://transparencia.mogan.es/wp-content/themes/portal-transparencia-child/img/partidos-politicos/juntos-por-Mogan.png'
+  },
+  {
+    test: /unidos por gran canaria|\buxgc\b/i,
+    short: 'UxGC',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Unidos_por_Gran_Canaria_logo.svg'
+  },
+  {
+    test: /ando sataute/i,
+    short: 'ANDO',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://andosataute.es&sz=256'
+  },
+  {
+    test: /asamblea valsequillera|\basava\b/i,
+    short: 'AV',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://asambleavalsequillera.org&sz=256'
+  },
+  {
+    test: /\bavesan\b|asamblea de vecinos de san mateo/i,
+    short: 'AVESAN',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://avesan2011.blogspot.com&sz=256'
+  },
+  {
+    test: /bloque nacionalista rural|\bbnr\b/i,
+    short: 'BNR',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://bloquenacionalistarural.org&sz=256'
+  },
+  {
+    test: /m[aá]s por telde|\+xt/i,
+    short: '+XT',
+    src: 'https://www.masportelde.com/images/logov2.png'
+  },
+  {
+    test: /forum drago|drago canarias|drago verdes/i,
+    short: 'DRAGO',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_Drago_Canarias_2025.svg'
+  },
+  {
+    test: /nueva canarias|nc-fac|frente amplio canarista/i,
+    short: 'NC',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nueva_Canarias_Bloque_Canarista_logo_completo.svg'
+  },
+  {
+    test: /el cambio necesario/i,
+    short: 'ECN',
+    src: 'https://www.google.com/s2/favicons?domain_url=https://valsequillogc.es&sz=256'
+  },
+  {
     test: /iniciativa por el rosario|ir-?verdes/i,
     short: 'IR-VERDES',
     src: './assets/parties/ir-verdes.png'
