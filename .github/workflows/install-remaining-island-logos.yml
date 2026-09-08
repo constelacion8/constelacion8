@@ -1,0 +1,41 @@
+name: Install remaining island party logos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-remaining-island-logos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download party logos
+        run: |
+          set -euo pipefail
+          mkdir -p m88/assets/parties
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_AHI_2023.svg' -o m88/assets/parties/ahi.svg
+          curl -fL --retry 3 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Agrupaci%C3%B3n_Socialista_Gomera.svg' -o m88/assets/parties/asg.svg
+          if ! curl -fL --retry 3 'https://yaizateinforma.es/wp-content/uploads/2023/05/Logo-Unidos-por-Yaiza.jpg' -o m88/assets/parties/upy.jpg; then
+            curl -fL --retry 3 'https://yaizateinforma.es/wp-content/uploads/2023/05/Logo-Unidos-por-Yaiza-300x93.jpg' -o m88/assets/parties/upy.jpg
+          fi
+          test -s m88/assets/parties/ahi.svg
+          test -s m88/assets/parties/asg.svg
+          test -s m88/assets/parties/upy.jpg
+          file m88/assets/parties/ahi.svg m88/assets/parties/asg.svg m88/assets/parties/upy.jpg
+      - name: Commit logos
+        run: |
+          git config user.name 'constelacion8'
+          git config user.email 'info@enriquerodda.com'
+          git add m88/assets/parties/ahi.svg m88/assets/parties/asg.svg m88/assets/parties/upy.jpg
+          if git diff --cached --quiet; then
+            echo 'No logo changes to commit'
+          else
+            git commit -m 'Add party logos for remaining islands'
+            git push
+          fi
