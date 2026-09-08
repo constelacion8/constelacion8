@@ -25,6 +25,7 @@ let activeMode = 'island';
 
 function showMap(){
   activeIsland = null;
+  document.body.classList.remove('island-open');
   mapSection.hidden = false;
   directorySection.hidden = true;
   contactSection.hidden = true;
@@ -36,7 +37,8 @@ function showIsland(slug){
   if(!island) return;
   activeIsland = island;
   activeMode = 'island';
-  mapSection.hidden = true;
+  document.body.classList.add('island-open');
+  mapSection.hidden = false;
   directorySection.hidden = false;
   contactSection.hidden = true;
   document.getElementById('islandEyebrow').textContent = 'Isla · Directorio municipal';
@@ -51,7 +53,8 @@ function showAll(){
   activeIsland = null;
   activeMode = 'all';
   const all = islands.flatMap(island=>island.municipalities.map(name=>({name,island:island.name}))).sort((a,b)=>a.name.localeCompare(b.name,'es'));
-  mapSection.hidden = true;
+  document.body.classList.add('island-open');
+  mapSection.hidden = false;
   directorySection.hidden = false;
   contactSection.hidden = true;
   document.getElementById('islandEyebrow').textContent = 'Canarias · Directorio municipal';
@@ -72,6 +75,8 @@ function renderMunicipalities(items){
 }
 
 function showMunicipality(name,islandName){
+  document.body.classList.add('island-open');
+  mapSection.hidden = false;
   directorySection.hidden = true;
   contactSection.hidden = false;
   document.getElementById('municipalityIsland').textContent = islandName;
