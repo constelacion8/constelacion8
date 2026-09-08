@@ -9,51 +9,56 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Diagnose CDN wrappers
+      - name: Verify public route
         shell: bash
         run: |
           set -euo pipefail
-          for NAME in jsdelivr githack; do
-            if [ "$NAME" = jsdelivr ]; then
-              URL='https://cdn.jsdelivr.net/gh/constelacion8/constelacion8@mapa-comercial-preview/mapa-comercial-preview/index.html'
-            else
-              URL='https://raw.githack.com/constelacion8/constelacion8/mapa-comercial-preview/mapa-comercial-preview/index.html'
-            fi
-            echo "=== $NAME ==="
-            curl -fsSL -D "/tmp/$NAME-headers.txt" "$URL" -o "/tmp/$NAME.html"
-            grep -i '^content-type:' "/tmp/$NAME-headers.txt" || true
-            grep -q 'hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial' "/tmp/$NAME.html"
-            echo "BODY_OK_$NAME"
-          done
+          URL='https://constelacion8.com/mapa-comercial/'
+          curl -fsSL -D /tmp/headers.txt "$URL" -o /tmp/page.html
+          grep -qi '^content-type:.*text/html' /tmp/headers.txt
+          grep -q 'Mapa Comercial · DE8 Films' /tmp/page.html
+          echo 'PUBLIC_ROUTE_OK'
 
-      - name: Verify Supabase web app
+      - name: Install Playwright
         shell: bash
         run: |
-          set -euo pipefail
-          URL='https://hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial'
-          curl -fsSL -D /tmp/app-headers.txt "$URL" -o /tmp/app.html
-          grep -i '^content-type:' /tmp/app-headers.txt || true
-          if grep -qi '^x-frame-options:.*deny\|^x-frame-options:.*sameorigin' /tmp/app-headers.txt; then
-            echo 'Supabase blocks iframe embedding'; exit 1
-          fi
-          if grep -qi '^content-security-policy:.*frame-ancestors.*none' /tmp/app-headers.txt; then
-            echo 'Supabase CSP blocks iframe embedding'; exit 1
-          fi
-          grep -q 'Mapa Comercial · DE8 Films' /tmp/app.html
-          grep -q 'mc_login' /tmp/app.html
-          grep -q 'Tenerife' /tmp/app.html
-          grep -q 'Vilaflor de Chasna' /tmp/app.html
-          echo 'SUPABASE_APP_OK'
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.57.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
 
-      - name: Verify login RPC is externally reachable
+      - name: Browser verification
         shell: bash
         run: |
-          set -euo pipefail
-          STATUS=$(curl -sS -o /tmp/login-response.json -w '%{http_code}' \
-            -X POST 'https://hhruwnbhogbslhcmpktu.supabase.co/rest/v1/rpc/mc_login' \
-            -H 'apikey: sb_publishable_SftrWcHM4Ovcsvxmyt5rDg_kN2Te2Qm' \
-            -H 'Content-Type: application/json' \
-            --data '{"p_username":"__verification_invalid__","p_password":"__verification_invalid__"}')
-          echo "LOGIN_RPC_STATUS=$STATUS"
-          test "$STATUS" = '200'
-          echo 'LOGIN_RPC_REACHABLE'
+          cat > verify-mapa.cjs <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const url='https://constelacion8.com/mapa-comercial/';
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1440,height:1000}});
+            const pageErrors=[];
+            page.on('pageerror',e=>pageErrors.push(String(e)));
+            await page.goto(url,{waitUntil:'networkidle',timeout:90000});
+            await page.waitForSelector('#loginForm',{timeout:30000});
+            if(!(await page.locator('#authScreen').isVisible())) throw new Error('Login screen is not visible');
+            const username=page.locator('#loginUsername');
+            if(await username.count() !== 1) throw new Error('Username field not initialized');
+            await username.fill('__invalid_verification__');
+            await page.fill('#loginPassword','__invalid_verification__');
+            await page.click('#loginForm button[type="submit"]');
+            await page.waitForFunction(()=>document.querySelector('#loginMessage')?.textContent?.includes('incorrectos'),null,{timeout:30000});
+            await page.evaluate(()=>{
+              document.getElementById('authScreen').hidden=true;
+              document.getElementById('app').hidden=false;
+            });
+            await page.click('[data-island="tenerife"]');
+            await page.waitForSelector('.municipality-card',{timeout:30000});
+            const title=(await page.locator('#islandTitle').textContent()||'').trim();
+            const count=await page.locator('.municipality-card').count();
+            if(title!=='Tenerife') throw new Error(`Wrong island title: ${title}`);
+            if(count!==31) throw new Error(`Expected 31 Tenerife municipalities, got ${count}`);
+            if(pageErrors.length) throw new Error(`Page errors: ${pageErrors.join(' | ')}`);
+            console.log('BROWSER_OK: login visible, backend reachable, Tenerife=31 municipalities');
+            await browser.close();
+          })().catch(err=>{console.error(err);process.exit(1)});
+          NODE
+          node verify-mapa.cjs
