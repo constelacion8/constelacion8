@@ -1,0 +1,66 @@
+name: Update M88 party UI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-m88-party-ui.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Switch party marks to local assets and enlarge them
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path('m88/app.js')
+          text = app.read_text()
+          replacements = {
+            "https://irverdes.com/wp-content/uploads/2023/03/IR_VERDES-IC-20_anos-horiz.png": "./assets/parties/ir-verdes.png",
+            "https://upload.wikimedia.org/wikipedia/commons/3/3c/Logo_AI.jpg": "./assets/parties/alternativa-icodense.jpg",
+            "https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg": "./assets/parties/si-se-puede.jpg",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Coalici%C3%B3n_Canaria.svg/400px-Coalici%C3%B3n_Canaria.svg.png": "./assets/parties/cc.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Logo_del_PP_%282022%29.svg/512px-Logo_del_PP_%282022%29.svg.png": "./assets/parties/pp.png",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/VOX_logo.svg/500px-VOX_logo.svg.png": "./assets/parties/vox.png",
+            "https://upload.wikimedia.org/wikipedia/commons/9/92/PSOE_LOGO.png": "./assets/parties/psoe.png",
+          }
+          for old,new in replacements.items():
+              text = text.replace(old,new)
+          text = text.replace("short: 'AISU',\n    src: null", "short: 'AISU',\n    src: './assets/parties/aisu.png'")
+          app.write_text(text)
+
+          css = Path('m88/app.css')
+          c = css.read_text()
+          c = c.replace(
+            '.party-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:11px 0 8px;color:#bdbdbd}',
+            '.party-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0 12px;color:#bdbdbd}'
+          )
+          c = c.replace(
+            '.party-logo{display:block;height:22px;width:auto;max-width:72px;object-fit:contain;background:#fff;border-radius:5px;padding:3px 5px}',
+            '.party-logo{display:block;height:52px;width:auto;max-width:150px;object-fit:contain;background:#fff;border-radius:9px;padding:6px 9px}'
+          )
+          c = c.replace('.party-badge{min-width:36px;height:22px;', '.party-badge{min-width:48px;height:38px;')
+          c = c.replace('.party-logo{height:20px;max-width:64px}', '.party-logo{height:46px;max-width:132px}')
+          css.write_text(c)
+
+          index = Path('m88/index.html')
+          h = index.read_text()
+          import re
+          h = re.sub(r'app\.css\?v=[^"\']+', 'app.css?v=20260908-2054', h)
+          h = re.sub(r'app\.js\?v=[^"\']+', 'app.js?v=20260908-2054', h)
+          index.write_text(h)
+          PY
+
+      - name: Commit UI update
+        run: |
+          git config user.name 'constelacion8'
+          git config user.email 'info@enriquerodda.com'
+          git add m88/app.js m88/app.css m88/index.html
+          git commit -m 'Use larger local party logos in M88'
+          git push
