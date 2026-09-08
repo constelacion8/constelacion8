@@ -1,0 +1,74 @@
+name: Cache M88 party logos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cache-m88-party-logos.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download party logos locally
+        run: |
+          set -euo pipefail
+          mkdir -p m88/assets/parties
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://upload.wikimedia.org/wikipedia/commons/9/92/PSOE_LOGO.png' \
+            -o m88/assets/parties/psoe.png
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Coalici%C3%B3n_Canaria.svg?width=640' \
+            -o m88/assets/parties/cc.png
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_del_PP_%282022%29.svg?width=640' \
+            -o m88/assets/parties/pp.png
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/VOX_logo.svg?width=640' \
+            -o m88/assets/parties/vox.png
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_AI.jpg?width=640' \
+            -o m88/assets/parties/alternativa-icodense.jpg
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://irverdes.com/wp-content/uploads/2023/03/IR_VERDES-IC-20_anos-horiz.png' \
+            -o m88/assets/parties/ir-verdes.png
+
+          curl -fL --retry 3 --connect-timeout 20 \
+            'https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg' \
+            -o m88/assets/parties/si-se-puede.jpg
+
+          # Try to locate AISU's own site logo. Failure is allowed; the UI will keep its labelled fallback.
+          AISU_URL=$(curl -fsL 'https://www.aisusantaursula.com/' | grep -Eo 'https?[^"'"' ]+\.(png|jpg|jpeg|webp)' | grep -Ei 'logo|aisu' | head -n 1 || true)
+          if [ -n "${AISU_URL:-}" ]; then
+            curl -fL --retry 2 "$AISU_URL" -o m88/assets/parties/aisu.img || true
+          fi
+
+          echo 'Downloaded files:'
+          find m88/assets/parties -maxdepth 1 -type f -print -exec file {} \;
+
+          # Reject accidental HTML error pages.
+          for f in m88/assets/parties/psoe.png m88/assets/parties/cc.png m88/assets/parties/pp.png m88/assets/parties/vox.png m88/assets/parties/alternativa-icodense.jpg m88/assets/parties/ir-verdes.png m88/assets/parties/si-se-puede.jpg; do
+            file "$f" | grep -Eiq 'PNG image|JPEG image|SVG Scalable Vector Graphics' || { echo "Invalid logo payload: $f"; exit 1; }
+          done
+
+      - name: Commit cached logos
+        run: |
+          git config user.name 'constelacion8'
+          git config user.email 'info@enriquerodda.com'
+          git add m88/assets/parties
+          if git diff --cached --quiet; then
+            echo 'No logo changes to commit'
+          else
+            git commit -m 'Cache party logos for M88'
+            git push
+          fi
