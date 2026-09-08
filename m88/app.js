@@ -1,5 +1,5 @@
-import { islands, totalMunicipalities } from './data.js';
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js';
+import { islands, totalMunicipalities } from './data.js?v=20260908-1842';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js?v=20260908-1842';
 
 let supabase = null;
 if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
@@ -90,7 +90,7 @@ async function loadContacts(municipalityName){
     return;
   }
   const { data, error } = await supabase
-    .from('contacts_directory')
+    .from('m88_contacts_directory')
     .select('full_name,official_title,email,phone,source_url,verified_at,notes,area_names')
     .eq('municipality_name', municipalityName)
     .order('full_name', { ascending:true });
