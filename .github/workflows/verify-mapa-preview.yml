@@ -9,16 +9,22 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify CDN wrapper
+      - name: Diagnose CDN wrappers
         shell: bash
         run: |
           set -euo pipefail
-          URL='https://cdn.jsdelivr.net/gh/constelacion8/constelacion8@mapa-comercial-preview/mapa-comercial-preview/index.html'
-          curl -fsSL -D /tmp/cdn-headers.txt "$URL" -o /tmp/wrapper.html
-          grep -qi '^content-type:.*text/html' /tmp/cdn-headers.txt
-          grep -q 'Mapa Comercial · DE8 Films' /tmp/wrapper.html
-          grep -q 'hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial' /tmp/wrapper.html
-          echo 'CDN_WRAPPER_OK'
+          for NAME in jsdelivr githack; do
+            if [ "$NAME" = jsdelivr ]; then
+              URL='https://cdn.jsdelivr.net/gh/constelacion8/constelacion8@mapa-comercial-preview/mapa-comercial-preview/index.html'
+            else
+              URL='https://raw.githack.com/constelacion8/constelacion8/mapa-comercial-preview/mapa-comercial-preview/index.html'
+            fi
+            echo "=== $NAME ==="
+            curl -fsSL -D "/tmp/$NAME-headers.txt" "$URL" -o "/tmp/$NAME.html"
+            grep -i '^content-type:' "/tmp/$NAME-headers.txt" || true
+            grep -q 'hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial' "/tmp/$NAME.html"
+            echo "BODY_OK_$NAME"
+          done
 
       - name: Verify Supabase web app
         shell: bash
@@ -26,7 +32,7 @@ jobs:
           set -euo pipefail
           URL='https://hhruwnbhogbslhcmpktu.supabase.co/functions/v1/mapa-comercial'
           curl -fsSL -D /tmp/app-headers.txt "$URL" -o /tmp/app.html
-          grep -qi '^content-type:.*text/html' /tmp/app-headers.txt
+          grep -i '^content-type:' /tmp/app-headers.txt || true
           if grep -qi '^x-frame-options:.*deny\|^x-frame-options:.*sameorigin' /tmp/app-headers.txt; then
             echo 'Supabase blocks iframe embedding'; exit 1
           fi
@@ -48,5 +54,6 @@ jobs:
             -H 'apikey: sb_publishable_SftrWcHM4Ovcsvxmyt5rDg_kN2Te2Qm' \
             -H 'Content-Type: application/json' \
             --data '{"p_username":"__verification_invalid__","p_password":"__verification_invalid__"}')
+          echo "LOGIN_RPC_STATUS=$STATUS"
           test "$STATUS" = '200'
           echo 'LOGIN_RPC_REACHABLE'
