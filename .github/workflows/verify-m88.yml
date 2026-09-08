@@ -59,14 +59,15 @@ jobs:
             await page.waitForSelector('.contact-card .party-row',{timeout:30000});
             const partyText=(await page.locator('.contact-card .party-row').first().textContent() || '').replace(/\s+/g,' ').trim();
             if(!/PSOE|Partido Socialista/i.test(partyText)) throw new Error(`Adeje party mark missing PSOE: ${partyText}`);
-            const partyOk=await page.locator('.contact-card .party-row').first().evaluate(row=>{
+            await page.waitForFunction(()=>{
+              const row=document.querySelector('.contact-card .party-row');
+              if(!row) return false;
               const img=row.querySelector('img.party-logo');
               const badge=row.querySelector('.party-badge');
               const imageOk=!!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
               const badgeOk=!!badge && getComputedStyle(badge).display!=='none';
               return imageOk || badgeOk;
-            });
-            if(!partyOk) throw new Error('Party logo and fallback badge both unavailable');
+            },null,{timeout:15000});
 
             await page.click('#navAll');
             await page.waitForTimeout(300);
