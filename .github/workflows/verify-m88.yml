@@ -27,6 +27,7 @@ jobs:
           const { chromium } = require('playwright');
           (async()=>{
             const browser=await chromium.launch({headless:true});
+
             const page=await browser.newPage({viewport:{width:1440,height:1000}});
             const errors=[];
             page.on('pageerror',e=>errors.push(String(e)));
@@ -47,7 +48,19 @@ jobs:
             count=await page.locator('.municipality-card').count();
             if(count!==88) throw new Error(`All municipalities expected 88, got ${count}`);
             if(errors.length) throw new Error(errors.join(' | '));
-            console.log('M88_OK: direct access, Tenerife=31, Supabase=200, total=88');
+
+            const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
+            await mobile.goto(`https://constelacion8.com/m88/?mobilecheck=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
+            await mobile.waitForSelector('.archipelago-stage',{timeout:30000});
+            const stage=await mobile.locator('.archipelago-stage').boundingBox();
+            if(!stage) throw new Error('Mobile map stage missing');
+            if(stage.x < -1 || stage.x + stage.width > 391) throw new Error(`Mobile map stage clipped: x=${stage.x}, width=${stage.width}`);
+            for(const node of await mobile.locator('.island-node').all()){
+              const box=await node.boundingBox();
+              if(!box) continue;
+              if(box.x < -2 || box.x + box.width > 392) throw new Error(`Mobile island clipped: x=${box.x}, width=${box.width}`);
+            }
+            console.log('M88_OK: desktop + backend + mobile map fit');
             await browser.close();
           })().catch(err=>{console.error(err);process.exit(1)});
           NODE
