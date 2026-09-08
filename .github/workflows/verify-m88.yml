@@ -55,6 +55,19 @@ jobs:
             const response=await apiResponse;
             if(response.status()!==200) throw new Error(`Supabase directory HTTP ${response.status()}`);
             await page.waitForFunction(()=>document.querySelector('#contactCount')?.textContent!=='Cargando…',null,{timeout:30000});
+
+            await page.waitForSelector('.contact-card .party-row',{timeout:30000});
+            const partyText=(await page.locator('.contact-card .party-row').first().textContent() || '').replace(/\s+/g,' ').trim();
+            if(!/PSOE|Partido Socialista/i.test(partyText)) throw new Error(`Adeje party mark missing PSOE: ${partyText}`);
+            const partyOk=await page.locator('.contact-card .party-row').first().evaluate(row=>{
+              const img=row.querySelector('img.party-logo');
+              const badge=row.querySelector('.party-badge');
+              const imageOk=!!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
+              const badgeOk=!!badge && getComputedStyle(badge).display!=='none';
+              return imageOk || badgeOk;
+            });
+            if(!partyOk) throw new Error('Party logo and fallback badge both unavailable');
+
             await page.click('#navAll');
             await page.waitForTimeout(300);
             count=await page.locator('.municipality-card').count();
@@ -72,7 +85,7 @@ jobs:
               if(!box) continue;
               if(box.x < -2 || box.x + box.width > 392) throw new Error(`Mobile island clipped: x=${box.x}, width=${box.width}`);
             }
-            console.log('M88_OK: minimal home + desktop + backend + mobile map fit');
+            console.log('M88_OK: minimal home + desktop + backend + party mark + mobile map fit');
             await browser.close();
           })().catch(err=>{console.error(err);process.exit(1)});
           NODE
