@@ -22,12 +22,26 @@ const grid = document.getElementById('municipalityGrid');
 const search = document.getElementById('municipalitySearch');
 let activeIsland = null;
 
+const passwordButton = document.createElement('button');
+passwordButton.type = 'button';
+passwordButton.textContent = 'Cambiar contraseña';
+passwordButton.hidden = true;
+passwordButton.setAttribute('aria-label','Cambiar contraseña');
+Object.assign(passwordButton.style,{
+  position:'fixed',right:'18px',bottom:'18px',zIndex:'90',border:'1px solid #FFCD00',
+  borderRadius:'999px',padding:'11px 15px',background:'#000',color:'#FFCD00',
+  font:'600 10px Work Sans, sans-serif',letterSpacing:'.09em',textTransform:'uppercase',
+  boxShadow:'0 14px 40px rgba(0,0,0,.45)'
+});
+document.body.appendChild(passwordButton);
+
 function getToken(){ return sessionStorage.getItem(SESSION_KEY) || ''; }
 function setToken(token){ token ? sessionStorage.setItem(SESSION_KEY, token) : sessionStorage.removeItem(SESSION_KEY); }
 
 function setAuthenticated(authenticated){
   authScreen.hidden = authenticated;
   app.hidden = !authenticated;
+  passwordButton.hidden = !authenticated;
   if(authenticated) showMap();
 }
 
@@ -81,11 +95,48 @@ loginForm.addEventListener('submit', async (event)=>{
   }
 });
 
+passwordButton.addEventListener('click', async()=>{
+  if(!supabase) return;
+  const token = getToken();
+  if(!token || !(await validateToken(token))){
+    setToken('');
+    setAuthenticated(false);
+    setLoginMessage('La sesión ha caducado. Vuelve a acceder.', true);
+    return;
+  }
+  const newPassword = window.prompt('Nueva contraseña (mínimo 8 caracteres):');
+  if(newPassword === null) return;
+  if(newPassword.length < 8 || newPassword.length > 64){
+    window.alert('La contraseña debe tener entre 8 y 64 caracteres.');
+    return;
+  }
+  const confirmation = window.prompt('Repite la nueva contraseña:');
+  if(confirmation === null) return;
+  if(newPassword !== confirmation){
+    window.alert('Las contraseñas no coinciden.');
+    return;
+  }
+  passwordButton.disabled = true;
+  try{
+    const { data, error } = await supabase.rpc('mc_change_password', { p_token: token, p_new_password: newPassword });
+    if(error || data !== true){
+      window.alert('No se pudo cambiar la contraseña.');
+      return;
+    }
+    setToken('');
+    setAuthenticated(false);
+    setLoginMessage('Contraseña actualizada. Vuelve a entrar con la nueva.');
+    window.alert('Contraseña actualizada correctamente.');
+  }finally{
+    passwordButton.disabled = false;
+  }
+});
+
 document.getElementById('logoutButton').addEventListener('click', async()=>{
   const token = getToken();
   setToken('');
   setAuthenticated(false);
-  if(supabase && token) await supabase.rpc('mc_logout',{p_token:token});
+  if(supabase && token) await supabase.rpc('mc_logout', { p_token: token });
 });
 
 document.getElementById('homeButton').addEventListener('click', showMap);
