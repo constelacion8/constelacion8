@@ -60,14 +60,14 @@ jobs:
             const partyText=(await page.locator('.contact-card .party-row').first().textContent() || '').replace(/\s+/g,' ').trim();
             if(!/PSOE|Partido Socialista/i.test(partyText)) throw new Error(`Adeje party mark missing PSOE: ${partyText}`);
             await page.waitForFunction(()=>{
-              const row=document.querySelector('.contact-card .party-row');
-              if(!row) return false;
-              const img=row.querySelector('img.party-logo');
-              const badge=row.querySelector('.party-badge');
-              const imageOk=!!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
-              const badgeOk=!!badge && getComputedStyle(badge).display!=='none';
-              return imageOk || badgeOk;
+              const img=document.querySelector('.contact-card .party-row img.party-logo');
+              return !!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
             },null,{timeout:15000});
+            const desktopLogo=page.locator('.contact-card .party-logo').first();
+            const desktopSrc=await desktopLogo.getAttribute('src');
+            if(!desktopSrc || !desktopSrc.includes('/m88/assets/parties/')) throw new Error(`Party logo is not local: ${desktopSrc}`);
+            const desktopBox=await desktopLogo.boundingBox();
+            if(!desktopBox || desktopBox.height < 50) throw new Error(`Desktop party logo too small: ${desktopBox?.height}`);
 
             await page.click('#navAll');
             await page.waitForTimeout(300);
@@ -86,7 +86,22 @@ jobs:
               if(!box) continue;
               if(box.x < -2 || box.x + box.width > 392) throw new Error(`Mobile island clipped: x=${box.x}, width=${box.width}`);
             }
-            console.log('M88_OK: minimal home + desktop + backend + party mark + mobile map fit');
+
+            await mobile.click('[data-island="tenerife"]');
+            await mobile.waitForSelector('.municipality-card',{timeout:30000});
+            await mobile.locator('.municipality-card').filter({hasText:'Adeje'}).click();
+            await mobile.waitForFunction(()=>document.querySelector('#contactCount')?.textContent!=='Cargando…',null,{timeout:30000});
+            await mobile.waitForFunction(()=>{
+              const img=document.querySelector('.contact-card .party-row img.party-logo');
+              return !!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
+            },null,{timeout:15000});
+            const mobileLogo=mobile.locator('.contact-card .party-logo').first();
+            const mobileSrc=await mobileLogo.getAttribute('src');
+            if(!mobileSrc || !mobileSrc.includes('/m88/assets/parties/')) throw new Error(`Mobile party logo is not local: ${mobileSrc}`);
+            const mobileBox=await mobileLogo.boundingBox();
+            if(!mobileBox || mobileBox.height < 44) throw new Error(`Mobile party logo too small: ${mobileBox?.height}`);
+
+            console.log('M88_OK: local party logos + larger desktop/mobile size + backend + map fit');
             await browser.close();
           })().catch(err=>{console.error(err);process.exit(1)});
           NODE
