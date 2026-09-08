@@ -26,49 +26,79 @@ jobs:
           cat > verify-gc.cjs <<'NODE'
           const { chromium } = require('playwright');
           const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+          async function imageLoaded(img){
+            return img.evaluate(el => new Promise(resolve => {
+              const done = () => resolve(el.naturalWidth > 0 && getComputedStyle(el).display !== 'none');
+              if (el.complete) return done();
+              el.addEventListener('load', done, { once:true });
+              el.addEventListener('error', () => resolve(false), { once:true });
+              setTimeout(() => resolve(false), 8000);
+            }));
+          }
+
           (async()=>{
             const browser=await chromium.launch({headless:true});
             const page=await browser.newPage({viewport:{width:1280,height:900}});
+            const pageErrors=[];
+            page.on('pageerror',e=>pageErrors.push(String(e)));
+
             let ready=false;
             for(let attempt=0;attempt<12;attempt++){
               await page.goto(`https://constelacion8.com/m88/?gcLogoCheck=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
               const src=await page.locator('script[src*="app.js"]').getAttribute('src').catch(()=>null);
-              if(src && src.includes('logosgc')) { ready=true; break; }
+              if(src && src.includes('logosgc-local1')) { ready=true; break; }
               await sleep(5000);
             }
-            if(!ready) throw new Error('Gran Canaria logo build not visible yet');
+            if(!ready) throw new Error('Latest Gran Canaria local-logo build not visible yet');
+
             await page.click('[data-island="gran-canaria"]');
             await page.waitForSelector('.municipality-card',{timeout:30000});
-            const municipalities=await page.locator('.municipality-card').allTextContents();
+            const municipalities=await page.locator('.municipality-card').evaluateAll(els=>els.map(el=>el.dataset.name));
             if(municipalities.length!==21) throw new Error(`Expected 21 municipalities, got ${municipalities.length}`);
+
             const failures=[];
             let contacts=0;
-            for(const raw of municipalities){
-              const name=raw.replace(/^\s*\d+\s*·\s*Gran Canaria\s*/i,'').replace(/Ver contactos\s*→?\s*$/i,'').trim();
-              await page.locator('.municipality-card').filter({hasText:name}).click();
-              await page.waitForFunction(()=>document.querySelector('#contactCount')?.textContent!=='Cargando…',null,{timeout:30000});
+            for(const name of municipalities){
+              await page.locator(`.municipality-card[data-name="${CSS.escape(name)}"]`).click();
+              await page.waitForFunction(()=>{
+                const value=document.querySelector('#contactCount')?.textContent || '';
+                return value && value!=='Cargando…';
+              },null,{timeout:30000});
+
               const cards=page.locator('.contact-card');
               const n=await cards.count();
               contacts+=n;
+              if(!n) failures.push(`${name}: no contact cards rendered`);
+
               for(let i=0;i<n;i++){
                 const card=cards.nth(i);
                 const person=(await card.locator('h3').textContent()||'').trim();
                 const row=card.locator('.party-row');
-                if(await row.count()!==1){failures.push(`${name}: ${person}: no party row`);continue;}
+                if(await row.count()!==1){
+                  failures.push(`${name}: ${person}: no party row`);
+                  continue;
+                }
                 const img=row.locator('img.party-logo');
-                if(await img.count()!==1){failures.push(`${name}: ${person}: no logo image`);continue;}
-                const ok=await img.evaluate(el=>el.complete && el.naturalWidth>0 && getComputedStyle(el).display!=='none');
+                if(await img.count()!==1){
+                  failures.push(`${name}: ${person}: no logo image`);
+                  continue;
+                }
+                const ok=await imageLoaded(img);
                 if(!ok){
                   const src=await img.getAttribute('src');
                   failures.push(`${name}: ${person}: broken/hidden logo ${src}`);
                 }
               }
+
               await page.click('#backToMunicipalities');
               await page.waitForSelector('.municipality-card',{timeout:30000});
             }
+
             if(contacts!==60) failures.push(`Expected 60 contacts, got ${contacts}`);
+            if(pageErrors.length) failures.push(`Page errors: ${pageErrors.join(' | ')}`);
             if(failures.length) throw new Error(`GC logo failures:\n${failures.join('\n')}`);
-            console.log(`GC_LOGOS_OK: ${contacts} contacts across 21 municipalities, all logos load`);
+            console.log(`GC_LOGOS_OK: ${contacts} contacts across 21 municipalities, all party logos load`);
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
