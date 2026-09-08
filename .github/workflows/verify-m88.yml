@@ -1,0 +1,49 @@
+name: Verify M88
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'm88/**'
+      - '.github/workflows/verify-m88.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.57.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+      - name: Verify public app
+        run: |
+          cat > verify-m88.cjs <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1440,height:1000}});
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('https://constelacion8.com/m88/',{waitUntil:'networkidle',timeout:90000});
+            if(await page.locator('#loginForm').count()) throw new Error('Unexpected login form');
+            await page.waitForSelector('[data-island="tenerife"]',{timeout:30000});
+            await page.click('[data-island="tenerife"]');
+            await page.waitForSelector('.municipality-card',{timeout:30000});
+            let count=await page.locator('.municipality-card').count();
+            if(count!==31) throw new Error(`Tenerife expected 31, got ${count}`);
+            await page.click('#navAll');
+            await page.waitForTimeout(300);
+            count=await page.locator('.municipality-card').count();
+            if(count!==88) throw new Error(`All municipalities expected 88, got ${count}`);
+            if(errors.length) throw new Error(errors.join(' | '));
+            console.log('M88_OK: direct access, Tenerife=31, total=88');
+            await browser.close();
+          })().catch(err=>{console.error(err);process.exit(1)});
+          NODE
+          node verify-m88.cjs
