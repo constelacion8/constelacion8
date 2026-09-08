@@ -60,7 +60,7 @@ jobs:
             const failures=[];
             let contacts=0;
             for(const name of municipalities){
-              await page.locator(`.municipality-card[data-name="${CSS.escape(name)}"]`).click();
+              await page.locator(`.municipality-card[data-name=${JSON.stringify(name)}]`).click();
               await page.waitForFunction(()=>{
                 const value=document.querySelector('#contactCount')?.textContent || '';
                 return value && value!=='Cargando…';
