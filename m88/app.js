@@ -15,6 +15,26 @@ if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
 
 const PARTY_MARKS = [
   {
+    test: /agrupaci[oó]n herre[nñ]a independiente|\bahi\b/i,
+    short: 'AHI',
+    src: './assets/parties/ahi.svg'
+  },
+  {
+    test: /agrupaci[oó]n socialista gomera|\basg\b/i,
+    short: 'ASG',
+    src: './assets/parties/asg.svg'
+  },
+  {
+    test: /unidos por betancuria|\bupbe\b/i,
+    short: 'UPBE',
+    src: './assets/parties/upbe.svg'
+  },
+  {
+    test: /unidos por yaiza|\bupy\b/i,
+    short: 'UPY',
+    src: './assets/parties/upy.jpg'
+  },
+  {
     test: /roque aguayro/i,
     short: 'RA',
     src: './assets/parties/roque-aguayro.png'
