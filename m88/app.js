@@ -13,6 +13,54 @@ if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
   }
 }
 
+const PARTY_MARKS = [
+  {
+    test: /iniciativa por el rosario|ir-?verdes/i,
+    short: 'IR-VERDES',
+    src: 'https://irverdes.com/wp-content/uploads/2023/03/IR_VERDES-IC-20_anos-horiz.png'
+  },
+  {
+    test: /alternativa icodense/i,
+    short: 'AI',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Logo_AI.jpg'
+  },
+  {
+    test: /asamblea unificada|aup-?ssp|sí se puede|si se puede/i,
+    short: 'AUP-SSP',
+    src: 'https://sisepuedecanarias.org/wp-content/uploads/2018/12/logo-ssp-infimo.jpg'
+  },
+  {
+    test: /agrupación independiente de santa úrsula|agrupacion independiente de santa ursula|\baisu\b/i,
+    short: 'AISU',
+    src: null
+  },
+  {
+    test: /agrupación independiente de arafo|agrupacion independiente de arafo|ai ?arafo/i,
+    short: 'AIA-CC',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Coalici%C3%B3n_Canaria.svg/400px-Coalici%C3%B3n_Canaria.svg.png'
+  },
+  {
+    test: /coalición canaria|coalicion canaria/i,
+    short: 'CC',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Coalici%C3%B3n_Canaria.svg/400px-Coalici%C3%B3n_Canaria.svg.png'
+  },
+  {
+    test: /partido popular|\bpp\b/i,
+    short: 'PP',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Logo_del_PP_%282022%29.svg/512px-Logo_del_PP_%282022%29.svg.png'
+  },
+  {
+    test: /\bvox\b/i,
+    short: 'VOX',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/VOX_logo.svg/500px-VOX_logo.svg.png'
+  },
+  {
+    test: /partido socialista|psoe/i,
+    short: 'PSOE',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/9/92/PSOE_LOGO.png'
+  }
+];
+
 const mapSection = document.getElementById('mapSection');
 const directorySection = document.getElementById('directorySection');
 const contactSection = document.getElementById('contactSection');
@@ -88,6 +136,24 @@ function showMunicipality(name,islandName){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+function partyMark(party){
+  const text = String(party || '').trim();
+  if(!text) return '';
+  const mark = PARTY_MARKS.find(item=>item.test.test(text));
+  const short = mark?.short || initialsFromParty(text);
+  const image = mark?.src
+    ? `<img class="party-logo" src="${escapeAttr(mark.src)}" alt="${escapeAttr(short)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-grid'">`
+    : '';
+  const badgeStyle = mark?.src ? ' style="display:none"' : '';
+  return `<div class="party-row">${image}<span class="party-badge"${badgeStyle}>${escapeHtml(short)}</span><span class="party-name">${escapeHtml(text)}</span></div>`;
+}
+
+function initialsFromParty(value){
+  const tokens = String(value).replace(/\([^)]*\)/g,' ').split(/\s+/).filter(Boolean);
+  const initials = tokens.filter(token=>!/^(de|del|la|el|y|por)$/i.test(token)).slice(0,4).map(token=>token[0]).join('').toUpperCase();
+  return initials || 'PARTIDO';
+}
+
 async function loadContacts(municipalityName){
   if(!supabase){
     document.getElementById('contactCount').textContent = '0 contactos';
@@ -106,7 +172,7 @@ async function loadContacts(municipalityName){
   document.getElementById('contactCount').textContent = `${data.length} ${data.length===1?'contacto':'contactos'}`;
   if(!data.length) return;
   empty.hidden = true;
-  list.innerHTML = data.map(contact=>`<article class="contact-card"><div class="areas">${escapeHtml(contact.area_names || 'Área institucional')}</div><h3>${escapeHtml(contact.full_name)}</h3><p>${escapeHtml(contact.official_title || '')}</p>${contact.political_party ? `<p><strong>Partido:</strong> ${escapeHtml(contact.political_party)}</p>` : ''}${contact.address ? `<p><strong>Dirección:</strong> ${escapeHtml(contact.address)}</p>` : ''}<p>${contact.email ? `<a href="mailto:${escapeAttr(contact.email)}">${escapeHtml(contact.email)}</a>` : ''}${contact.phone ? `${contact.email?' · ':''}${escapeHtml(contact.phone)}` : ''}</p>${contact.source_url ? `<p><a href="${escapeAttr(contact.source_url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></p>` : ''}</article>`).join('');
+  list.innerHTML = data.map(contact=>`<article class="contact-card"><div class="areas">${escapeHtml(contact.area_names || 'Área institucional')}</div><h3>${escapeHtml(contact.full_name)}</h3><p>${escapeHtml(contact.official_title || '')}</p>${partyMark(contact.political_party)}${contact.address ? `<p><strong>Dirección:</strong> ${escapeHtml(contact.address)}</p>` : ''}<p>${contact.email ? `<a href="mailto:${escapeAttr(contact.email)}">${escapeHtml(contact.email)}</a>` : ''}${contact.phone ? `${contact.email?' · ':''}${escapeHtml(contact.phone)}` : ''}</p>${contact.source_url ? `<p><a href="${escapeAttr(contact.source_url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></p>` : ''}</article>`).join('');
 }
 
 search.addEventListener('input',()=>{
