@@ -13,56 +13,45 @@ jobs:
   discover:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect official sites
+      - name: Inspect remaining party pages
         shell: bash
         run: |
           python3 - <<'PY'
           import re, urllib.request, urllib.parse, html
-          sites = {
-            'ROQUE':'https://roqueaguayro.com/',
-            'AET':'https://tejedanosmueve.es/',
-            'ANDO':'https://andosataute.es/',
-            'ASAMBLEA_VALSEQUILLERA':'https://asambleavalsequillera.org/',
-            'BNR':'https://bloquenacionalistarural.org/',
-            'AVESAN':'https://avesan2011.blogspot.com/',
-            'MAS_TELDE':'https://www.masportelde.com/',
-            'JPM':'https://transparencia.mogan.es/',
-            'VPLURAL':'https://valsequilloplural.com/',
-            'NC':'https://www.nuevacanariasbc.org/',
-            'DRAGO':'https://www.dragocanarias.com/'
+          pages = {
+            'JPM_CONCEJAL':'https://transparencia.mogan.es/consistorio/luis-miguel-becerra-andre/',
+            'JPM_HOME':'https://transparencia.mogan.es/inicio/',
+            'AVESAN_TEAM':'https://vegadesanmateo.es/ayuntamiento/equipo-de-gobierno',
+            'AVESAN_BLOG':'https://avesan2011.blogspot.com/?m=1',
+            'ASAVA_HTTP':'http://asambleavalsequillera.org/',
+            'ASAVA_WWW_HTTP':'http://www.asambleavalsequillera.org/',
+            'ASAVA_WWW_HTTPS':'https://www.asambleavalsequillera.org/',
+            'VPL':'https://valsequilloplural.com/',
+            'RTVE_2023':'https://resultados-elecciones.rtve.es/municipales/2023/canarias/las-palmas/'
           }
-          headers={'User-Agent':'Mozilla/5.0'}
-          for name,url in sites.items():
+          headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/127 Safari/537.36'}
+          for name,url in pages.items():
             print('\n###',name,url)
             try:
               req=urllib.request.Request(url,headers=headers)
-              text=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','ignore')
-              text=html.unescape(text)
-              candidates=[]
-              # Link rel icons
-              for m in re.finditer(r'<link[^>]+(?:rel=["\'][^"\']*(?:icon|apple-touch)[^"\']*["\'])[^>]*>',text,re.I):
-                tag=m.group(0); hm=re.search(r'href=["\']([^"\']+)',tag,re.I)
-                if hm:candidates.append(('ICON',hm.group(1)))
-              # OG image
-              for m in re.finditer(r'<meta[^>]+(?:property|name)=["\'](?:og:image|twitter:image)["\'][^>]*>',text,re.I):
-                tag=m.group(0); cm=re.search(r'content=["\']([^"\']+)',tag,re.I)
-                if cm:candidates.append(('OG',cm.group(1)))
-              # Images whose tag hints logo/brand
-              for m in re.finditer(r'<img\b[^>]*>',text,re.I):
-                tag=m.group(0)
-                if re.search(r'logo|brand|cabecera|header',tag,re.I):
-                  sm=re.search(r'(?:src|data-src)=["\']([^"\']+)',tag,re.I)
-                  if sm:candidates.append(('IMG',sm.group(1)))
-              # CSS background/url filenames containing logo
-              for m in re.finditer(r'url\(["\']?([^\)"\']*(?:logo|brand)[^\)"\']*)',text,re.I):
-                candidates.append(('CSS',m.group(1)))
-              seen=set()
-              for typ,asset in candidates:
-                asset=asset.strip()
-                if asset.startswith('//'): asset='https:'+asset
-                elif not asset.startswith('http'): asset=urllib.parse.urljoin(url,asset)
-                if asset not in seen:
-                  seen.add(asset); print(typ,asset)
+              data=urllib.request.urlopen(req,timeout=30).read()
+              text=html.unescape(data.decode('utf-8','ignore'))
+              print('BYTES',len(data))
+              # print every img tag that contains party-related words or looks like a logo
+              for tag in re.findall(r'<img\b[^>]*>',text,re.I):
+                if re.search(r'juntos|mog[aá]n|avesan|asamblea|valsequ|logo|partido|politic|candid',tag,re.I):
+                  print('IMG_TAG',tag[:1500])
+              # print image URLs close to target words
+              for target in ['Juntos por Mogán','AVESAN','Asamblea Valsequillera','ASAVA','El Cambio Necesario','PSOE-VPL','Valsequillo Plural']:
+                for m in re.finditer(re.escape(target),text,re.I):
+                  snip=text[max(0,m.start()-1000):m.end()+1000]
+                  urls=re.findall(r'https?://[^\s"\'<>]+(?:png|jpe?g|svg|webp)(?:\?[^\s"\'<>]*)?',snip,re.I)
+                  if urls:
+                    print('NEAR',target,*urls,sep='\n  ')
+                    break
+              for m in re.finditer(r'(?:src|href)=["\']([^"\']+\.(?:png|jpe?g|svg|webp)(?:\?[^"\']*)?)["\']',text,re.I):
+                asset=urllib.parse.urljoin(url,m.group(1))
+                if re.search(r'logo|juntos|avesan|asamblea|valsequ|partido|politic',asset,re.I): print('ASSET',asset)
             except Exception as e:
               print('ERROR',repr(e))
           PY
