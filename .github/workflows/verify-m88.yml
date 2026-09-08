@@ -25,19 +25,31 @@ jobs:
         run: |
           cat > verify-m88.cjs <<'NODE'
           const { chromium } = require('playwright');
+          const sleep = ms => new Promise(resolve=>setTimeout(resolve,ms));
           (async()=>{
             const browser=await chromium.launch({headless:true});
-
             const page=await browser.newPage({viewport:{width:1440,height:1000}});
             const errors=[];
             page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto('https://constelacion8.com/m88/',{waitUntil:'networkidle',timeout:90000});
+
+            let fresh=false;
+            for(let attempt=0;attempt<12;attempt++){
+              await page.goto(`https://constelacion8.com/m88/?fresh=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
+              const title=(await page.locator('#mapSection h1').textContent().catch(()=>''))?.replace(/\s+/g,' ').trim();
+              const tooltipCount=await page.locator('#mapTooltip').count();
+              if(title==='Mapa comercial de DE8 Films.' && tooltipCount===0){fresh=true;break;}
+              await sleep(5000);
+            }
+            if(!fresh) throw new Error('Fresh minimal M88 deployment not visible yet');
             if(await page.locator('#loginForm').count()) throw new Error('Unexpected login form');
+            if(await page.locator('.brand-mark').count()) throw new Error('Legacy brand mark still visible in DOM');
+
             await page.waitForSelector('[data-island="tenerife"]',{timeout:30000});
             await page.click('[data-island="tenerife"]');
             await page.waitForSelector('.municipality-card',{timeout:30000});
             let count=await page.locator('.municipality-card').count();
             if(count!==31) throw new Error(`Tenerife expected 31, got ${count}`);
+
             const apiResponse = page.waitForResponse(r=>r.url().includes('/rest/v1/m88_contacts_directory') && r.request().method()==='GET',{timeout:30000});
             await page.locator('.municipality-card').filter({hasText:'Adeje'}).click();
             const response=await apiResponse;
@@ -60,7 +72,7 @@ jobs:
               if(!box) continue;
               if(box.x < -2 || box.x + box.width > 392) throw new Error(`Mobile island clipped: x=${box.x}, width=${box.width}`);
             }
-            console.log('M88_OK: desktop + backend + mobile map fit');
+            console.log('M88_OK: minimal home + desktop + backend + mobile map fit');
             await browser.close();
           })().catch(err=>{console.error(err);process.exit(1)});
           NODE
