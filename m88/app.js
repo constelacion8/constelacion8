@@ -95,7 +95,7 @@ async function loadContacts(municipalityName){
   }
   const { data, error } = await supabase
     .from('m88_contacts_directory')
-    .select('full_name,official_title,email,phone,source_url,verified_at,notes,area_names')
+    .select('full_name,official_title,email,phone,source_url,verified_at,notes,area_names,political_party,address')
     .eq('municipality_name', municipalityName)
     .order('full_name', { ascending:true });
   if(error){
@@ -106,7 +106,7 @@ async function loadContacts(municipalityName){
   document.getElementById('contactCount').textContent = `${data.length} ${data.length===1?'contacto':'contactos'}`;
   if(!data.length) return;
   empty.hidden = true;
-  list.innerHTML = data.map(contact=>`<article class="contact-card"><div class="areas">${escapeHtml(contact.area_names || 'Área institucional')}</div><h3>${escapeHtml(contact.full_name)}</h3><p>${escapeHtml(contact.official_title || '')}</p><p>${contact.email ? `<a href="mailto:${escapeAttr(contact.email)}">${escapeHtml(contact.email)}</a>` : ''}${contact.phone ? `${contact.email?' · ':''}${escapeHtml(contact.phone)}` : ''}</p>${contact.source_url ? `<p><a href="${escapeAttr(contact.source_url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></p>` : ''}</article>`).join('');
+  list.innerHTML = data.map(contact=>`<article class="contact-card"><div class="areas">${escapeHtml(contact.area_names || 'Área institucional')}</div><h3>${escapeHtml(contact.full_name)}</h3><p>${escapeHtml(contact.official_title || '')}</p>${contact.political_party ? `<p><strong>Partido:</strong> ${escapeHtml(contact.political_party)}</p>` : ''}${contact.address ? `<p><strong>Dirección:</strong> ${escapeHtml(contact.address)}</p>` : ''}<p>${contact.email ? `<a href="mailto:${escapeAttr(contact.email)}">${escapeHtml(contact.email)}</a>` : ''}${contact.phone ? `${contact.email?' · ':''}${escapeHtml(contact.phone)}` : ''}</p>${contact.source_url ? `<p><a href="${escapeAttr(contact.source_url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></p>` : ''}</article>`).join('');
 }
 
 search.addEventListener('input',()=>{
