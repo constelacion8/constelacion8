@@ -1,5 +1,5 @@
 import { islands, totalMunicipalities } from './data.js?v=20260908-1842';
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js?v=20260908-1842';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js?v=20260909-agenda1';
 
 let supabase = null;
 if (SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
