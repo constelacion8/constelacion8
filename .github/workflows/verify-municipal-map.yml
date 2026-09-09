@@ -1,0 +1,87 @@
+name: Verify municipal map
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'm88/**'
+      - '.github/workflows/verify-municipal-map.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-municipal-map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.57.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+      - name: Verify municipal overlay on public app
+        run: |
+          cat > verify-municipal-map.cjs <<'NODE'
+          const { chromium } = require('playwright');
+          const sleep = ms => new Promise(resolve=>setTimeout(resolve,ms));
+
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1440,height:1000}});
+            const pageErrors=[];
+            page.on('pageerror',error=>pageErrors.push(String(error)));
+
+            let ready=false;
+            let lastError='';
+            for(let attempt=0;attempt<12;attempt++){
+              try{
+                await page.goto(`https://constelacion8.com/m88/?municipalcheck=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
+                await page.waitForSelector('.municipality-shape',{timeout:30000});
+                const count=await page.locator('.municipality-shape').count();
+                if(count===89){ready=true;break;}
+                lastError=`expected 89 municipality shapes, got ${count}`;
+              }catch(error){
+                lastError=String(error);
+              }
+              await sleep(5000);
+            }
+            if(!ready) throw new Error(`Municipal overlay not ready: ${lastError}`);
+
+            const municipalityCount=await page.locator('.municipality-shape').count();
+            if(municipalityCount!==89) throw new Error(`Expected 89 municipality shapes (88 + La Graciosa/Teguise), got ${municipalityCount}`);
+
+            const islandLayers=await page.locator('.island-node.has-municipalities').count();
+            if(islandLayers!==8) throw new Error(`Expected municipal layer on 8 island silhouettes, got ${islandLayers}`);
+
+            const constellationLines=await page.locator('.constellation-lines path').count();
+            if(constellationLines!==5) throw new Error(`Constellation lines changed: expected 5, got ${constellationLines}`);
+
+            const islandAuras=await page.locator('.island-aura').count();
+            if(islandAuras!==8) throw new Error(`Island aura effects changed: expected 8, got ${islandAuras}`);
+
+            const style=await page.locator('.municipality-shape').first().evaluate(el=>({
+              stroke:getComputedStyle(el).stroke,
+              fill:getComputedStyle(el).fill
+            }));
+            if(!/255\s*,\s*205\s*,\s*0/.test(style.stroke)) throw new Error(`Municipality separator is not DE8 yellow: ${style.stroke}`);
+            if(/255\s*,\s*255\s*,\s*255/.test(style.stroke)) throw new Error(`Municipality separator became white: ${style.stroke}`);
+
+            const legendItems=await page.locator('.pipeline-legend-item').count();
+            if(legendItems!==4) throw new Error(`Expected 4 commercial states in legend, got ${legendItems}`);
+            const legendCounts=await page.locator('.pipeline-legend-item b').allTextContents();
+            const total=legendCounts.reduce((sum,value)=>sum+(Number.parseInt(value,10)||0),0);
+            if(total!==88) throw new Error(`Commercial-state legend must total 88 municipalities, got ${total}`);
+
+            const statusValues=await page.locator('.municipality-shape').evaluateAll(nodes=>[...new Set(nodes.map(node=>node.dataset.status))]);
+            const allowed=new Set(['no_contactado','contactado','negociacion','trabajado']);
+            if(statusValues.some(value=>!allowed.has(value))) throw new Error(`Unexpected commercial status: ${statusValues.join(', ')}`);
+
+            if(pageErrors.length) throw new Error(pageErrors.join(' | '));
+
+            console.log(`MUNICIPAL_MAP_OK: ${municipalityCount} shapes, ${islandLayers} islands, yellow municipal borders, original glow/network preserved, legend=${legendCounts.join('/')}`);
+            await browser.close();
+          })().catch(error=>{console.error(error);process.exit(1)});
+          NODE
+          node verify-municipal-map.cjs
