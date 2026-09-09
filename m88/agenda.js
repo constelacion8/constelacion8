@@ -1,14 +1,43 @@
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js?v=20260908-1842';
+const SUPABASE_URL = 'https://kvoldyeinvjajsimxmyc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_AjQQNYKbCwaGNv_o1GopAw_TzyLkHXh';
 
-const agendaList = document.getElementById('agendaList');
-const agendaCount = document.getElementById('agendaCount');
-if (!agendaList || !agendaCount || !SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  // Agenda is optional and must never interfere with the map.
-} else {
+mountAgenda();
+
+function mountAgenda(){
+  const hero = document.getElementById('mapSection');
+  if(!hero || document.getElementById('agendaHome')) return;
+
+  if(!document.querySelector('link[data-m88-agenda]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='./agenda.css?v=20260909-1';
+    link.dataset.m88Agenda='true';
+    document.head.appendChild(link);
+  }
+
+  const section=document.createElement('section');
+  section.className='agenda-home';
+  section.id='agendaHome';
+  section.setAttribute('aria-labelledby','agendaTitle');
+  section.innerHTML=`
+    <div class="agenda-head">
+      <div>
+        <p class="agenda-kicker">Agenda comercial</p>
+        <h2 class="agenda-title" id="agendaTitle">Reuniones confirmadas</h2>
+      </div>
+      <div class="agenda-count" id="agendaCount"><strong>—</strong> reuniones</div>
+    </div>
+    <div class="agenda-list" id="agendaList">
+      <div class="agenda-loading" aria-label="Cargando reuniones"></div>
+    </div>`;
+  hero.appendChild(section);
   void loadAgenda();
 }
 
 async function loadAgenda(){
+  const agendaList=document.getElementById('agendaList');
+  const agendaCount=document.getElementById('agendaCount');
+  if(!agendaList||!agendaCount) return;
   try{
     const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/+esm');
     const client = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -33,6 +62,9 @@ async function loadAgenda(){
 }
 
 function renderAgenda(meetings){
+  const agendaList=document.getElementById('agendaList');
+  const agendaCount=document.getElementById('agendaCount');
+  if(!agendaList||!agendaCount) return;
   agendaCount.innerHTML=`<strong>${meetings.length}</strong> ${meetings.length===1?'reunión':'reuniones'}`;
   if(!meetings.length){
     agendaList.innerHTML='<div class="agenda-empty"><strong>Sin reuniones confirmadas.</strong><span>Las próximas reuniones aparecerán aquí automáticamente.</span></div>';
