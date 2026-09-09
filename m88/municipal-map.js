@@ -10,10 +10,10 @@ const GEO_URLS = [
 ];
 
 const STATUS = {
-  no_contactado: { label: 'No contactado', fill: 'rgba(194,59,59,.33)', dot: '#C23B3B' },
-  contactado: { label: 'Contactado', fill: 'rgba(217,132,47,.37)', dot: '#D9842F' },
-  negociacion: { label: 'En negociación', fill: 'rgba(62,138,90,.38)', dot: '#3E8A5A' },
-  trabajado: { label: 'Ya hemos trabajado', fill: 'rgba(47,111,163,.40)', dot: '#2F6FA3' }
+  no_contactado: { label: 'No contactado', paint: 'url(#municipality-fill-no-contactado)', dot: '#C23B3B', legend: '#C23B3B' },
+  contactado: { label: 'Contactado', paint: 'rgba(217,132,47,.82)', dot: '#D9842F', legend: '#D9842F' },
+  negociacion: { label: 'En negociación', paint: 'rgba(62,138,90,.82)', dot: '#3E8A5A', legend: '#3E8A5A' },
+  trabajado: { label: 'Ya hemos trabajado', paint: 'rgba(47,111,163,.84)', dot: '#2F6FA3', legend: '#2F6FA3' }
 };
 
 const allMunicipalities = islands.flatMap(island=>island.municipalities.map(name=>({name,island})));
@@ -78,7 +78,7 @@ function boundsFromPoints(points){
   for(const point of points){
     const x=Number(point?.[0]), y=Number(point?.[1]);
     if(!Number.isFinite(x)||!Number.isFinite(y)) continue;
-    if(x<minX) minX=x;if(x>maxX) maxX=x;if(y<minY) minY=y;if(y>maxY) maxY=y;
+    if(x<minX) minX=x; if(x>maxX) maxX=x; if(y<minY) minY=y; if(y>maxY) maxY=y;
   }
   return Number.isFinite(minX)?{minX,minY,maxX,maxY}:null;
 }
@@ -104,9 +104,41 @@ function geometryPath(geometry,geoBounds,targetBounds){
       ring.map((point,index)=>{
         const [x,y]=projectPoint(point,geoBounds,targetBounds);
         return `${index?'L':'M'}${x.toFixed(2)},${y.toFixed(2)}`;
-      }).join(' ')+' Z'
+      }).join(' ') + ' Z'
     ).join(' ')
   ).join(' ');
+}
+
+function getOrCreateDefs(svg){
+  let defs=svg.querySelector(':scope > defs');
+  if(defs) return defs;
+  defs=document.createElementNS(SVG_NS,'defs');
+  svg.insertBefore(defs,svg.firstChild);
+  return defs;
+}
+
+function ensurePaintDefs(defs){
+  if(defs.querySelector('#municipality-fill-no-contactado')) return;
+
+  const gradient=document.createElementNS(SVG_NS,'linearGradient');
+  gradient.id='municipality-fill-no-contactado';
+  gradient.setAttribute('x1','0%');
+  gradient.setAttribute('y1','0%');
+  gradient.setAttribute('x2','100%');
+  gradient.setAttribute('y2','100%');
+
+  const stops=[
+    ['0%','#7E1D1D'],
+    ['48%','#A82B2B'],
+    ['100%','#5C1212']
+  ];
+  for(const [offset,color] of stops){
+    const stop=document.createElementNS(SVG_NS,'stop');
+    stop.setAttribute('offset',offset);
+    stop.setAttribute('stop-color',color);
+    gradient.appendChild(stop);
+  }
+  defs.appendChild(gradient);
 }
 
 function ensureStyles(){
@@ -115,9 +147,21 @@ function ensureStyles(){
   style.id='de8MunicipalityMapStyles';
   style.textContent=`
     .municipality-layer{pointer-events:auto}
-    .municipality-shape{fill:var(--municipality-fill,rgba(194,59,59,.33));stroke:${YELLOW};stroke-opacity:.92;stroke-width:.48;vector-effect:non-scaling-stroke;paint-order:stroke fill;filter:drop-shadow(0 0 1.25px rgba(255,205,0,.28));transition:filter .16s ease,opacity .16s ease,fill .22s ease,stroke-width .16s ease;cursor:pointer}
-    .municipality-shape:hover{stroke-width:.95;stroke-opacity:1;filter:brightness(1.18) drop-shadow(0 0 3.2px rgba(255,205,0,.78))}
-    .island-node.has-municipalities .island-shape,.island-node.has-municipalities:hover .island-shape,.island-node.has-municipalities:focus-visible .island-shape,.island-node.has-municipalities.active .island-shape{fill:transparent!important;pointer-events:none}
+    .municipality-shape{stroke:${YELLOW};stroke-opacity:.96;stroke-width:.50;vector-effect:non-scaling-stroke;paint-order:stroke fill;filter:drop-shadow(0 0 1.45px rgba(255,205,0,.32));transition:filter .16s ease,opacity .16s ease,fill .22s ease,stroke-width .16s ease;cursor:pointer}
+    .municipality-shape:hover{stroke-width:.95;stroke-opacity:1;filter:brightness(1.10) drop-shadow(0 0 3.6px rgba(255,205,0,.76))}
+    .municipality-shape[data-status="contactado"],
+    .municipality-shape[data-status="negociacion"],
+    .municipality-shape[data-status="trabajado"]{opacity:.98}
+    .island-node.has-municipalities .island-shape,
+    .island-node.has-municipalities:hover .island-shape,
+    .island-node.has-municipalities:focus-visible .island-shape,
+    .island-node.has-municipalities.active .island-shape{
+      fill:transparent !important;
+      stroke:transparent !important;
+      opacity:0 !important;
+      filter:none !important;
+      pointer-events:none;
+    }
     .municipality-tooltip{position:absolute;z-index:8;display:none;pointer-events:none;min-width:148px;max-width:230px;padding:9px 11px;border:1px solid rgba(255,205,0,.34);border-radius:11px;background:rgba(0,0,0,.94);box-shadow:0 9px 30px rgba(0,0,0,.48),0 0 18px rgba(255,205,0,.06);backdrop-filter:blur(10px);color:#fff;font:500 10px/1.35 "Work Sans",Arial,sans-serif}
     .municipality-tooltip strong{display:block;margin-bottom:3px;font-size:11px;font-weight:600;color:#fff}
     .municipality-tooltip span{display:flex;align-items:center;gap:6px;color:#969696}
@@ -160,7 +204,7 @@ function showTooltip(event,stage,tooltip,name,statusKey,extra=''){
   tooltip.style.top=`${top}px`;
 }
 
-function hideTooltip(tooltip){tooltip.style.display='none';}
+function hideTooltip(tooltip){ tooltip.style.display='none'; }
 
 function ensureLegend(stage,statusMap){
   let legend=document.getElementById('pipelineLegend');
@@ -172,10 +216,10 @@ function ensureLegend(stage,statusMap){
   }
   const counts=Object.fromEntries(Object.keys(STATUS).map(key=>[key,0]));
   for(const item of allMunicipalities){
-    const key=STATUS[statusMap.get(item.name)]?statusMap.get(item.name):'no_contactado';
+    const key=STATUS[statusMap.get(item.name)] ? statusMap.get(item.name) : 'no_contactado';
     counts[key]++;
   }
-  legend.innerHTML=`<span class="pipeline-legend-title">Estado comercial</span>${Object.entries(STATUS).map(([key,state])=>`<span class="pipeline-legend-item" style="--legend-color:${state.dot}"><i style="background:${state.dot}"></i>${state.label} <b>${counts[key]}</b></span>`).join('')}`;
+  legend.innerHTML=`<span class="pipeline-legend-title">Estado comercial</span>${Object.entries(STATUS).map(([key,state])=>`<span class="pipeline-legend-item" style="--legend-color:${state.legend}"><i style="background:${state.dot}"></i>${state.label} <b>${counts[key]}</b></span>`).join('')}`;
 }
 
 async function loadPipelineStatuses(){
@@ -233,42 +277,45 @@ async function loadGeoFeatures(){
       console.warn('No se pudo cargar una fuente municipal',url,error);
     }
   }
-  throw lastError||new Error('No se pudo cargar la geometría municipal');
+  throw lastError || new Error('No se pudo cargar la geometría municipal');
 }
 
-function getOrCreateDefs(svg){
-  let defs=svg.querySelector(':scope > defs');
-  if(defs) return defs;
-  defs=document.createElementNS(SVG_NS,'defs');
-  svg.insertBefore(defs,svg.firstChild);
-  return defs;
+function applyMunicipalityShapeStyle(path,statusKey){
+  const state=STATUS[statusKey] || STATUS.no_contactado;
+  path.dataset.status=statusKey;
+  path.setAttribute('fill',state.paint);
 }
 
 function renderMunicipalityOverlay(svg,stage,features,statusMap){
   svg.querySelectorAll('.municipality-layer').forEach(node=>node.remove());
   svg.querySelectorAll('clipPath[data-municipal-clip="1"]').forEach(node=>node.remove());
   svg.querySelectorAll('.island-node.has-municipalities').forEach(node=>node.classList.remove('has-municipalities'));
+
   const tooltip=ensureTooltip(stage);
   const defs=getOrCreateDefs(svg);
+  ensurePaintDefs(defs);
   const featureByName=new Map(features.map(feature=>[feature._municipalityName,feature]));
 
   for(const island of islands.filter(item=>item.municipalities.length)){
     const node=svg.querySelector(`.island-node[data-island="${CSS.escape(island.slug)}"]`);
     const outline=node?.querySelector('.island-shape');
-    if(!node||!outline) continue;
+    if(!node || !outline) continue;
+
     const islandFeatures=island.municipalities.map(name=>featureByName.get(name)).filter(Boolean);
     if(!islandFeatures.length) continue;
+
     const geoBounds=islandGeoBounds(islandFeatures);
     if(!geoBounds) continue;
+
     const targetBounds=outline.getBBox();
-    if(!targetBounds.width||!targetBounds.height) continue;
+    if(!targetBounds.width || !targetBounds.height) continue;
 
     const clipId=`municipality-clip-${island.slug}`;
     const clip=document.createElementNS(SVG_NS,'clipPath');
     clip.id=clipId;
     clip.dataset.municipalClip='1';
     const clipShape=document.createElementNS(SVG_NS,'path');
-    clipShape.setAttribute('d',outline.getAttribute('d')||'');
+    clipShape.setAttribute('d',outline.getAttribute('d') || '');
     clip.appendChild(clipShape);
     defs.appendChild(clip);
 
@@ -279,21 +326,20 @@ function renderMunicipalityOverlay(svg,stage,features,statusMap){
 
     for(const feature of islandFeatures){
       const name=feature._municipalityName;
-      const statusKey=STATUS[statusMap.get(name)]?statusMap.get(name):'no_contactado';
+      const statusKey=STATUS[statusMap.get(name)] ? statusMap.get(name) : 'no_contactado';
       const path=document.createElementNS(SVG_NS,'path');
       path.classList.add('municipality-shape');
       path.dataset.municipality=name;
-      path.dataset.status=statusKey;
       path.setAttribute('d',geometryPath(feature.geometry,geoBounds,targetBounds));
       path.setAttribute('fill-rule','evenodd');
-      path.style.setProperty('--municipality-fill',STATUS[statusKey].fill);
+      applyMunicipalityShapeStyle(path,statusKey);
       path.setAttribute('aria-label',`${name}: ${STATUS[statusKey].label}`);
       path.addEventListener('mousemove',event=>showTooltip(event,stage,tooltip,name,statusKey,island.name));
       path.addEventListener('mouseleave',()=>hideTooltip(tooltip));
       group.appendChild(path);
     }
 
-    node.insertBefore(group,outline);
+    node.appendChild(group);
     node.classList.add('has-municipalities');
   }
 
@@ -303,22 +349,24 @@ function renderMunicipalityOverlay(svg,stage,features,statusMap){
 function renderGraciosa(svg,stage,tooltip,statusMap){
   const node=svg.querySelector('.island-node[data-island="la-graciosa"]');
   const outline=node?.querySelector('.island-shape');
-  if(!node||!outline) return;
-  const statusKey=STATUS[statusMap.get('Teguise')]?statusMap.get('Teguise'):'no_contactado';
+  if(!node || !outline) return;
+
+  const statusKey=STATUS[statusMap.get('Teguise')] ? statusMap.get('Teguise') : 'no_contactado';
   const group=document.createElementNS(SVG_NS,'g');
   group.classList.add('municipality-layer');
   group.dataset.island='la-graciosa';
+
   const path=document.createElementNS(SVG_NS,'path');
   path.classList.add('municipality-shape');
   path.dataset.municipality='Teguise';
-  path.dataset.status=statusKey;
-  path.setAttribute('d',outline.getAttribute('d')||'');
-  path.style.setProperty('--municipality-fill',STATUS[statusKey].fill);
+  path.setAttribute('d',outline.getAttribute('d') || '');
+  applyMunicipalityShapeStyle(path,statusKey);
   path.setAttribute('aria-label',`Teguise (La Graciosa): ${STATUS[statusKey].label}`);
   path.addEventListener('mousemove',event=>showTooltip(event,stage,tooltip,'Teguise',statusKey,'La Graciosa'));
   path.addEventListener('mouseleave',()=>hideTooltip(tooltip));
   group.appendChild(path);
-  node.insertBefore(group,outline);
+
+  node.appendChild(group);
   node.classList.add('has-municipalities');
 }
 
@@ -329,7 +377,7 @@ function escapeHtml(value=''){
 async function initMunicipalityMap(){
   const svg=document.querySelector('.canary-map');
   const stage=document.getElementById('archipelagoStage');
-  if(!svg||!stage) return;
+  if(!svg || !stage) return;
   ensureStyles();
   const statusMap=await loadPipelineStatuses();
   ensureLegend(stage,statusMap);
