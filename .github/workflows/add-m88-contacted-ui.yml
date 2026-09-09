@@ -17,7 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Update M88 files
-        run: python .github/scripts/add_m88_contacted_ui.py
+        run: |
+          python .github/scripts/add_m88_contacted_ui.py
+          sed -i 's/app.css?v=20260908-2054/app.css?v=20260909-contacted1/' m88/index.html
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
