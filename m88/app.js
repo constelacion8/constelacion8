@@ -144,12 +144,14 @@ const PARTY_MARKS = [
 const mapSection = document.getElementById('mapSection');
 const directorySection = document.getElementById('directorySection');
 const contactSection = document.getElementById('contactSection');
+const contactedSection = document.getElementById('contactedSection');
 const grid = document.getElementById('municipalityGrid');
 const search = document.getElementById('municipalitySearch');
 const empty = document.getElementById('contactEmpty');
 const list = document.getElementById('contactsList');
 let activeIsland = null;
 let activeMode = 'island';
+let contactedMap = new Map();
 
 function showMap(){
   activeIsland = null;
@@ -157,6 +159,7 @@ function showMap(){
   mapSection.hidden = false;
   directorySection.hidden = true;
   contactSection.hidden = true;
+  contactedSection.hidden = true;
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -169,6 +172,7 @@ function showIsland(slug){
   mapSection.hidden = false;
   directorySection.hidden = false;
   contactSection.hidden = true;
+  contactedSection.hidden = true;
   document.getElementById('islandEyebrow').textContent = 'Isla · Directorio municipal';
   document.getElementById('islandTitle').textContent = island.name;
   document.getElementById('islandCount').textContent = island.municipalities.length ? `${island.municipalities.length} municipios · orden alfabético` : island.note;
@@ -185,6 +189,7 @@ function showAll(){
   mapSection.hidden = false;
   directorySection.hidden = false;
   contactSection.hidden = true;
+  contactedSection.hidden = true;
   document.getElementById('islandEyebrow').textContent = 'Canarias · Directorio municipal';
   document.getElementById('islandTitle').textContent = '88 municipios';
   document.getElementById('islandCount').textContent = `${totalMunicipalities} municipios · orden alfabético`;
@@ -198,7 +203,7 @@ function renderMunicipalities(items){
     grid.innerHTML = `<div class="contact-empty"><strong>Sin municipio propio.</strong><p>${escapeHtml(activeIsland?.note || '')}</p></div>`;
     return;
   }
-  grid.innerHTML = items.map((item,index)=>`<button class="municipality-card" type="button" data-name="${escapeAttr(item.name)}" data-island-name="${escapeAttr(item.island)}"><small>${String(index+1).padStart(2,'0')} · ${escapeHtml(item.island)}</small><strong>${escapeHtml(item.name)}</strong><span>Ver contactos →</span></button>`).join('');
+  grid.innerHTML = items.map((item,index)=>{const contacted=contactedMap.get(item.name);return `<button class="municipality-card${contacted?' is-contacted':''}" type="button" data-name="${escapeAttr(item.name)}" data-island-name="${escapeAttr(item.island)}"><small>${String(index+1).padStart(2,'0')} · ${escapeHtml(item.island)}</small><strong>${escapeHtml(item.name)}</strong>${contacted?`<span class="contacted-label">✓ Contactado</span>`:`<span>Ver contactos →</span>`}</button>`}).join('');
   grid.querySelectorAll('.municipality-card').forEach(card=>card.addEventListener('click',()=>showMunicipality(card.dataset.name, card.dataset.islandName)));
 }
 
@@ -206,6 +211,7 @@ function showMunicipality(name,islandName){
   document.body.classList.add('island-open');
   mapSection.hidden = false;
   directorySection.hidden = true;
+  contactedSection.hidden = true;
   contactSection.hidden = false;
   document.getElementById('municipalityIsland').textContent = islandName;
   document.getElementById('municipalityTitle').textContent = name;
@@ -214,6 +220,49 @@ function showMunicipality(name,islandName){
   document.getElementById('contactCount').textContent = 'Cargando…';
   void loadContacts(name);
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function loadContactedMunicipalities(){
+  if(!supabase) return [];
+  const { data, error } = await supabase
+    .from('m88_contacted_municipalities')
+    .select('municipality_name,island_name,contacted_at,notes')
+    .order('contacted_at',{ascending:false})
+    .order('municipality_name',{ascending:true});
+  if(error){ console.warn(error); return []; }
+  contactedMap = new Map(data.map(item=>[item.municipality_name,item]));
+  const headerCount=document.getElementById('contactedHeaderCount');
+  if(headerCount) headerCount.textContent=String(data.length);
+  return data;
+}
+
+async function showContacted(){
+  activeIsland=null;
+  activeMode='contacted';
+  document.body.classList.add('island-open');
+  mapSection.hidden=false;
+  directorySection.hidden=true;
+  contactSection.hidden=true;
+  contactedSection.hidden=false;
+  const data=await loadContactedMunicipalities();
+  document.getElementById('contactedCount').textContent=`${data.length} de ${totalMunicipalities}`;
+  document.getElementById('contactedPending').textContent=`${totalMunicipalities-data.length} pendientes`;
+  const contactedGrid=document.getElementById('contactedGrid');
+  const contactedEmpty=document.getElementById('contactedEmpty');
+  if(!data.length){
+    contactedGrid.innerHTML='';
+    contactedEmpty.hidden=false;
+  } else {
+    contactedEmpty.hidden=true;
+    contactedGrid.innerHTML=data.map(item=>`<button class="municipality-card is-contacted" type="button" data-name="${escapeAttr(item.municipality_name)}" data-island-name="${escapeAttr(item.island_name)}"><small>${escapeHtml(item.island_name)}</small><strong>${escapeHtml(item.municipality_name)}</strong><span class="contacted-label">✓ Contactado</span>${item.contacted_at?`<span class="contacted-date">${formatContactedDate(item.contacted_at)}</span>`:''}</button>`).join('');
+    contactedGrid.querySelectorAll('.municipality-card').forEach(card=>card.addEventListener('click',()=>showMunicipality(card.dataset.name,card.dataset.islandName)));
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function formatContactedDate(value){
+  const [y,m,d]=String(value).split('-');
+  return y&&m&&d?`${d}/${m}/${y}`:String(value||'');
 }
 
 function partyMark(party){
@@ -271,10 +320,15 @@ document.querySelectorAll('.island-node').forEach(node=>{
   node.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();activate();}});
 });
 
+const navContacted = document.getElementById('navContacted');
+if(navContacted) navContacted.addEventListener('click',()=>void showContacted());
+const backFromContacted = document.getElementById('backFromContacted');
+if(backFromContacted) backFromContacted.addEventListener('click',showMap);
+void loadContactedMunicipalities();
 const navAll = document.getElementById('navAll');
 if(navAll) navAll.addEventListener('click',showAll);
 document.getElementById('backToMap').addEventListener('click',showMap);
-document.getElementById('backToMunicipalities').addEventListener('click',()=>activeMode==='all'?showAll():activeIsland&&showIsland(activeIsland.slug));
+document.getElementById('backToMunicipalities').addEventListener('click',()=>activeMode==='all'?showAll():activeMode==='contacted'?void showContacted():activeIsland&&showIsland(activeIsland.slug));
 
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
 function escapeAttr(value){return escapeHtml(value);}

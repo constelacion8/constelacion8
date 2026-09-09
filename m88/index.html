@@ -15,7 +15,10 @@
   <div class="noise" aria-hidden="true"></div>
   <div class="app">
     <header class="site-header">
-      <button class="header-count" id="navAll" type="button" aria-label="Ver los 88 municipios">88</button>
+      <div class="header-actions">
+        <button class="header-contacted" id="navContacted" type="button">Municipios contactados <span id="contactedHeaderCount">0</span></button>
+        <button class="header-count" id="navAll" type="button" aria-label="Ver los 88 municipios">88</button>
+      </div>
     </header>
 
     <main>
@@ -74,6 +77,17 @@
         </div>
       </section>
 
+      <section class="contacted-view" id="contactedSection" hidden>
+        <div class="section-wrap">
+          <button class="back-button" id="backFromContacted" type="button">← Mapa</button>
+          <p class="eyebrow">Seguimiento comercial</p>
+          <h2>Municipios contactados</h2>
+          <div class="contacted-meta"><span id="contactedCount">0 de 88</span><span id="contactedPending">88 pendientes</span></div>
+          <div class="municipality-grid contacted-grid" id="contactedGrid"></div>
+          <div class="contact-empty" id="contactedEmpty"><strong>Aún no hay municipios marcados.</strong><p>Los municipios aparecerán aquí cuando los registremos como contactados.</p></div>
+        </div>
+      </section>
+
       <section class="contact-view" id="contactSection" hidden>
         <div class="section-wrap">
           <button class="back-button" id="backToMunicipalities" type="button">← Municipios</button>
@@ -86,6 +100,6 @@
       </section>
     </main>
   </div>
-  <script type="module" src="app.js?v=20260909-all-islands-1"></script>
+  <script type="module" src="app.js?v=20260909-contacted1"></script>
 </body>
 </html>
