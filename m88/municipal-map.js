@@ -81,30 +81,55 @@ function primaryOuterRing(feature) {
   return Array.isArray(polygon?.[0]) ? polygon[0] : null;
 }
 
-function boundsFromPoints(points) {
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  for (const point of points) {
-    const x = Number(point?.[0]);
-    const y = Number(point?.[1]);
-    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
-    if (x < minX) minX = x;
-    if (x > maxX) maxX = x;
-    if (y < minY) minY = y;
-    if (y > maxY) maxY = y;
-  }
-  return Number.isFinite(minX) ? { minX, minY, maxX, maxY } : null;
-}
-
-function islandGeoBounds(features) {
+function collectIslandPoints(features) {
   const points = [];
   for (const feature of features) {
     const ring = primaryOuterRing(feature);
     if (ring) points.push(...ring);
   }
-  return boundsFromPoints(points);
+  return points;
 }
 
-function createProjector(geoBounds, targetBounds) {
+function boundsFromPlanarPoints(points, cosLat) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const point of points) {
+    const lon = Number(point?.[0]);
+    const lat = Number(point?.[1]);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+    const x = lon * cosLat;
+    if (x < minX) minX = x;
+    if (x > maxX) maxX = x;
+    if (lat < minY) minY = lat;
+    if (lat > maxY) maxY = lat;
+  }
+  return Number.isFinite(minX) ? { minX, minY, maxX, maxY } : null;
+}
+
+/*
+ * GeoJSON está en longitud/latitud. Un grado de longitud no mide lo mismo que
+ * uno de latitud en Canarias (~28º N). Si se tratan como ejes idénticos la isla
+ * queda demasiado ancha y parece aplastada en vertical. Esta proyección local
+ * equirectangular corrige X por cos(latitud media) y luego aplica UN ÚNICO
+ * factor de escala a X e Y. Así no hay deformación anisotrópica.
+ */
+function createIslandProjector(features, targetBounds) {
+  const points = collectIslandPoints(features);
+  if (!points.length) return null;
+
+  let minLat = Infinity, maxLat = -Infinity;
+  for (const point of points) {
+    const lat = Number(point?.[1]);
+    if (!Number.isFinite(lat)) continue;
+    if (lat < minLat) minLat = lat;
+    if (lat > maxLat) maxLat = lat;
+  }
+  if (!Number.isFinite(minLat) || !Number.isFinite(maxLat)) return null;
+
+  const meanLat = (minLat + maxLat) / 2;
+  const cosLat = Math.cos(meanLat * Math.PI / 180);
+  const geoBounds = boundsFromPlanarPoints(points, cosLat);
+  if (!geoBounds) return null;
+
   const geoWidth = geoBounds.maxX - geoBounds.minX || 1;
   const geoHeight = geoBounds.maxY - geoBounds.minY || 1;
   const scale = Math.min(targetBounds.width / geoWidth, targetBounds.height / geoHeight);
@@ -113,14 +138,19 @@ function createProjector(geoBounds, targetBounds) {
   const offsetX = targetBounds.x + (targetBounds.width - drawnWidth) / 2;
   const offsetY = targetBounds.y + (targetBounds.height - drawnHeight) / 2;
 
-  return point => [
-    offsetX + (point[0] - geoBounds.minX) * scale,
-    offsetY + (geoBounds.maxY - point[1]) * scale
-  ];
+  return point => {
+    const lon = Number(point[0]);
+    const lat = Number(point[1]);
+    const planarX = lon * cosLat;
+    return [
+      offsetX + (planarX - geoBounds.minX) * scale,
+      offsetY + (geoBounds.maxY - lat) * scale
+    ];
+  };
 }
 
 function ringPath(ring, project, close = true) {
-  if (!ring?.length) return '';
+  if (!ring?.length || !project) return '';
   const d = ring.map((point, index) => {
     const [x, y] = project(point);
     return `${index ? 'L' : 'M'}${x.toFixed(2)},${y.toFixed(2)}`;
@@ -137,21 +167,20 @@ function getOrCreateDefs(svg) {
 }
 
 function ensurePaintDefs(defs) {
-  if (!defs.querySelector('#municipality-fill-no-contactado')) {
-    const gradient = document.createElementNS(SVG_NS, 'linearGradient');
-    gradient.id = 'municipality-fill-no-contactado';
-    gradient.setAttribute('x1', '0%');
-    gradient.setAttribute('y1', '0%');
-    gradient.setAttribute('x2', '100%');
-    gradient.setAttribute('y2', '100%');
-    [['0%', '#6E1B1B'], ['48%', '#B83939'], ['100%', '#7D2020']].forEach(([offset, color]) => {
-      const stop = document.createElementNS(SVG_NS, 'stop');
-      stop.setAttribute('offset', offset);
-      stop.setAttribute('stop-color', color);
-      gradient.appendChild(stop);
-    });
-    defs.appendChild(gradient);
-  }
+  if (defs.querySelector('#municipality-fill-no-contactado')) return;
+  const gradient = document.createElementNS(SVG_NS, 'linearGradient');
+  gradient.id = 'municipality-fill-no-contactado';
+  gradient.setAttribute('x1', '0%');
+  gradient.setAttribute('y1', '0%');
+  gradient.setAttribute('x2', '100%');
+  gradient.setAttribute('y2', '100%');
+  [['0%', '#6E1B1B'], ['48%', '#B83939'], ['100%', '#7D2020']].forEach(([offset, color]) => {
+    const stop = document.createElementNS(SVG_NS, 'stop');
+    stop.setAttribute('offset', offset);
+    stop.setAttribute('stop-color', color);
+    gradient.appendChild(stop);
+  });
+  defs.appendChild(gradient);
 }
 
 function ensureStyles() {
@@ -332,11 +361,11 @@ function renderMunicipalityOverlay(svg, stage, features, statusMap) {
     const islandFeatures = island.municipalities.map(name => featureByName.get(name)).filter(Boolean);
     if (!islandFeatures.length) continue;
 
-    const geoBounds = islandGeoBounds(islandFeatures);
     const targetBounds = oldOutline.getBBox();
-    if (!geoBounds || !targetBounds.width || !targetBounds.height) continue;
+    if (!targetBounds.width || !targetBounds.height) continue;
+    const project = createIslandProjector(islandFeatures, targetBounds);
+    if (!project) continue;
 
-    const project = createProjector(geoBounds, targetBounds);
     const fillGroup = document.createElementNS(SVG_NS, 'g');
     fillGroup.classList.add('municipality-fill-layer');
     fillGroup.dataset.island = island.slug;
