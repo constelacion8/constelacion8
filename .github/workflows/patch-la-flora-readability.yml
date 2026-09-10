@@ -12,18 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Increase small text sizes
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('area-2627/index.html')
-          s=p.read_text()
-          anchor="@media(max-width:500px){.betgrid{grid-template-columns:1fr}.pot{display:flex;align-items:center;justify-content:center;gap:10px}.round{font-size:50px}.c h2{font-size:15px}.pod{padding-inline:5px}}"
-          extra=""".eye{font-size:11px}.logo small{font-size:11px}.who{font-size:11px}.who span{font-size:9px}.leagueintro .kicker{font-size:11px}.leagueintro p{font-size:12px;line-height:1.55}.pts small{font-size:9px}.cd small{font-size:9px}.rule{font-size:10px;line-height:1.45}.q{font-size:12px;line-height:1.35}.ch span{font-size:11px}.ch small{font-size:9px}.ttl{font-size:10px}.est{font-size:9px}.pot small{font-size:9px;line-height:1.35}.receipt,.notice{font-size:10px;line-height:1.45}.pool{font-size:9px}.sect button{font-size:10px}.pod span{font-size:11px}.rt{font-size:9px}.rr{font-size:9px}.nm b{font-size:12px}.nm small{font-size:9px}.row>strong{font-size:13px}.hr b{font-size:12px}.hr small{font-size:9px}.status{font-size:10px}.lbl{font-size:11px}.ico{font-size:23px}footer{font-size:10px;line-height:1.4}
-@media(max-width:500px){.betgrid{grid-template-columns:1fr}.pot{display:flex;align-items:center;justify-content:center;gap:10px}.round{font-size:50px}.c h2{font-size:16px}.pod{padding-inline:5px}.leagueintro p{font-size:12.5px}.rule{font-size:10.5px}.q{font-size:12.5px}.ch span{font-size:11.5px}.pool,.receipt,.notice{font-size:10.5px}.lbl{font-size:11px}}"""
-          if anchor not in s:
-              raise SystemExit('Responsive CSS anchor not found')
-          s=s.replace(anchor,extra,1)
-          p.write_text(s)
-          PY
+          python3 -c "from pathlib import Path; import base64; p=Path('area-2627/index.html'); s=p.read_text(); css=base64.b64decode('Ci8qIHJlYWRhYmlsaXR5IHBhc3MgKi8KLmV5ZXtmb250LXNpemU6MTFweH0ubG9nbyBzbWFsbHtmb250LXNpemU6MTFweH0ud2hve2ZvbnQtc2l6ZToxMXB4fS53aG8gc3Bhbntmb250LXNpemU6OXB4fS5sZWFndWVpbnRybyAua2lja2Vye2ZvbnQtc2l6ZToxMXB4fS5sZWFndWVpbnRybyBwe2ZvbnQtc2l6ZToxMnB4O2xpbmUtaGVpZ2h0OjEuNTV9LnB0cyBzbWFsbHtmb250LXNpemU6OXB4fS5jZCBzbWFsbHtmb250LXNpemU6OXB4fS5ydWxle2ZvbnQtc2l6ZToxMHB4O2xpbmUtaGVpZ2h0OjEuNDV9LnF7Zm9udC1zaXplOjEycHg7bGluZS1oZWlnaHQ6MS4zNX0uY2ggc3Bhbntmb250LXNpemU6MTFweH0uY2ggc21hbGx7Zm9udC1zaXplOjlweH0udHRse2ZvbnQtc2l6ZToxMHB4fS5lc3R7Zm9udC1zaXplOjlweH0ucG90IHNtYWxse2ZvbnQtc2l6ZTo5cHg7bGluZS1oZWlnaHQ6MS4zNX0ucmVjZWlwdCwubm90aWNle2ZvbnQtc2l6ZToxMHB4O2xpbmUtaGVpZ2h0OjEuNDV9LnBvb2x7Zm9udC1zaXplOjlweH0uc2VjdCBidXR0b257Zm9udC1zaXplOjEwcHh9LnBvZCBzcGFue2ZvbnQtc2l6ZToxMXB4fS5ydHtmb250LXNpemU6OXB4fS5ycntmb250LXNpemU6OXB4fS5ubSBie2ZvbnQtc2l6ZToxMnB4fS5ubSBzbWFsbHtmb250LXNpemU6OXB4fS5yb3c+c3Ryb25ne2ZvbnQtc2l6ZToxM3B4fS5ociBie2ZvbnQtc2l6ZToxMnB4fS5ociBzbWFsbHtmb250LXNpemU6OXB4fS5zdGF0dXN7Zm9udC1zaXplOjEwcHh9LmxibHtmb250LXNpemU6MTFweH0uaWNve2ZvbnQtc2l6ZToyM3B4fWZvb3Rlcntmb250LXNpemU6MTBweDtsaW5lLWhlaWdodDoxLjR9CkBtZWRpYShtYXgtd2lkdGg6NTAwcHgpey5sZWFndWVpbnRybyBwe2ZvbnQtc2l6ZToxMi41cHh9LnJ1bGV7Zm9udC1zaXplOjEwLjVweH0ucXtmb250LXNpemU6MTIuNXB4fS5jaCBzcGFue2ZvbnQtc2l6ZToxMS41cHh9LnBvb2wsLnJlY2VpcHQsLm5vdGljZXtmb250LXNpemU6MTAuNXB4fS5sYmx7Zm9udC1zaXplOjExcHh9LmMgaDJ7Zm9udC1zaXplOjE2cHh9fQo=').decode(); p.write_text(s.replace('</style>', css+'\n</style>', 1))"
       - name: Commit patch and remove temporary workflow
         run: |
           git config user.name 'ChatGPT'
