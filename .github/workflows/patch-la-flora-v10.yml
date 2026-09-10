@@ -1,0 +1,47 @@
+name: Patch La Flora Jornada 5
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-la-flora-v10.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add Jornada 5 intro and enlarge stake buttons
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text()
+
+          css_old=".logo b{color:var(--r);font-weight:400;font-style:italic}.who{text-align:right;font-size:9px}"
+          css_new=".logo b{color:var(--r);font-weight:400;font-style:italic}.leagueintro{margin:12px 0 4px;padding:12px 14px 13px;border:1px solid #313d50;border-left:3px solid var(--r);border-radius:12px;background:linear-gradient(90deg,#111823,#090e15);box-shadow:0 10px 26px #0005}.leagueintro .kicker{font:700 9px 'Oswald';letter-spacing:.13em;text-transform:uppercase;color:var(--r);margin-bottom:5px}.leagueintro p{margin:0;color:#d6dce6;font:500 10px/1.45 'Work Sans'}.leagueintro b{color:#fff}.who{text-align:right;font-size:9px}"
+          if css_old not in s:
+              raise SystemExit('Header CSS anchor not found')
+          s=s.replace(css_old,css_new,1)
+
+          stake_old=".stake{border:1px solid #526076;border-radius:999px;background:#0d141e;color:#fff;padding:7px 1px;font:600 10px 'Oswald'}"
+          stake_new=".stake{border:1px solid #526076;border-radius:999px;background:#0d141e;color:#fff;padding:10px 2px;min-height:42px;font:700 15px 'Oswald';letter-spacing:.01em}"
+          if stake_old not in s:
+              raise SystemExit('Stake CSS anchor not found')
+          s=s.replace(stake_old,stake_new,1)
+
+          home_old="function home(){const m=market();return`${m?hero(m):'<div class=\"panel\"><div class=\"ph\"><h2>No hay duelo publicado</h2></div></div>'}${rankPreview()}${roundPreview()}`}function hero(m)"
+          home_new="function home(){const m=market();return`${leagueIntro()}${m?hero(m):'<div class=\"panel\"><div class=\"ph\"><h2>No hay duelo publicado</h2></div></div>'}${rankPreview()}${roundPreview()}`}function leagueIntro(){return`<section class=\"leagueintro\"><div class=\"kicker\">JORNADA 5 · LA LIGA, AL ROJO VIVO</div><p>La Jornada 5 llega con varios cruces directos. <b>JM. (201)</b> y <b>Berto115 (195)</b> están separados por 6 puntos; <b>.Rives. (123)</b> y <b>Fran.88 (119)</b>, por solo 4; y <b>Vidrio77 (85)</b> y <b>thoth (69)</b> completan otra pelea abierta. Pero todas las miradas están en el 4.º puesto: <b>Tosco13 (177)</b> y <b>Andrew Perilla (175)</b>, separados por solo 2 puntos. El gran duelo de la jornada está servido.</p></section>`}function hero(m)"
+          if home_old not in s:
+              raise SystemExit('Home JS anchor not found')
+          s=s.replace(home_old,home_new,1)
+
+          p.write_text(s)
+          PY
+      - name: Commit patch and remove temporary workflow
+        run: |
+          git config user.name 'ChatGPT'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/workflows/patch-la-flora-v10.yml
+          git add area-2627/index.html
+          git commit -m 'Add Jornada 5 league intro and larger stake buttons'
+          git push
