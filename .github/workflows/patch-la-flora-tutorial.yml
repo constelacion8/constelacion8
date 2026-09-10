@@ -10,33 +10,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add tutorial and correct post-bet estimate
+      - name: Add tutorial safely
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import base64
           p=Path('area-2627/index.html')
           s=p.read_text()
-
-          css=""".tutorial{margin:24px 0 8px;border:1px solid #ff4650;border-radius:16px;background:linear-gradient(145deg,#17111a,#090e16 55%,#101824);box-shadow:0 16px 40px #0007,0 0 24px #ff333c1e;overflow:hidden}.tutorial summary{list-style:none;display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:11px;padding:16px 14px;cursor:pointer;background:linear-gradient(90deg,#ff333c18,transparent 58%)}.tutorial summary::-webkit-details-marker{display:none}.tuticon{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,#ff4049,#a70e17);font-size:22px;box-shadow:0 0 20px #ff333c38}.tuttitle small{display:block;font:700 10px 'Oswald';letter-spacing:.13em;color:#ff7a80;text-transform:uppercase;margin-bottom:2px}.tuttitle strong{display:block;font:700 21px/1.05 'Oswald';letter-spacing:.035em;color:#fff;text-transform:uppercase}.tuttitle span{display:block;font-size:11px;line-height:1.35;color:#aeb9ca;margin-top:4px}.tutopen{font:700 11px 'Oswald';color:#fff;padding:8px 10px;border:1px solid #48556a;border-radius:999px;background:#0a1019;white-space:nowrap}.tutorial[open] .tutopen{color:#ff747b;border-color:#ff3d4777}.tutorialbody{border-top:1px solid #ffffff12;padding:15px 14px 17px}.tutlead{font-size:14px;line-height:1.55;color:#e7ebf2;margin-bottom:14px}.tutgrid{display:grid;gap:8px}.tutitem{padding:12px;border:1px solid #2d394c;border-radius:11px;background:#080e17}.tutitem b{display:block;font:700 14px 'Oswald';color:#fff;text-transform:uppercase;margin-bottom:4px}.tutitem p{margin:0;font-size:13px;line-height:1.55;color:#cbd4e1}.tutitem em{font-style:normal;color:var(--y);font-weight:800}.tutexample{margin-top:13px;padding:14px;border:1px solid #ff424d77;border-radius:13px;background:linear-gradient(145deg,#3b0a111f,#090e16 60%)}.tutexample .tag{display:inline-block;font:700 10px 'Oswald';letter-spacing:.12em;text-transform:uppercase;color:#fff;background:#d91e29;padding:5px 8px;border-radius:6px}.tutexample h4{margin:9px 0 7px;font:700 20px/1.15 'Oswald';color:#fff}.tutexample p{margin:7px 0;font-size:13px;line-height:1.55;color:#d6deea}.tutmath{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.tutmath div{text-align:center;padding:9px 4px;border:1px solid #334158;border-radius:9px;background:#070c13}.tutmath small{display:block;font-size:10px;color:#99a6b9}.tutmath b{display:block;font:700 18px 'Oswald';color:var(--y);margin-top:2px}.tutnote{margin-top:12px;padding:11px 12px;border-left:3px solid var(--g);background:#0a1712;border-radius:8px;font-size:12px;line-height:1.5;color:#cce8d8}@media(max-width:500px){.tutorial summary{grid-template-columns:44px 1fr;padding:15px 12px}.tutopen{grid-column:1/-1;text-align:center;margin-top:2px;font-size:12px}.tuttitle strong{font-size:22px}.tuttitle span{font-size:12px}.tutlead{font-size:14px}.tutitem p,.tutexample p{font-size:13.5px}.tutitem b{font-size:15px}.tutmath b{font-size:20px}}"""
-          anchor='.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;'
-          if anchor not in s: raise SystemExit('nav anchor missing')
-          s=s.replace(anchor,css+anchor,1)
-
+          css=base64.b64decode(Path('.github/lfbets-tutorial-css.b64').read_text()).decode()
+          fn=base64.b64decode(Path('.github/lfbets-tutorial-fn.b64').read_text()).decode()
+          nav='.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;'
+          if '.tutorial{' not in s:
+              s=s.replace(nav,css+nav,1)
           old="const total=o=>o.A+o.X+o.B,odd=(o,k)=>total(o)/o[k],label=(m,k)=>k==='A'?pretty(m.option_a):k==='B'?pretty(m.option_b):'Empate';"
           new="const total=o=>o.A+o.X+o.B,odd=(o,k)=>total(o)/o[k],postOdd=(o,k,s)=>(total(o)+s)/(o[k]+s),label=(m,k)=>k==='A'?pretty(m.option_a):k==='B'?pretty(m.option_b):'Empate';"
-          if old not in s: raise SystemExit('odds anchor missing')
-          s=s.replace(old,new,1)
-          if 'stake*odd(o,pick)' not in s: raise SystemExit('estimate anchor missing')
+          if 'postOdd=' not in s:
+              if old not in s: raise SystemExit('odds anchor missing')
+              s=s.replace(old,new,1)
           s=s.replace('stake*odd(o,pick)','stake*postOdd(o,pick,stake)',1)
-
-          tutorial="""function tutorial(){return`<details class="tutorial"><summary><div class="tuticon">📘</div><div class="tuttitle"><small>¿Primera vez?</small><strong>Tutorial y normas</strong><span>Florines, bote, cuotas y un ejemplo de la Jornada 5.</span></div><b class="tutopen">ABRIR TUTORIAL +</b></summary><div class="tutorialbody"><div class="tutlead">La Flora Bets es un juego privado entre los 10 participantes de La Flora. No hay dinero real: todo funciona con <b>florines (ƒ)</b> y un bote común que cambia según las apuestas del grupo.</div><div class="tutgrid"><div class="tutitem"><b>1 · Tus florines</b><p>Cada jugador empieza con <em>1.000 ƒ</em>. Los florines no se compran, no se venden y no tienen valor económico. Al resolverse cada jornada, todos reciben además <em>+100 ƒ</em> para mantener viva la competición.</p></div><div class="tutitem"><b>2 · A, X o B</b><p>A significa que el primer jugador termina la jornada por delante en la <b>clasificación general</b>; B, que lo hace el segundo. X significa que ambos terminan con los mismos puntos totales. No apostamos simplemente a quién suma más puntos esa semana.</p></div><div class="tutitem"><b>3 · Qué es el bote</b><p>Al abrir el mercado hay un fondo virtual de <em>100 ƒ en A, 100 ƒ en X y 100 ƒ en B</em>: por eso el bote arranca en 300 ƒ. Después se añaden los florines apostados por todos. Al final, el bote se reparte proporcionalmente entre quienes hayan acertado.</p></div><div class="tutitem"><b>4 · Qué significa x3,00</b><p>Es el multiplicador estimado en ese momento. Si la cuota final fuese x3,00 y hubieras apostado 100 ƒ, recibirías <em>300 ƒ en total</em>: tus 100 ƒ más 200 ƒ de ganancia. Las cuotas cambian mientras entra dinero y quedan fijadas al cerrarse el mercado.</p></div><div class="tutitem"><b>5 · ¿Influye apostar 25 o 250?</b><p>Sí. Cuanto más apuestas, mayor puede ser tu premio, pero también arriesgas más. Además, tu propia apuesta entra en el bote: si metes mucho a un lado, la cuota de ese resultado baja y las alternativas suben. El retorno estimado de la pantalla ya calcula este efecto.</p></div><div class="tutitem"><b>6 · Termómetro de confianza</b><p>Aquí no importa cuánto dinero pone cada uno, sino <b>cuántas personas</b> eligen a cada jugador. Una apuesta de 25 ƒ cuenta exactamente igual que una de 250 ƒ para medir la confianza del grupo. Las X se muestran aparte.</p></div><div class="tutitem"><b>7 · Apertura y cierre</b><p>Las apuestas se abren <em>24 horas antes</em> del primer partido de la jornada y se bloquean exactamente cuando empieza ese partido. Cada jugador puede realizar <b>una sola apuesta por jornada</b>.</p></div></div><div class="tutexample"><span class="tag">Ejemplo · Jornada 5</span><h4>Tosco13 (177) vs Andrew Perilla (175)</h4><p>El duelo real parte con solo 2 puntos de diferencia. La pregunta es quién estará por delante en la clasificación general cuando termine la Jornada 5; si terminan empatados a puntos, gana la X.</p><p>Al abrir el mercado tenemos 100 ƒ en cada opción:</p><div class="tutmath"><div><small>Tosco13</small><b>100 ƒ · x3,00</b></div><div><small>Empate</small><b>100 ƒ · x3,00</b></div><div><small>Andrew</small><b>100 ƒ · x3,00</b></div></div><p>El bote inicial es 300 ƒ. Si eres el primero en apostar y metes <b>100 ƒ a Tosco13</b>, el bote pasa a 400 ƒ y el lado de Tosco pasa a 200 ƒ. Su cuota estimada después de tu propia apuesta sería aproximadamente <b>x2,00</b>. Si nadie más apostara, acertar te devolvería 200 ƒ: 100 ƒ tuyos + 100 ƒ de ganancia.</p><p>Ahora imagina que al cierre el bote queda así: Tosco13 500 ƒ, X 100 ƒ y Andrew 200 ƒ. El bote total sería 800 ƒ. Las cuotas finales serían aproximadamente <b>Tosco x1,60 · X x8,00 · Andrew x4,00</b>. Por eso acertar una opción en la que confía poca gente puede pagar mucho más.</p></div><div class="tutnote"><b>Regla de oro:</b> la cuota que ves antes del cierre es orientativa. El multiplicador definitivo depende de cómo quede repartido el bote cuando empiece el primer partido.</div></div></details>`}"
-          anchor2='function home(){'
-          if anchor2 not in s: raise SystemExit('home anchor missing')
-          s=s.replace(anchor2,tutorial+anchor2,1)
-
-          foot='<footer>Florines sin valor económico · Juego privado entre amigos</footer>'
-          if foot not in s: raise SystemExit('footer anchor missing')
-          s=s.replace(foot,'${tutorial()}'+foot,1)
+          if 'function tutorial()' not in s:
+              s=s.replace('function home(){',fn+'function home(){',1)
+          oldhome='${rankPreview()}${roundPreview()}`}'
+          newhome='${rankPreview()}${roundPreview()}${tutorial()}`}'
+          if '${tutorial()}' not in s[s.index('function home(){'):s.index('function leagueIntro(){')]:
+              if oldhome not in s: raise SystemExit('home anchor missing')
+              s=s.replace(oldhome,newhome,1)
           p.write_text(s)
           PY
       - name: Validate JavaScript
@@ -46,14 +44,15 @@ jobs:
           from pathlib import Path
           s=Path('area-2627/index.html').read_text()
           m=re.search(r'<script>([\s\S]*)</script>',s)
+          if not m: raise SystemExit('script missing')
           Path('/tmp/app.js').write_text(m.group(1))
           PY
           node --check /tmp/app.js
-      - name: Commit patch and remove temporary workflow
+      - name: Commit and clean temporary files
         run: |
           git config user.name 'ChatGPT'
           git config user.email 'actions@users.noreply.github.com'
-          git rm .github/workflows/patch-la-flora-tutorial.yml
+          git rm .github/workflows/patch-la-flora-tutorial.yml .github/lfbets-tutorial-css.b64 .github/lfbets-tutorial-fn.b64
           git add area-2627/index.html
           git commit -m 'Add tutorial and rules to La Flora Bets'
           git push
