@@ -1,0 +1,34 @@
+name: Improve La Flora Bets readability
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-la-flora-readability.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Increase small text sizes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text()
+          anchor="@media(max-width:500px){.betgrid{grid-template-columns:1fr}.pot{display:flex;align-items:center;justify-content:center;gap:10px}.round{font-size:50px}.c h2{font-size:15px}.pod{padding-inline:5px}}"
+          extra=""".eye{font-size:11px}.logo small{font-size:11px}.who{font-size:11px}.who span{font-size:9px}.leagueintro .kicker{font-size:11px}.leagueintro p{font-size:12px;line-height:1.55}.pts small{font-size:9px}.cd small{font-size:9px}.rule{font-size:10px;line-height:1.45}.q{font-size:12px;line-height:1.35}.ch span{font-size:11px}.ch small{font-size:9px}.ttl{font-size:10px}.est{font-size:9px}.pot small{font-size:9px;line-height:1.35}.receipt,.notice{font-size:10px;line-height:1.45}.pool{font-size:9px}.sect button{font-size:10px}.pod span{font-size:11px}.rt{font-size:9px}.rr{font-size:9px}.nm b{font-size:12px}.nm small{font-size:9px}.row>strong{font-size:13px}.hr b{font-size:12px}.hr small{font-size:9px}.status{font-size:10px}.lbl{font-size:11px}.ico{font-size:23px}footer{font-size:10px;line-height:1.4}
+@media(max-width:500px){.betgrid{grid-template-columns:1fr}.pot{display:flex;align-items:center;justify-content:center;gap:10px}.round{font-size:50px}.c h2{font-size:16px}.pod{padding-inline:5px}.leagueintro p{font-size:12.5px}.rule{font-size:10.5px}.q{font-size:12.5px}.ch span{font-size:11.5px}.pool,.receipt,.notice{font-size:10.5px}.lbl{font-size:11px}}"""
+          if anchor not in s:
+              raise SystemExit('Responsive CSS anchor not found')
+          s=s.replace(anchor,extra,1)
+          p.write_text(s)
+          PY
+      - name: Commit patch and remove temporary workflow
+        run: |
+          git config user.name 'ChatGPT'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/workflows/patch-la-flora-readability.yml
+          git add area-2627/index.html
+          git commit -m 'Increase La Flora Bets small-text readability'
+          git push
