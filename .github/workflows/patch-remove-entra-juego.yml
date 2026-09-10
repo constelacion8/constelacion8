@@ -1,0 +1,32 @@
+name: Remove player login heading
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-remove-entra-juego.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove heading
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text()
+          old='<h1>Entra en juego</h1>'
+          if old not in s:
+              raise SystemExit('Heading not found')
+          s=s.replace(old,'',1)
+          p.write_text(s)
+          PY
+      - name: Commit change and clean workflow
+        run: |
+          git config user.name 'ChatGPT'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/workflows/patch-remove-entra-juego.yml
+          git add area-2627/index.html
+          git commit -m 'Remove Entra en juego heading from player login'
+          git push
