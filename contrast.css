@@ -1,57 +1,74 @@
-/* Identidad visual DE8 para Constelación 8: negro, amarillo y blanco. */
+/* Tema visual definitivo DE8 para Constelación 8.
+   Esta hoja funciona como capa de tema y usa !important deliberadamente para
+   neutralizar los estilos violetas heredados de app.css, refine.css,
+   origin-note.css e install-app.css. */
+
 :root{
   --violet-0:#000000!important;
   --violet-1:#050505!important;
   --violet-2:#090909!important;
   --violet-3:#111111!important;
   --violet-4:#FFFFFF!important;
-  --de8-yellow:#FFCD00;
+  --de8-yellow:#FFCD00!important;
   --warm-gold:#FFCD00!important;
-  --white:#FFFFFF;
+  --white:#FFFFFF!important;
   --text:#FFFFFF!important;
-  --muted:rgba(255,255,255,.78)!important;
-  --soft:rgba(255,255,255,.56)!important;
-  --line:rgba(255,205,0,.18);
-  --violet-line:rgba(255,255,255,.18)!important;
+  --muted:#CFCFCF!important;
+  --soft:#929292!important;
+  --line:rgba(255,205,0,.20)!important;
+  --violet-line:rgba(255,255,255,.24)!important;
 }
 
-html,body{background:#050505!important;color:#FFFFFF!important}
-body{background:#050505!important}
-::selection{background:#FFCD00!important;color:#000!important}
-
-/* Fondo: se conserva la profundidad, sin violeta. */
-.cosmic-noise{
+html,
+body,
+.app{
+  background:#050505!important;
+  color:#FFFFFF!important;
+}
+body{
   background-image:
-    radial-gradient(circle at 13% 18%,rgba(255,255,255,.82) 0 1px,transparent 1.6px),
-    radial-gradient(circle at 71% 13%,rgba(255,205,0,.72) 0 1px,transparent 1.5px),
-    radial-gradient(circle at 86% 72%,rgba(255,255,255,.72) 0 1px,transparent 1.5px),
-    radial-gradient(circle at 34% 75%,rgba(255,255,255,.5) 0 1px,transparent 1.5px)!important;
+    radial-gradient(circle at 50% -10%,rgba(255,205,0,.055),transparent 34%),
+    radial-gradient(circle at 14% 45%,rgba(255,255,255,.018),transparent 28%),
+    linear-gradient(180deg,#050505 0%,#050505 55%,#020202 100%)!important;
 }
-.cosmic-noise:after{background:radial-gradient(ellipse at center,transparent 0 38%,rgba(0,0,0,.82) 100%)!important}
+::selection{background:#FFCD00!important;color:#000000!important}
 
-/* Cabecera: una sola marca, sin repetición. */
+/* Fondo cósmico: sólo blanco y amarillo. */
+.cosmic-noise{
+  opacity:.24!important;
+  background-image:
+    radial-gradient(circle at 13% 18%,rgba(255,255,255,.88) 0 1px,transparent 1.6px),
+    radial-gradient(circle at 71% 13%,rgba(255,205,0,.76) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 86% 72%,rgba(255,255,255,.72) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 34% 75%,rgba(255,255,255,.52) 0 1px,transparent 1.5px)!important;
+}
+.cosmic-noise::after{
+  background:radial-gradient(ellipse at center,transparent 0 38%,rgba(0,0,0,.82) 100%)!important;
+}
+
+/* Cabecera. */
 .site-header{
-  background:linear-gradient(180deg,rgba(5,5,5,.96),rgba(5,5,5,.78))!important;
+  background:linear-gradient(180deg,rgba(5,5,5,.97),rgba(5,5,5,.80))!important;
   border-bottom-color:rgba(255,255,255,.08)!important;
 }
 .brand{gap:10px!important;font-size:0!important}
 .brand-name{display:none!important}
 .brand::after{
-  content:"Constelación 8.";
-  display:inline-block;
-  font:700 18px/1 "Work Sans",Arial,sans-serif;
-  letter-spacing:-.045em;
-  color:#FFFFFF;
-  white-space:nowrap;
+  content:"Constelación 8."!important;
+  display:inline-block!important;
+  font:700 18px/1 "Work Sans",Arial,sans-serif!important;
+  letter-spacing:-.045em!important;
+  color:#FFFFFF!important;
+  white-space:nowrap!important;
 }
 .brand-mark{
   position:relative!important;
   width:37px!important;
   height:22px!important;
   display:block!important;
-  flex:none;
+  flex:none!important;
   transform:none!important;
-  filter:drop-shadow(0 0 4px rgba(255,205,0,.38));
+  filter:drop-shadow(0 0 4px rgba(255,205,0,.38))!important;
   background:
     radial-gradient(circle at 3px 13px,#FFCD00 0 2px,transparent 2.4px),
     radial-gradient(circle at 8px 5px,#FFCD00 0 2px,transparent 2.4px),
@@ -62,134 +79,349 @@ body{background:#050505!important}
     radial-gradient(circle at 32px 8px,#FFCD00 0 2px,transparent 2.4px),
     radial-gradient(circle at 35px 19px,#FFCD00 0 2px,transparent 2.4px)!important;
 }
-.brand-mark i,.brand-mark::before,.brand-mark::after{display:none!important;content:none!important}
-.main-nav button{color:rgba(255,255,255,.78)!important}
-.header-cta{color:#FFCD00!important;border-color:rgba(255,205,0,.5)!important}
-.header-cta:hover{background:#FFCD00!important;color:#000!important}
+.brand-mark i,
+.brand-mark::before,
+.brand-mark::after{display:none!important;content:none!important}
+.main-nav button{color:rgba(255,255,255,.76)!important}
+.header-cta{color:#FFCD00!important;border-color:rgba(255,205,0,.48)!important}
+.header-cta:hover{background:#FFCD00!important;color:#000000!important}
 
-/* Portada más compacta. El mapa conserva geometría e interacción. */
-html body #inicio.hero{min-height:auto!important;padding-bottom:22px!important;background:#050505!important}
+/* Portada y mapa. */
+html body #inicio.hero{
+  min-height:auto!important;
+  padding-bottom:22px!important;
+  background:#050505!important;
+}
 #inicio .hero-intro{margin-bottom:2px!important}
-#inicio .hero-halo{background:#FFCD00!important;opacity:.045!important}
-#inicio.hero:before{
+#inicio .hero-atlas-title,
+#inicio .c8-hero-credit-inline,
+#inicio .c8-hero-credit-inline span,
+#inicio .c8-hero-credit-inline strong{color:#FFFFFF!important}
+#inicio .hero-lead{color:#FFCD00!important}
+#inicio .hero-halo-a{background:#FFCD00!important;opacity:.05!important}
+#inicio .hero-halo-b{background:#FFFFFF!important;opacity:.018!important}
+#inicio.hero::before{
   background:
     radial-gradient(circle at 31% 62%,rgba(255,205,0,.045),transparent 18%),
-    radial-gradient(circle at 66% 54%,rgba(255,205,0,.045),transparent 22%),
+    radial-gradient(circle at 66% 54%,rgba(255,255,255,.022),transparent 22%),
     repeating-radial-gradient(ellipse at 50% 62%,rgba(255,205,0,.035) 0 1px,transparent 1px 44px)!important;
 }
-#inicio .hero-atlas-title,#inicio .c8-hero-credit-inline,#inicio .c8-hero-credit-inline span,#inicio .c8-hero-credit-inline strong{color:#FFFFFF!important}
-#inicio .hero-lead{color:#FFCD00!important}
 #inicio .archipelago-stage{margin-top:2px!important;margin-bottom:4px!important}
-#inicio .archipelago-stage:before{background:radial-gradient(ellipse at center,rgba(255,205,0,.045),transparent 63%)!important}
+#inicio .archipelago-stage::before{
+  background:radial-gradient(ellipse at center,rgba(255,205,0,.045),transparent 63%)!important;
+}
 #inicio .c8-inclusion-note{
   max-width:720px!important;
   margin:0 auto!important;
   padding:0 24px 8px!important;
   color:rgba(255,255,255,.78)!important;
 }
+.map-mobile-ui,
+.map-controls,
+.map-gesture-hint{display:none!important}
 
-/* Se eliminan los controles de movimiento/zoom inventados en móvil. */
-.map-mobile-ui,.map-controls,.map-gesture-hint{display:none!important}
-
-/* Mapa: misma forma y funcionamiento; solo desaparecen los tonos violetas. */
-.constellation-lines .violet-line{stroke:rgba(255,255,255,.28)!important}
-.network-nodes circle:nth-child(3n){fill:#FFFFFF!important}
+/* Incluso las partículas generadas por JS pierden su antiguo color violeta. */
 .particle{--particle-color:#FFCD00!important}
-#lineGold stop:first-child,#lineGold stop:last-child{stop-color:#FFFFFF!important}
+.particle:nth-child(3n){--particle-color:#FFFFFF!important}
+.particle::after{border-color:rgba(255,205,0,.14)!important}
+
+/* SVG: los stops con atributos violetas quedan sustituidos visualmente. */
+#lineGold stop:first-child,
+#lineGold stop:last-child{stop-color:#FFFFFF!important}
 #lineGold stop:nth-child(2){stop-color:#FFCD00!important}
-.map-tooltip{background:rgba(5,5,5,.72)!important}
-.map-tooltip small{color:rgba(255,255,255,.62)!important}
+.constellation-lines path{stroke:url(#lineGold)!important}
+.constellation-lines .violet-line{stroke:rgba(255,255,255,.32)!important}
+.network-nodes circle{fill:#FFCD00!important}
+.network-nodes circle:nth-child(3n){fill:#FFFFFF!important}
+.island-shape{fill:rgba(255,205,0,.12)!important;stroke:#FFCD00!important}
+.island-aura{stroke:rgba(255,205,0,.16)!important}
+.island-node:hover .island-shape,
+.island-node:focus-visible .island-shape,
+.island-node.active .island-shape{fill:rgba(255,205,0,.27)!important}
+.island-node.active .island-aura{stroke:rgba(255,205,0,.36)!important}
 
-/* Fondos y paneles generales. */
-.explorer,.project-section,.time-match,.c8-origin,.c8-install,.c8-share{background:#050505!important}
-.explorer,.project-section,.time-match,.c8-origin{border-top-color:rgba(255,205,0,.08)!important}
-.directory-shell,.time-tool,.rel-card,.time-person,.c8-origin-note summary,.c8-install-card,.c8-share-card,.c8-share-dialog,.c8-install-dialog{
-  background:#0B0B0B!important;
-  border-color:rgba(255,255,255,.12)!important;
-}
-.c8-share-dialog,.c8-install-dialog{box-shadow:0 30px 100px rgba(0,0,0,.58)!important}
-.c8-share-dialog::backdrop,.c8-install-dialog::backdrop{background:rgba(0,0,0,.82)!important}
-
-/* Controles, filtros y tarjetas. */
-.search,.time-field input,.time-field select{
-  background:#090909!important;
-  border-color:rgba(255,255,255,.14)!important;
+.map-tooltip{
+  background:rgba(5,5,5,.78)!important;
+  border-color:rgba(255,205,0,.16)!important;
   color:#FFFFFF!important;
 }
-.search::placeholder,.time-field input::placeholder{color:rgba(255,255,255,.55)!important;opacity:1!important}
+.map-tooltip strong{color:#FFFFFF!important}
+.map-tooltip small{color:rgba(255,255,255,.62)!important}
+.tooltip-dot{background:#FFCD00!important}
+.hero-down{color:rgba(255,255,255,.72)!important}
+.hero-down b{color:#FFCD00!important}
+
+/* Secciones principales: negro real, sin baños violetas. */
+.explorer,
+.time-match,
+.project-section,
+.c8-origin,
+.c8-install,
+.c8-share{
+  background:#050505!important;
+  background-image:none!important;
+  border-top-color:rgba(255,205,0,.08)!important;
+}
+.time-match::before{
+  background:repeating-radial-gradient(ellipse at 50% 26%,rgba(255,255,255,.04) 0 1px,transparent 1px 52px)!important;
+}
+
+/* Paneles y tarjetas. */
+.directory-shell,
+.time-tool,
+.rel-card,
+.time-person,
+.c8-origin-note summary,
+.c8-install-card,
+.c8-share-card,
+.c8-share-dialog,
+.c8-install-dialog{
+  background:#0B0B0B!important;
+  background-image:none!important;
+  border-color:rgba(255,255,255,.12)!important;
+  box-shadow:0 22px 70px rgba(0,0,0,.34)!important;
+}
+.directory-shell,
+.time-tool,
+.c8-origin-note summary,
+.c8-install-card,
+.c8-share-card{box-shadow:0 22px 70px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.035)!important}
+
+/* Directorio. */
+.directory-empty p,
+.directory-head p,
+.section-heading>p:last-child,
+.profile-bio,
+.project-copy p,
+.project-copy .project-definition,
+.project-copy .project-secondary{
+  color:rgba(255,255,255,.80)!important;
+}
+.directory-empty strong,
+.directory-head h3,
+.profile h3,
+.person-row strong,
+.rel-card strong,
+.constellation-title{color:#FFFFFF!important}
+.directory-count,
+.alpha-letter,
+.profile-kicker{color:#FFCD00!important}
+
+.search,
+.time-field input,
+.time-field select{
+  background:#090909!important;
+  background-image:none!important;
+  border-color:rgba(255,255,255,.15)!important;
+  color:#FFFFFF!important;
+}
+.time-field select{
+  background-image:
+    linear-gradient(45deg,transparent 50%,#FFCD00 50%),
+    linear-gradient(135deg,#FFCD00 50%,transparent 50%)!important;
+}
 .time-field select option{background:#090909!important;color:#FFFFFF!important}
-.island-chip,.chip,.profile-back,.fact,.time-summary span,.c8-origin-note summary span,.c8-share-apps span{
+.search::placeholder,
+.time-field input::placeholder{color:rgba(255,255,255,.48)!important;opacity:1!important}
+.search:focus,
+.time-field input:focus,
+.time-field select:focus{border-color:rgba(255,205,0,.52)!important}
+
+.island-chip,
+.chip,
+.profile-back,
+.fact,
+.time-summary span{
   background:transparent!important;
   border-color:rgba(255,255,255,.14)!important;
-  color:rgba(255,255,255,.78)!important;
+  color:rgba(255,255,255,.76)!important;
 }
-.island-chip.active,.island-chip:hover,.time-submit,.c8-share-button{
+.island-chip:hover,
+.island-chip.active,
+.time-submit{
   background:#FFCD00!important;
   border-color:#FFCD00!important;
   color:#000000!important;
 }
-.chip.active{background:rgba(255,205,0,.06)!important;border-color:rgba(255,205,0,.48)!important;color:#FFCD00!important}
-.person-row:hover,.time-person:hover,.rel-card:hover{background:rgba(255,205,0,.045)!important}
-.alpha-letter,.profile-kicker,.eyebrow,.directory-count,.c8-install-kicker,.c8-share-kicker{color:#FFCD00!important}
-.reason,.time-overlap{color:#FFCD00!important}
+.chip.active{
+  background:rgba(255,205,0,.055)!important;
+  border-color:rgba(255,205,0,.50)!important;
+  color:#FFCD00!important;
+}
+.person-row:hover,
+.time-person:hover,
+.rel-card:hover{background:rgba(255,205,0,.045)!important}
+.person-row small,
+.person-year,
+.profile-meta,
+.rel-card small,
+.fact{color:rgba(255,255,255,.62)!important}
+.person-arrow,
+.fact b,
+.reason,
+.time-overlap{color:#FFCD00!important}
+.rel-card{background:#0B0B0B!important}
+.profile-back:hover{border-color:rgba(255,205,0,.5)!important;color:#FFCD00!important}
 
-/* Tipografía secundaria: blanco con distintas opacidades, nunca violeta. */
-.hero-lead,
+/* Coincidencias. */
+.time-match-copy h2,
+.time-tool-head strong,
+.time-person strong{color:#FFFFFF!important}
 .time-match-copy>p:last-of-type,
-.section-heading>p:last-child,
-.project-copy .project-definition,
-.project-copy .project-secondary,
-.directory-head p,
-.profile-bio,
-.directory-empty p,
-.c8-origin-body,
-.c8-install-head p,
-.c8-share-copy>p:not(.c8-share-kicker){color:rgba(255,255,255,.82)!important}
-.time-tool-head small,.time-field span,.time-privacy,.time-empty,.time-summary span,.time-person small,.person-row small,.person-year,.profile-meta,.rel-card small,.directory-count,.c8-origin-signature::after,.c8-install-platform small,.c8-install-note,.c8-share-hint,.c8-share-options span,.c8-install-dialog-foot{color:rgba(255,255,255,.62)!important}
-.person-row strong,.time-person strong,.rel-card strong,.profile h3,.directory-head h3,.directory-empty strong,.time-tool-head strong,.constellation-title,.profile-sources,.profile-sources h4,.profile-sources li,.profile-sources small,.c8-origin-note summary,.c8-install-head h2,.c8-install-platform strong,.c8-share-copy h2,.c8-share-dialog h3,.c8-install-dialog h3{color:#FFFFFF!important}
-.profile-sources a{color:#FFFFFF!important;text-decoration-color:rgba(255,205,0,.72)!important;text-underline-offset:3px}
-.profile-sources a:hover,.profile-sources a:focus-visible{color:#FFCD00!important}
-
-/* Coincidencias y elementos orbitales en blanco/amarillo. */
-.time-match:before{background:repeating-radial-gradient(ellipse at 50% 26%,rgba(255,255,255,.04) 0 1px,transparent 1px 52px)!important}
+.time-tool-head small,
+.time-field span,
+.time-privacy,
+.time-empty,
+.time-person small{
+  color:rgba(255,255,255,.64)!important;
+}
+.time-tool-badge,
+.time-summary b{color:#FFCD00!important}
 .time-orbit{border-color:rgba(255,255,255,.18)!important}
-.time-orbit:before{border-color:rgba(255,205,0,.18)!important}
-.time-orbit:after{border-color:rgba(255,255,255,.26)!important}
-.time-orbit b{background:#FFFFFF!important;box-shadow:0 0 14px rgba(255,255,255,.45)!important}
+.time-orbit::before{border-color:rgba(255,205,0,.22)!important}
+.time-orbit::after{border-color:rgba(255,255,255,.26)!important}
+.time-orbit i{background:#FFCD00!important}
+.time-orbit b{background:#FFFFFF!important;box-shadow:0 0 14px rgba(255,255,255,.44)!important}
+.time-person{border-color:rgba(255,255,255,.11)!important}
+.time-summary span{color:rgba(255,255,255,.72)!important}
+.time-overlap,
+.reason{background:rgba(255,205,0,.055)!important;border-color:rgba(255,205,0,.14)!important}
 
-/* Origen, instalación y compartir: sin violetas residuales. */
-.c8-origin-note summary:hover{background:#101010!important;border-color:rgba(255,205,0,.72)!important}
-.c8-origin-note summary span{background:rgba(255,205,0,.04)!important;border-color:rgba(255,205,0,.24)!important;color:#FFCD00!important}
-.c8-install-logo{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important}
-.c8-install-logo-android svg,.c8-install-logo-apple svg{color:#FFFFFF!important}
-.c8-install-button{background:rgba(255,205,0,.06)!important;border-color:rgba(255,205,0,.48)!important;color:#FFFFFF!important}
-.c8-install-button:hover{background:rgba(255,205,0,.12)!important}
-.c8-install-button.ready::after{background:#FFCD00!important;box-shadow:0 0 12px rgba(255,205,0,.7)!important}
-.c8-share-symbol{background:rgba(255,205,0,.08)!important}
-.c8-share-options a,.c8-share-option-copy,.c8-install-step{background:rgba(255,255,255,.025)!important;border-color:rgba(255,255,255,.09)!important;color:#FFFFFF!important}
+/* Fuentes documentales. */
+.profile-sources,
+.profile-sources h4,
+.profile-sources li,
+.profile-sources small{color:rgba(255,255,255,.82)!important}
+.profile-sources a{color:#FFFFFF!important;text-decoration-color:rgba(255,205,0,.72)!important;text-underline-offset:3px!important}
+.profile-sources a:hover,
+.profile-sources a:focus-visible{color:#FFCD00!important}
+
+/* Nota de origen. */
+.c8-origin-note summary{
+  border-color:rgba(255,205,0,.42)!important;
+  background:#0B0B0B!important;
+}
+.c8-origin-note summary:hover{
+  background:#101010!important;
+  border-color:rgba(255,205,0,.74)!important;
+}
+.c8-origin-note summary::before,
+.c8-origin-note summary::after{color:#FFCD00!important}
+.c8-origin-note summary::after{background:rgba(255,205,0,.055)!important;border-color:rgba(255,205,0,.42)!important}
+.c8-origin-note summary span{
+  background:rgba(255,205,0,.045)!important;
+  border-color:rgba(255,205,0,.26)!important;
+  color:#FFCD00!important;
+}
+.c8-origin-body{color:rgba(255,255,255,.84)!important}
+.c8-origin-signature,
+.c8-origin-signature::before{color:#FFFFFF!important}
+.c8-origin-signature::after{color:rgba(255,255,255,.58)!important}
+
+/* Instalación PWA: Android/Apple también se integran en la paleta DE8. */
+.c8-install-head h2,
+.c8-install-platform strong{color:#FFFFFF!important}
+.c8-install-head p,
+.c8-install-platform small,
+.c8-install-note{color:rgba(255,255,255,.62)!important}
+.c8-install-kicker,
+.c8-install-status{color:#FFCD00!important}
+.c8-install-logo{
+  background:rgba(255,255,255,.04)!important;
+  border-color:rgba(255,255,255,.12)!important;
+}
+.c8-install-logo-android svg,
+.c8-install-logo-apple svg{color:#FFFFFF!important}
+.c8-install-button{
+  background:rgba(255,205,0,.06)!important;
+  border-color:rgba(255,205,0,.48)!important;
+  color:#FFFFFF!important;
+}
+.c8-install-button:hover{background:rgba(255,205,0,.12)!important;border-color:rgba(255,205,0,.8)!important}
+.c8-install-button.ready::after{background:#FFCD00!important;box-shadow:0 0 12px rgba(255,205,0,.70)!important}
+
+/* Compartir. */
+.c8-share-card{border-color:rgba(255,205,0,.24)!important}
+.c8-share-card::after{background:linear-gradient(105deg,rgba(255,255,255,.025),transparent 42%)!important}
+.c8-share-constellation path{stroke:rgba(255,205,0,.40)!important}
+.c8-share-constellation circle{fill:#FFCD00!important}
+.c8-share-kicker{color:#FFCD00!important}
+.c8-share-copy h2{color:#FFFFFF!important}
+.c8-share-copy>p:not(.c8-share-kicker){color:rgba(255,255,255,.72)!important}
+.c8-share-apps span{
+  background:rgba(255,255,255,.035)!important;
+  border-color:rgba(255,255,255,.10)!important;
+  color:rgba(255,255,255,.62)!important;
+}
+.c8-share-symbol{background:rgba(255,205,0,.08)!important;border-color:rgba(255,205,0,.26)!important}
+.c8-share-symbol svg{fill:#FFCD00!important}
+.c8-share-button{background:#FFCD00!important;border-color:#FFCD00!important;color:#000000!important}
+.c8-share-copy-button{color:rgba(255,255,255,.68)!important}
+.c8-share-copy-button:hover{color:#FFCD00!important}
+.c8-share-hint{color:rgba(255,255,255,.48)!important}
+.c8-share-status{color:#FFCD00!important}
+
+/* Diálogos. */
+.c8-share-dialog,
+.c8-install-dialog{
+  background:#090909!important;
+  color:#FFFFFF!important;
+  border-color:rgba(255,205,0,.28)!important;
+  box-shadow:0 30px 100px rgba(0,0,0,.66)!important;
+}
+.c8-share-dialog::backdrop,
+.c8-install-dialog::backdrop{background:rgba(0,0,0,.84)!important}
+.c8-share-dialog h3,
+.c8-install-dialog h3{color:#FFFFFF!important}
+.c8-share-dialog p,
+.c8-install-dialog p{color:rgba(255,255,255,.68)!important}
+.c8-share-dialog-close,
+.c8-install-dialog-close{
+  background:rgba(255,255,255,.04)!important;
+  border-color:rgba(255,255,255,.12)!important;
+  color:#FFFFFF!important;
+}
+.c8-share-options a,
+.c8-share-option-copy,
+.c8-install-step{
+  background:rgba(255,255,255,.025)!important;
+  border-color:rgba(255,255,255,.09)!important;
+  color:#FFFFFF!important;
+}
+.c8-share-options a:hover,
+.c8-share-option-copy:hover{background:rgba(255,205,0,.045)!important;border-color:rgba(255,205,0,.38)!important}
+.c8-share-options strong{color:#FFFFFF!important}
+.c8-share-options span,
+.c8-install-dialog-foot{color:rgba(255,255,255,.50)!important}
 .c8-install-step b{background:rgba(255,205,0,.11)!important;color:#FFCD00!important}
-.c8-footer-admin,footer,footer span,footer small{color:rgba(255,255,255,.62)!important}
+.c8-install-step span{color:rgba(255,255,255,.88)!important}
 
-/* La nota de origen se gestiona en origin-note.css; no reinyectamos texto desde aquí. */
+/* Pie. */
+footer,
+footer span,
+footer small{color:rgba(255,255,255,.62)!important}
+footer{background:#050505!important;border-top-color:rgba(255,255,255,.06)!important}
 footer::before{content:none!important;display:none!important}
 
+/* Neutraliza cualquier fondo violáceo residual de elementos interactivos comunes. */
+button:not(.header-cta):not(.time-submit):not(.c8-share-button),
+input,
+select,
+dialog{
+  --legacy-violet:none;
+}
+
 @media(max-width:620px){
-  .brand{gap:8px!important}
+  #inicio .hero-lead{color:#FFCD00!important}
+  #inicio .c8-inclusion-note{color:rgba(255,255,255,.82)!important}
   .brand::after{font-size:16px!important}
   .brand-mark{width:34px!important;height:21px!important}
-
-  html body #inicio.hero{min-height:auto!important;padding:84px 8px 14px!important;justify-content:flex-start!important}
-  #inicio .hero-intro{margin-bottom:0!important}
-  #inicio .archipelago-stage{width:94vw!important;max-width:94vw!important;margin:10px auto 2px!important}
-  #inicio .c8-inclusion-note{
-    margin:0 auto!important;
-    padding:0 22px 8px!important;
-    font-size:11px!important;
-    line-height:1.5!important;
-    color:rgba(255,255,255,.82)!important;
-  }
-  #inicio .hero-lead{font-size:16px!important;line-height:1.48!important}
-
-  .hero-lead,.time-match-copy>p:last-of-type,.section-heading>p:last-child,.project-copy .project-definition,.project-copy .project-secondary,.profile-bio,.directory-head p,.directory-empty p{color:#FFFFFF!important}
-  .time-tool-head small,.time-privacy,.time-empty,.time-summary span,.time-person small,.person-row small,.person-year,.profile-meta,.rel-card small{color:rgba(255,255,255,.72)!important}
+  .hero-lead,
+  .time-match-copy>p:last-of-type,
+  .section-heading>p:last-child,
+  .project-copy .project-definition,
+  .project-copy .project-secondary,
+  .profile-bio,
+  .directory-head p,
+  .directory-empty p{color:rgba(255,255,255,.84)!important}
 }
