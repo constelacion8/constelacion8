@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /m88/
+Disallow: /area-2627/
 
