@@ -1,180 +1,48 @@
-/* Contraste reforzado para lectura en exterior y pantallas móviles. */
+/* Identidad visual DE8 para Constelación 8: negro, amarillo y blanco. */
 :root{
-  --text:#FFFFFF;
-  --muted:#EEE7F5;
-  --soft:#D8CCE5;
+  --violet-0:#000000!important;
+  --violet-1:#050505!important;
+  --violet-2:#090909!important;
+  --violet-3:#111111!important;
+  --violet-4:#FFFFFF!important;
+  --de8-yellow:#FFCD00;
+  --warm-gold:#FFCD00!important;
+  --white:#FFFFFF;
+  --text:#FFFFFF!important;
+  --muted:rgba(255,255,255,.78)!important;
+  --soft:rgba(255,255,255,.56)!important;
+  --line:rgba(255,205,0,.18);
+  --violet-line:rgba(255,255,255,.18)!important;
 }
 
-/* Texto editorial principal y secundario */
-.hero-lead,
-.time-match-copy>p:last-of-type,
-.section-heading>p:last-child,
-.project-copy .project-definition,
-.project-copy .project-secondary,
-.directory-head p,
-.profile-bio,
-.directory-empty p{
-  color:#F4EFF8!important;
-}
+html,body{background:#050505!important;color:#FFFFFF!important}
+body{background:#050505!important}
+::selection{background:#FFCD00!important;color:#000!important}
 
-/* Resumen visual de la portada: amarillo de marca */
-.hero-biographic-note{
-  color:#FFCD00!important;
-  border-color:rgba(255,205,0,.78)!important;
+/* Fondo: se conserva la profundidad, sin violeta. */
+.cosmic-noise{
+  background-image:
+    radial-gradient(circle at 13% 18%,rgba(255,255,255,.82) 0 1px,transparent 1.6px),
+    radial-gradient(circle at 71% 13%,rgba(255,205,0,.72) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 86% 72%,rgba(255,255,255,.72) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 34% 75%,rgba(255,255,255,.5) 0 1px,transparent 1.5px)!important;
 }
+.cosmic-noise:after{background:radial-gradient(ellipse at center,transparent 0 38%,rgba(0,0,0,.82) 100%)!important}
 
-/* Nota editorial bajo el mapa: casi blanca, discreta pero plenamente legible */
-#inicio .c8-inclusion-note{
-  color:rgba(255,255,255,.92)!important;
+/* Cabecera: una sola marca, sin repetición. */
+.site-header{
+  background:linear-gradient(180deg,rgba(5,5,5,.96),rgba(5,5,5,.78))!important;
+  border-bottom-color:rgba(255,255,255,.08)!important;
 }
-
-/* Metadatos: blanco violáceo luminoso, nunca gris oscuro */
-.time-tool-head small,
-.time-field span,
-.time-privacy,
-.time-empty,
-.time-summary span,
-.time-person small,
-.person-row small,
-.person-year,
-.profile-meta,
-.rel-card small,
-.map-gesture-hint,
-.map-tooltip small,
-.directory-count{
-  color:#DDD1E8!important;
-}
-
-/* Texto esencial: blanco puro */
-.person-row strong,
-.time-person strong,
-.rel-card strong,
-.profile h3,
-.directory-head h3,
-.directory-empty strong,
-.time-tool-head strong,
-.hero-down,
-.hero-credit-below,
-.hero-credit-below span,
-.hero-credit-below strong{
-  color:#FFFFFF!important;
-}
-
-/* Controles y filtros */
-.search,
-.time-field input,
-.time-field select{
-  color:#FFFFFF!important;
-}
-.search::placeholder,
-.time-field input::placeholder{
-  color:#CFC2DA!important;
-  opacity:1;
-}
-.island-chip,
-.chip,
-.profile-back{
-  color:#E9E0F1!important;
-}
-.island-chip.active,
-.island-chip:hover{
-  color:#1A0633!important;
-}
-.chip.active{
-  color:#FFCD00!important;
-}
-.chip small{
-  opacity:.85!important;
-}
-
-/* Etiquetas y datos de ficha */
-.fact{
-  color:#E8DFF0!important;
-}
-.profile-kicker,
-.constellation-title{
-  color:#FFFFFF!important;
-}
-.reason,
-.time-overlap{
-  color:#FFF0A8!important;
-}
-
-/* Fuentes documentales: máxima legibilidad */
-.profile-sources,
-.profile-sources h4,
-.profile-sources li,
-.profile-sources small{
-  color:#F1EAF6!important;
-}
-.profile-sources a{
-  color:#FFFFFF!important;
-  text-decoration-color:rgba(255,205,0,.72)!important;
-  text-underline-offset:3px;
-}
-.profile-sources a:hover,
-.profile-sources a:focus-visible{
-  color:#FFDF57!important;
-}
-
-/* Navegación y pie */
-.main-nav button,
-footer,
-footer small,
-footer span{
-  color:#E8DFF0!important;
-}
-
-/* Origen del proyecto: una nota de autor antes del cierre legal/de marca. */
-footer{
-  min-height:auto!important;
-  padding:88px 5vw 28px!important;
-  flex-wrap:wrap!important;
-  align-items:center!important;
-  border-top:0!important;
-}
-footer::before{
-  content:"Constelación 8 nació de una necesidad muy sencilla. En DE8 Films, productora canaria de cine documental, queríamos una herramienta propia que nos permitiera tener a mano, ordenar y descubrir las biografías de las personas de Canarias y de quienes han dejado una huella profunda en las islas. De esa necesidad de trabajo nació este atlas: una idea original de Enrique Roda, cofundador y director creativo de DE8 Films.\A\A Muy pronto entendimos que una herramienta así no tenía sentido si se quedaba dentro de una productora. Nuestra vocación es divulgar: compartir historias, despertar curiosidad y hacer que conocer nuestro pasado también pueda ser entretenido. Por eso Constelación 8 se comparte como un proyecto abierto a la comunidad, dispuesto a crecer con nuevas fuentes, correcciones y propuestas. Ojalá sirva también para recordarnos lo afortunados que somos de compartir —o haber compartido— tiempo y territorio con tantas personas interesantes que, desde disciplinas muy distintas, han contribuido a hacer de este archipiélago un lugar mejor.\A\A Y hay una convicción personal detrás de esta constelación: Canarias también se construye con quienes la eligieron. Algunas personas nacieron fuera por azar o circunstancias familiares y crecieron aquí desde muy pequeñas; otras llegaron después y decidieron entregar a estas islas lo mejor de sus carreras, su talento y su vida. Siempre he creído que hay muchas maneras de ser canario. En este atlas también están quienes, sin haber nacido en las islas, lo demostraron con su arraigo, su compromiso y su aportación. Porque también hay quienes se hacen canarios eligiendo Canarias. — Enrique Roda";
-  display:block;
-  flex:0 0 100%;
-  max-width:940px;
-  margin:0 auto 30px;
-  padding:0 0 54px;
-  border-bottom:1px solid rgba(255,255,255,.075);
-  white-space:pre-line;
-  text-align:left;
-  font:400 13px/1.86 "Open Sans",Arial,sans-serif;
-  color:rgba(244,239,248,.86);
-  letter-spacing:0;
-}
-
-/* Wordmark de cabecera inspirado en DE8 Films: Work Sans, blanco y punto final. */
-.brand{
-  gap:11px!important;
-}
-.brand-name{
-  font-family:"Work Sans",Arial,sans-serif!important;
-  font-size:0!important;
-  line-height:1!important;
-  letter-spacing:0!important;
-  font-weight:700!important;
-  text-transform:none!important;
-  color:#FFFFFF!important;
-}
-.brand-name::after{
+.brand{gap:10px!important;font-size:0!important}
+.brand-name{display:none!important}
+.brand::after{
   content:"Constelación 8.";
   display:inline-block;
-  font-family:"Work Sans",Arial,sans-serif;
-  font-size:18px;
-  line-height:1;
-  font-weight:700;
+  font:700 18px/1 "Work Sans",Arial,sans-serif;
   letter-spacing:-.045em;
   color:#FFFFFF;
   white-space:nowrap;
-}
-.brand-name b{
-  font-size:0!important;
-  color:inherit!important;
 }
 .brand-mark{
   position:relative!important;
@@ -194,61 +62,134 @@ footer::before{
     radial-gradient(circle at 32px 8px,#FFCD00 0 2px,transparent 2.4px),
     radial-gradient(circle at 35px 19px,#FFCD00 0 2px,transparent 2.4px)!important;
 }
-.brand-mark i,
-.brand-mark::before,
-.brand-mark::after{
-  display:none!important;
-  content:none!important;
+.brand-mark i,.brand-mark::before,.brand-mark::after{display:none!important;content:none!important}
+.main-nav button{color:rgba(255,255,255,.78)!important}
+.header-cta{color:#FFCD00!important;border-color:rgba(255,205,0,.5)!important}
+.header-cta:hover{background:#FFCD00!important;color:#000!important}
+
+/* Portada más compacta. El mapa conserva geometría e interacción. */
+html body #inicio.hero{min-height:auto!important;padding-bottom:22px!important;background:#050505!important}
+#inicio .hero-intro{margin-bottom:2px!important}
+#inicio .hero-halo{background:#FFCD00!important;opacity:.045!important}
+#inicio.hero:before{
+  background:
+    radial-gradient(circle at 31% 62%,rgba(255,205,0,.045),transparent 18%),
+    radial-gradient(circle at 66% 54%,rgba(255,205,0,.045),transparent 22%),
+    repeating-radial-gradient(ellipse at 50% 62%,rgba(255,205,0,.035) 0 1px,transparent 1px 44px)!important;
+}
+#inicio .hero-atlas-title,#inicio .c8-hero-credit-inline,#inicio .c8-hero-credit-inline span,#inicio .c8-hero-credit-inline strong{color:#FFFFFF!important}
+#inicio .hero-lead{color:#FFCD00!important}
+#inicio .archipelago-stage{margin-top:2px!important;margin-bottom:4px!important}
+#inicio .archipelago-stage:before{background:radial-gradient(ellipse at center,rgba(255,205,0,.045),transparent 63%)!important}
+#inicio .c8-inclusion-note{
+  max-width:720px!important;
+  margin:0 auto!important;
+  padding:0 24px 8px!important;
+  color:rgba(255,255,255,.78)!important;
 }
 
+/* Se eliminan los controles de movimiento/zoom inventados en móvil. */
+.map-mobile-ui,.map-controls,.map-gesture-hint{display:none!important}
+
+/* Mapa: misma forma y funcionamiento; solo desaparecen los tonos violetas. */
+.constellation-lines .violet-line{stroke:rgba(255,255,255,.28)!important}
+.network-nodes circle:nth-child(3n){fill:#FFFFFF!important}
+.particle{--particle-color:#FFCD00!important}
+#lineGold stop:first-child,#lineGold stop:last-child{stop-color:#FFFFFF!important}
+#lineGold stop:nth-child(2){stop-color:#FFCD00!important}
+.map-tooltip{background:rgba(5,5,5,.72)!important}
+.map-tooltip small{color:rgba(255,255,255,.62)!important}
+
+/* Fondos y paneles generales. */
+.explorer,.project-section,.time-match,.c8-origin,.c8-install,.c8-share{background:#050505!important}
+.explorer,.project-section,.time-match,.c8-origin{border-top-color:rgba(255,205,0,.08)!important}
+.directory-shell,.time-tool,.rel-card,.time-person,.c8-origin-note summary,.c8-install-card,.c8-share-card,.c8-share-dialog,.c8-install-dialog{
+  background:#0B0B0B!important;
+  border-color:rgba(255,255,255,.12)!important;
+}
+.c8-share-dialog,.c8-install-dialog{box-shadow:0 30px 100px rgba(0,0,0,.58)!important}
+.c8-share-dialog::backdrop,.c8-install-dialog::backdrop{background:rgba(0,0,0,.82)!important}
+
+/* Controles, filtros y tarjetas. */
+.search,.time-field input,.time-field select{
+  background:#090909!important;
+  border-color:rgba(255,255,255,.14)!important;
+  color:#FFFFFF!important;
+}
+.search::placeholder,.time-field input::placeholder{color:rgba(255,255,255,.55)!important;opacity:1!important}
+.time-field select option{background:#090909!important;color:#FFFFFF!important}
+.island-chip,.chip,.profile-back,.fact,.time-summary span,.c8-origin-note summary span,.c8-share-apps span{
+  background:transparent!important;
+  border-color:rgba(255,255,255,.14)!important;
+  color:rgba(255,255,255,.78)!important;
+}
+.island-chip.active,.island-chip:hover,.time-submit,.c8-share-button{
+  background:#FFCD00!important;
+  border-color:#FFCD00!important;
+  color:#000000!important;
+}
+.chip.active{background:rgba(255,205,0,.06)!important;border-color:rgba(255,205,0,.48)!important;color:#FFCD00!important}
+.person-row:hover,.time-person:hover,.rel-card:hover{background:rgba(255,205,0,.045)!important}
+.alpha-letter,.profile-kicker,.eyebrow,.directory-count,.c8-install-kicker,.c8-share-kicker{color:#FFCD00!important}
+.reason,.time-overlap{color:#FFCD00!important}
+
+/* Tipografía secundaria: blanco con distintas opacidades, nunca violeta. */
+.hero-lead,
+.time-match-copy>p:last-of-type,
+.section-heading>p:last-child,
+.project-copy .project-definition,
+.project-copy .project-secondary,
+.directory-head p,
+.profile-bio,
+.directory-empty p,
+.c8-origin-body,
+.c8-install-head p,
+.c8-share-copy>p:not(.c8-share-kicker){color:rgba(255,255,255,.82)!important}
+.time-tool-head small,.time-field span,.time-privacy,.time-empty,.time-summary span,.time-person small,.person-row small,.person-year,.profile-meta,.rel-card small,.directory-count,.c8-origin-signature::after,.c8-install-platform small,.c8-install-note,.c8-share-hint,.c8-share-options span,.c8-install-dialog-foot{color:rgba(255,255,255,.62)!important}
+.person-row strong,.time-person strong,.rel-card strong,.profile h3,.directory-head h3,.directory-empty strong,.time-tool-head strong,.constellation-title,.profile-sources,.profile-sources h4,.profile-sources li,.profile-sources small,.c8-origin-note summary,.c8-install-head h2,.c8-install-platform strong,.c8-share-copy h2,.c8-share-dialog h3,.c8-install-dialog h3{color:#FFFFFF!important}
+.profile-sources a{color:#FFFFFF!important;text-decoration-color:rgba(255,205,0,.72)!important;text-underline-offset:3px}
+.profile-sources a:hover,.profile-sources a:focus-visible{color:#FFCD00!important}
+
+/* Coincidencias y elementos orbitales en blanco/amarillo. */
+.time-match:before{background:repeating-radial-gradient(ellipse at 50% 26%,rgba(255,255,255,.04) 0 1px,transparent 1px 52px)!important}
+.time-orbit{border-color:rgba(255,255,255,.18)!important}
+.time-orbit:before{border-color:rgba(255,205,0,.18)!important}
+.time-orbit:after{border-color:rgba(255,255,255,.26)!important}
+.time-orbit b{background:#FFFFFF!important;box-shadow:0 0 14px rgba(255,255,255,.45)!important}
+
+/* Origen, instalación y compartir: sin violetas residuales. */
+.c8-origin-note summary:hover{background:#101010!important;border-color:rgba(255,205,0,.72)!important}
+.c8-origin-note summary span{background:rgba(255,205,0,.04)!important;border-color:rgba(255,205,0,.24)!important;color:#FFCD00!important}
+.c8-install-logo{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important}
+.c8-install-logo-android svg,.c8-install-logo-apple svg{color:#FFFFFF!important}
+.c8-install-button{background:rgba(255,205,0,.06)!important;border-color:rgba(255,205,0,.48)!important;color:#FFFFFF!important}
+.c8-install-button:hover{background:rgba(255,205,0,.12)!important}
+.c8-install-button.ready::after{background:#FFCD00!important;box-shadow:0 0 12px rgba(255,205,0,.7)!important}
+.c8-share-symbol{background:rgba(255,205,0,.08)!important}
+.c8-share-options a,.c8-share-option-copy,.c8-install-step{background:rgba(255,255,255,.025)!important;border-color:rgba(255,255,255,.09)!important;color:#FFFFFF!important}
+.c8-install-step b{background:rgba(255,205,0,.11)!important;color:#FFCD00!important}
+.c8-footer-admin,footer,footer span,footer small{color:rgba(255,255,255,.62)!important}
+
+/* La nota de origen se gestiona en origin-note.css; no reinyectamos texto desde aquí. */
+footer::before{content:none!important;display:none!important}
+
 @media(max-width:620px){
-  .hero-lead,
-  .time-match-copy>p:last-of-type,
-  .section-heading>p:last-child,
-  .project-copy .project-definition,
-  .project-copy .project-secondary,
-  .profile-bio,
-  .directory-head p,
-  .directory-empty p{
-    color:#FFFFFF!important;
-  }
+  .brand{gap:8px!important}
+  .brand::after{font-size:16px!important}
+  .brand-mark{width:34px!important;height:21px!important}
 
+  html body #inicio.hero{min-height:auto!important;padding:84px 8px 14px!important;justify-content:flex-start!important}
+  #inicio .hero-intro{margin-bottom:0!important}
+  #inicio .archipelago-stage{width:94vw!important;max-width:94vw!important;margin:10px auto 2px!important}
   #inicio .c8-inclusion-note{
-    color:rgba(255,255,255,.95)!important;
+    margin:0 auto!important;
+    padding:0 22px 8px!important;
+    font-size:11px!important;
+    line-height:1.5!important;
+    color:rgba(255,255,255,.82)!important;
   }
+  #inicio .hero-lead{font-size:16px!important;line-height:1.48!important}
 
-  .time-tool-head small,
-  .time-privacy,
-  .time-empty,
-  .time-summary span,
-  .time-person small,
-  .person-row small,
-  .person-year,
-  .profile-meta,
-  .rel-card small{
-    color:#E9E0F1!important;
-  }
-
-  footer{
-    padding:64px 22px 24px!important;
-  }
-  footer::before{
-    margin-bottom:32px;
-    padding-bottom:38px;
-    font-size:12px;
-    line-height:1.82;
-    color:rgba(255,255,255,.88);
-  }
-
-  .brand{
-    gap:9px!important;
-  }
-  .brand-name::after{
-    font-size:16px;
-  }
-  .brand-mark{
-    width:34px!important;
-    height:21px!important;
-    transform:none!important;
-  }
+  .hero-lead,.time-match-copy>p:last-of-type,.section-heading>p:last-child,.project-copy .project-definition,.project-copy .project-secondary,.profile-bio,.directory-head p,.directory-empty p{color:#FFFFFF!important}
+  .time-tool-head small,.time-privacy,.time-empty,.time-summary span,.time-person small,.person-row small,.person-year,.profile-meta,.rel-card small{color:rgba(255,255,255,.72)!important}
 }
