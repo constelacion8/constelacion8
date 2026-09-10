@@ -1,7 +1,11 @@
-const C8_CACHE = 'constelacion8-shell-v3';
+const C8_CACHE = 'constelacion8-shell-v4';
 const C8_SHELL = [
   './',
   './index.html',
+  './app.css',
+  './refine.css',
+  './contrast.css',
+  './origin-note.css',
   './install-app.css',
   './install-app.js',
   './manifest.webmanifest',
