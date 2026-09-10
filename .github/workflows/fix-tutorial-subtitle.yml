@@ -1,0 +1,33 @@
+name: Fix tutorial subtitle
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-tutorial-subtitle.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix tutorial subtitle
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text()
+          old='<span>Florines, bote, cuotas y un ejemplo de la Jornada 5.</span>'
+          new='<span>Florines, bote y cuotas<br>Ejemplo real: Jornada 5</span>'
+          if old not in s:
+              raise SystemExit('Tutorial subtitle anchor not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+      - name: Commit and clean workflow
+        run: |
+          git config user.name 'ChatGPT'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/workflows/fix-tutorial-subtitle.yml
+          git add area-2627/index.html
+          git commit -m 'Fix Tutorial y normas subtitle wrapping'
+          git push
