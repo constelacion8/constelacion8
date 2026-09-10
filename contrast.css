@@ -18,31 +18,18 @@
 }
 
 html,body,.app{background:#050505!important;color:#fff!important}
-body{
-  background-image:
-    radial-gradient(circle at 50% -10%,rgba(255,205,0,.045),transparent 32%),
-    linear-gradient(180deg,#050505 0%,#050505 100%)!important;
-}
+body{background-image:radial-gradient(circle at 50% -10%,rgba(255,205,0,.045),transparent 32%),linear-gradient(180deg,#050505 0%,#050505 100%)!important}
 ::selection{background:#FFCD00!important;color:#000!important}
 
-/* Fondo general */
-.cosmic-noise{
-  opacity:.22!important;
-  background-image:
-    radial-gradient(circle at 13% 18%,rgba(255,255,255,.85) 0 1px,transparent 1.6px),
-    radial-gradient(circle at 71% 13%,rgba(255,205,0,.74) 0 1px,transparent 1.5px),
-    radial-gradient(circle at 86% 72%,rgba(255,255,255,.66) 0 1px,transparent 1.5px),
-    radial-gradient(circle at 34% 75%,rgba(255,255,255,.46) 0 1px,transparent 1.5px)!important;
-}
+.cosmic-noise{opacity:.22!important;background-image:radial-gradient(circle at 13% 18%,rgba(255,255,255,.85) 0 1px,transparent 1.6px),radial-gradient(circle at 71% 13%,rgba(255,205,0,.74) 0 1px,transparent 1.5px),radial-gradient(circle at 86% 72%,rgba(255,255,255,.66) 0 1px,transparent 1.5px),radial-gradient(circle at 34% 75%,rgba(255,255,255,.46) 0 1px,transparent 1.5px)!important}
 .cosmic-noise::after{background:radial-gradient(ellipse at center,transparent 0 38%,rgba(0,0,0,.84) 100%)!important}
 
 /* Cabecera */
 .site-header{background:linear-gradient(180deg,rgba(5,5,5,.98),rgba(5,5,5,.84))!important;border-bottom-color:rgba(255,255,255,.08)!important}
-.brand{gap:10px!important;font-size:0!important}
+.brand{gap:0!important;font-size:0!important}
 .brand-name{display:none!important}
 .brand::after{content:"Constelación 8."!important;display:inline-block!important;font:700 18px/1 "Work Sans",Arial,sans-serif!important;letter-spacing:-.045em!important;color:#fff!important;white-space:nowrap!important}
-.brand-mark{position:relative!important;width:37px!important;height:22px!important;display:block!important;flex:none!important;transform:none!important;filter:drop-shadow(0 0 4px rgba(255,205,0,.38))!important;background:radial-gradient(circle at 3px 13px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 8px 5px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 14px 17px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 18px 9px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 23px 3px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 27px 15px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 32px 8px,#FFCD00 0 2px,transparent 2.4px),radial-gradient(circle at 35px 19px,#FFCD00 0 2px,transparent 2.4px)!important}
-.brand-mark i,.brand-mark::before,.brand-mark::after{display:none!important;content:none!important}
+.brand-mark{display:none!important}
 .main-nav button{color:rgba(255,255,255,.76)!important}
 .header-cta{color:#FFCD00!important;border-color:rgba(255,205,0,.48)!important}
 .header-cta:hover{background:#FFCD00!important;color:#000!important}
@@ -59,55 +46,40 @@ html body #inicio.hero{min-height:auto!important;padding-bottom:22px!important;b
 #inicio .archipelago-stage::before{background:radial-gradient(ellipse at center,rgba(255,205,0,.04),transparent 63%)!important}
 #inicio .c8-inclusion-note{max-width:720px!important;margin:0 auto!important;padding:0 24px 8px!important;color:rgba(255,255,255,.78)!important}
 .map-mobile-ui,.map-controls,.map-gesture-hint{display:none!important}
-.particle{--particle-color:#FFCD00!important}
-.particle:nth-child(3n){--particle-color:#fff!important}
-#lineGold stop:first-child,#lineGold stop:last-child{stop-color:#fff!important}
-#lineGold stop:nth-child(2){stop-color:#FFCD00!important}
+.particle{--particle-color:#FFCD00!important}.particle:nth-child(3n){--particle-color:#fff!important}
+#lineGold stop:first-child,#lineGold stop:last-child{stop-color:#fff!important}#lineGold stop:nth-child(2){stop-color:#FFCD00!important}
 .constellation-lines .violet-line{stroke:rgba(255,255,255,.30)!important}
-.network-nodes circle{fill:#FFCD00!important}
-.network-nodes circle:nth-child(3n){fill:#fff!important}
-.map-tooltip{background:rgba(5,5,5,.82)!important;border-color:rgba(255,205,0,.16)!important}
-.map-tooltip strong{color:#fff!important}.map-tooltip small{color:rgba(255,255,255,.62)!important}
+.network-nodes circle{fill:#FFCD00!important}.network-nodes circle:nth-child(3n){fill:#fff!important}
+.map-tooltip{background:rgba(5,5,5,.82)!important;border-color:rgba(255,205,0,.16)!important}.map-tooltip strong{color:#fff!important}.map-tooltip small{color:rgba(255,255,255,.62)!important}
 
-/* Todas las secciones públicas */
+/* Secciones */
 .explorer,.time-match,.project-section,.c8-origin,.c8-install,.c8-share,.c8-stats{background:#050505!important;background-image:none!important;border-top-color:rgba(255,205,0,.08)!important}
 .time-match::before{background:repeating-radial-gradient(ellipse at 50% 26%,rgba(255,255,255,.035) 0 1px,transparent 1px 52px)!important}
-.c8-stats::before{background:radial-gradient(circle at 14% 20%,rgba(255,205,0,.045),transparent 32%),radial-gradient(circle at 82% 45%,rgba(255,255,255,.018),transparent 30%)!important}
+.c8-stats::before{background:radial-gradient(circle at 14% 20%,rgba(255,205,0,.035),transparent 32%),radial-gradient(circle at 82% 45%,rgba(255,255,255,.014),transparent 30%)!important}
 
-/* Regla transversal para TODAS las tarjetas dinámicas C8.
-   Incluye categorías, estadísticas, métricas, rankings, lecturas, música, etc. */
-*[class*="c8-"][class*="-card"]{
-  background:#0B0B0B!important;
-  background-image:none!important;
-  border-color:rgba(255,255,255,.12)!important;
-  box-shadow:0 18px 55px rgba(0,0,0,.28)!important;
-}
-.c8-interest-card::before{background:radial-gradient(circle,rgba(255,205,0,.065),transparent 68%)!important}
+/* Tarjetas: lista explícita para no afectar accidentalmente a otros componentes. */
+.c8-interest-card,.c8-stat-card,.c8-extra-card,.c8-rank-card,.c8-legendary-card,.c8-summer-card,.c8-music-card,.c8-install-card,.c8-share-card{background:#0B0B0B!important;background-image:none!important;border-color:rgba(255,255,255,.12)!important;box-shadow:0 18px 55px rgba(0,0,0,.28)!important}
+.c8-interest-card::before{background:radial-gradient(circle,rgba(255,205,0,.055),transparent 68%)!important}
 .c8-interest-card:hover,.c8-interest-card:focus-visible{background:#101010!important;border-color:rgba(255,205,0,.72)!important}
-.c8-interest-card.c8-interest-featured,.c8-interest-card.c8-interest-aborigenes{background:#0D0D0D!important;border-color:rgba(255,205,0,.62)!important;box-shadow:0 20px 64px rgba(0,0,0,.34),0 0 34px rgba(255,205,0,.045)!important}
-.c8-interest-featured::before,.c8-interest-aborigenes::before{background:radial-gradient(circle,rgba(255,205,0,.10),transparent 69%)!important}
-.c8-interest-label{color:#fff!important}
-.c8-interest-count{color:rgba(255,255,255,.66)!important}
-.c8-interest-featured .c8-interest-count{color:rgba(255,255,255,.82)!important}
-.c8-interest-badge{color:#FFCD00!important;border-color:rgba(255,205,0,.38)!important;background:transparent!important}
-.c8-interest-featured .c8-interest-badge,.c8-interest-aborigenes .c8-interest-badge{background:rgba(255,205,0,.055)!important;border-color:rgba(255,205,0,.52)!important}
+.c8-interest-card.c8-interest-featured,.c8-interest-card.c8-interest-aborigenes{background:#0D0D0D!important;border-color:rgba(255,205,0,.62)!important;box-shadow:0 20px 64px rgba(0,0,0,.34),0 0 34px rgba(255,205,0,.04)!important}
+.c8-interest-featured::before,.c8-interest-aborigenes::before{background:radial-gradient(circle,rgba(255,205,0,.09),transparent 69%)!important}
+.c8-interest-label{color:#fff!important}.c8-interest-count{color:rgba(255,255,255,.66)!important}.c8-interest-featured .c8-interest-count{color:rgba(255,255,255,.82)!important}
+.c8-interest-badge{color:#FFCD00!important;border-color:rgba(255,205,0,.38)!important;background:transparent!important}.c8-interest-featured .c8-interest-badge,.c8-interest-aborigenes .c8-interest-badge{background:rgba(255,205,0,.055)!important;border-color:rgba(255,205,0,.52)!important}
+.c8-interest-orbit,.c8-interest-orbit::before,.c8-interest-orbit::after{border-color:rgba(255,255,255,.12)!important}.c8-interest-node.n2,.c8-interest-node.n4{background:#fff!important;box-shadow:0 0 10px rgba(255,255,255,.35)!important}.c8-interest-line{background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,205,0,.28),rgba(255,255,255,.03))!important}
 
-/* Vistas internas de categoría e isla */
+/* Vistas internas */
 body.c8-category-page #explorar,body.c8-island-page #explorar{background:#050505!important;background-image:none!important}
 body.c8-category-page .c8-category-view-nav,body.c8-island-page .c8-island-view-nav{background:rgba(8,8,8,.96)!important;border-color:rgba(255,255,255,.13)!important;box-shadow:0 16px 45px rgba(0,0,0,.34)!important}
 .c8-category-view-back,.c8-island-view-back{background:rgba(255,205,0,.045)!important;border-color:rgba(255,205,0,.42)!important;color:#FFCD00!important}
 .c8-category-view-back:hover,.c8-category-view-back:focus-visible,.c8-island-view-back:hover,.c8-island-view-back:focus-visible{background:#FFCD00!important;color:#000!important}
-.c8-category-view-context small,.c8-island-view-context small{color:rgba(255,255,255,.48)!important}
-.c8-category-view-context strong,.c8-island-view-context strong{color:#fff!important}
+.c8-category-view-context small,.c8-island-view-context small{color:rgba(255,255,255,.48)!important}.c8-category-view-context strong,.c8-island-view-context strong{color:#fff!important}
 
 /* Directorio y perfiles */
 .directory-shell,.time-tool,.rel-card,.time-person,.c8-origin-note summary,.c8-share-dialog,.c8-install-dialog{background:#0B0B0B!important;background-image:none!important;border-color:rgba(255,255,255,.12)!important;box-shadow:0 22px 70px rgba(0,0,0,.30)!important}
 .directory-empty p,.directory-head p,.section-heading>p:last-child,.profile-bio,.project-copy p,.project-copy .project-definition,.project-copy .project-secondary{color:rgba(255,255,255,.78)!important}
 .directory-empty strong,.directory-head h3,.profile h3,.person-row strong,.rel-card strong,.constellation-title{color:#fff!important}
 .directory-count,.alpha-letter,.profile-kicker{color:#FFCD00!important}
-.search,.time-field input,.time-field select{background:#090909!important;border-color:rgba(255,255,255,.15)!important;color:#fff!important}
-.time-field select{background-image:linear-gradient(45deg,transparent 50%,#FFCD00 50%),linear-gradient(135deg,#FFCD00 50%,transparent 50%)!important}
-.time-field select option{background:#090909!important;color:#fff!important}
+.search,.time-field input{background:#090909!important;border-color:rgba(255,255,255,.15)!important;color:#fff!important}
 .search::placeholder,.time-field input::placeholder{color:rgba(255,255,255,.48)!important;opacity:1!important}
 .search:focus,.time-field input:focus,.time-field select:focus{border-color:rgba(255,205,0,.52)!important}
 .island-chip,.chip,.profile-back,.fact,.time-summary span{background:transparent!important;border-color:rgba(255,255,255,.14)!important;color:rgba(255,255,255,.72)!important}
@@ -117,80 +89,64 @@ body.c8-category-page .c8-category-view-nav,body.c8-island-page .c8-island-view-
 .person-row small,.person-year,.profile-meta,.rel-card small,.fact{color:rgba(255,255,255,.60)!important}
 .person-arrow,.fact b,.reason,.time-overlap{color:#FFCD00!important}
 
-/* Coincidencias */
+/* Coincidencias: selector corregido para Safari/iPhone. */
 .time-match-copy h2,.time-tool-head strong,.time-person strong{color:#fff!important}
 .time-match-copy>p:last-of-type,.time-tool-head small,.time-field span,.time-privacy,.time-empty,.time-person small{color:rgba(255,255,255,.64)!important}
 .time-tool-badge,.time-summary b{color:#FFCD00!important}
+.time-field select{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  width:100%!important;
+  min-height:54px!important;
+  padding:14px 46px 14px 15px!important;
+  border:1px solid rgba(255,255,255,.15)!important;
+  border-radius:13px!important;
+  background-color:#090909!important;
+  background-image:linear-gradient(45deg,transparent 50%,#FFCD00 50%),linear-gradient(135deg,#FFCD00 50%,transparent 50%)!important;
+  background-repeat:no-repeat!important;
+  background-size:6px 6px,6px 6px!important;
+  background-position:calc(100% - 20px) 24px,calc(100% - 14px) 24px!important;
+  color:#fff!important;
+}
+.time-field select option{background:#090909!important;color:#fff!important}
 .time-orbit{border-color:rgba(255,255,255,.18)!important}.time-orbit::before{border-color:rgba(255,205,0,.22)!important}.time-orbit::after{border-color:rgba(255,255,255,.26)!important}.time-orbit i{background:#FFCD00!important}.time-orbit b{background:#fff!important;box-shadow:0 0 14px rgba(255,255,255,.42)!important}
 .reason,.time-overlap{background:rgba(255,205,0,.05)!important;border-color:rgba(255,205,0,.14)!important}
 
-/* Estadísticas */
+/* Estadísticas: texto amarillo, nunca fondo amarillo. */
 .c8-stats-head h2,.c8-stat-value,.c8-stat-person strong{color:#fff!important}
-.c8-stats-head .eyebrow,.c8-stats-head h2 span,.c8-stat-eyebrow,.c8-stats-sync::before{color:#FFCD00!important;background-color:#FFCD00!important}
+.c8-stats-head .eyebrow,.c8-stats-head h2 span,.c8-stat-eyebrow{color:#FFCD00!important;background:transparent!important;background-color:transparent!important}
+.c8-stats-sync::before{background:#FFCD00!important;color:transparent!important}
 .c8-stats-intro,.c8-stat-card p,.c8-stats-foot{color:rgba(255,255,255,.74)!important}
 .c8-stat-person small,.c8-stats-sync{color:rgba(255,255,255,.62)!important}
 
-/* Métricas e índice de trascendencia */
+/* Métricas y rankings */
 .c8-extra-card small,.c8-extra-card b,.c8-ranking-head h3 span,.c8-rank-num,.c8-rank-island,.c8-rank-copy a{color:#FFCD00!important}
 .c8-extra-card strong,.c8-ranking-head h3,.c8-rank-person strong,.c8-rank-score{color:#fff!important}
 .c8-extra-card p,.c8-ranking-head p,.c8-rank-copy,.c8-method,.c8-women-note{color:rgba(255,255,255,.76)!important}
-.c8-rank-person small,.c8-rank-score small,.c8-rank-parts span{color:rgba(255,255,255,.66)!important}
-.c8-rank-parts span{border-color:rgba(255,205,0,.25)!important}
+.c8-rank-person small,.c8-rank-score small,.c8-rank-parts span{color:rgba(255,255,255,.66)!important}.c8-rank-parts span{border-color:rgba(255,205,0,.25)!important}
 .c8-method,.c8-women-note{background:rgba(255,205,0,.03)!important;border-left-color:#FFCD00!important}
 .c8-women-ranking .c8-rank-card{background:#0B0B0B!important;background-image:none!important;border-color:rgba(255,255,255,.12)!important}
 
-/* Vidas legendarias */
-.c8-legendary-card{background:#0B0B0B!important;background-image:none!important}
-.c8-legendary-num,.c8-legendary-person small,.c8-legendary-copy a{color:#FFCD00!important}
-.c8-legendary-person strong{color:#fff!important}
-.c8-legendary-hook,.c8-legendary-copy,.c8-legendary-note{color:rgba(255,255,255,.76)!important}
-.c8-legendary-note{background:rgba(255,205,0,.03)!important;border-left-color:#FFCD00!important}
-
-/* Lecturas de verano */
-.c8-summer-card{background:#0B0B0B!important;background-image:none!important}
-.c8-summer-num,.c8-summer-person strong,.c8-summer-copy a{color:#FFCD00!important}
-.c8-summer-work{color:#fff!important}
-.c8-summer-person small,.c8-summer-hook,.c8-summer-copy,.c8-summer-note{color:rgba(255,255,255,.74)!important}
-.c8-summer-note{background:rgba(255,205,0,.03)!important;border-left-color:#FFCD00!important}
-
-/* Música */
-.c8-music-card{background:#0B0B0B!important;background-image:none!important}
-.c8-music-num,.c8-music-person strong,.c8-music-copy a{color:#FFCD00!important}
-.c8-music-album{color:#fff!important}
-.c8-music-person small,.c8-music-hook,.c8-music-copy,.c8-music-note{color:rgba(255,255,255,.74)!important}
-.c8-music-note{background:rgba(255,205,0,.03)!important;border-left-color:#FFCD00!important}
+.c8-legendary-card,.c8-summer-card,.c8-music-card{background:#0B0B0B!important;background-image:none!important}
+.c8-legendary-num,.c8-legendary-person small,.c8-legendary-copy a,.c8-summer-num,.c8-summer-person strong,.c8-summer-copy a,.c8-music-num,.c8-music-person strong,.c8-music-copy a{color:#FFCD00!important}
+.c8-legendary-person strong,.c8-summer-work,.c8-music-album{color:#fff!important}
+.c8-legendary-hook,.c8-legendary-copy,.c8-legendary-note,.c8-summer-person small,.c8-summer-hook,.c8-summer-copy,.c8-summer-note,.c8-music-person small,.c8-music-hook,.c8-music-copy,.c8-music-note{color:rgba(255,255,255,.74)!important}
+.c8-legendary-note,.c8-summer-note,.c8-music-note{background:rgba(255,205,0,.03)!important;border-left-color:#FFCD00!important}
 
 /* Aborígenes */
-.c8-indigenous-note{background:rgba(255,205,0,.035)!important;border-color:rgba(255,205,0,.25)!important;color:rgba(255,255,255,.76)!important}
-.c8-indigenous-note strong{color:#FFCD00!important}.c8-indigenous-note p{color:rgba(255,255,255,.72)!important}
-.c8-indigenous-status{background:transparent!important;border-color:rgba(255,255,255,.20)!important;color:rgba(255,255,255,.62)!important}
-.c8-indigenous-status.is-verified{border-color:rgba(255,205,0,.38)!important;color:#FFCD00!important}
+.c8-indigenous-note{background:rgba(255,205,0,.035)!important;border-color:rgba(255,205,0,.24)!important;color:rgba(255,255,255,.82)!important}
+.c8-indigenous-note p{color:rgba(255,255,255,.70)!important}.c8-indigenous-note strong{color:#FFCD00!important}.c8-indigenous-status{background:transparent!important;border-color:rgba(255,255,255,.18)!important;color:rgba(255,255,255,.60)!important}.c8-indigenous-status.is-verified{border-color:rgba(255,205,0,.38)!important;color:#FFCD00!important}
 
-/* Nota de origen */
-.c8-origin-note summary{background:#0B0B0B!important;background-image:none!important;border-color:rgba(255,205,0,.42)!important}
-.c8-origin-note summary:hover{background:#101010!important;border-color:rgba(255,205,0,.74)!important}
-.c8-origin-note summary::before,.c8-origin-note summary::after{color:#FFCD00!important}
-.c8-origin-note summary::after{background:rgba(255,205,0,.055)!important;border-color:rgba(255,205,0,.42)!important}
-.c8-origin-note summary span{background:rgba(255,205,0,.04)!important;border-color:rgba(255,205,0,.26)!important;color:#FFCD00!important}
-.c8-origin-body{color:rgba(255,255,255,.82)!important}.c8-origin-signature,.c8-origin-signature::before{color:#fff!important}.c8-origin-signature::after{color:rgba(255,255,255,.56)!important}
-
-/* Instalación y compartir */
-.c8-install-head h2,.c8-install-platform strong,.c8-share-copy h2{color:#fff!important}
-.c8-install-head p,.c8-install-platform small,.c8-install-note,.c8-share-copy>p:not(.c8-share-kicker),.c8-share-hint{color:rgba(255,255,255,.62)!important}
-.c8-install-kicker,.c8-install-status,.c8-share-kicker,.c8-share-status{color:#FFCD00!important}
-.c8-install-logo{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important}.c8-install-logo-android svg,.c8-install-logo-apple svg{color:#fff!important}
-.c8-install-button{background:rgba(255,205,0,.055)!important;border-color:rgba(255,205,0,.48)!important;color:#fff!important}.c8-install-button:hover{background:rgba(255,205,0,.11)!important}.c8-install-button.ready::after{background:#FFCD00!important;box-shadow:0 0 12px rgba(255,205,0,.7)!important}
-.c8-share-card{border-color:rgba(255,205,0,.24)!important}.c8-share-card::after{background:linear-gradient(105deg,rgba(255,255,255,.02),transparent 42%)!important}.c8-share-constellation path{stroke:rgba(255,205,0,.4)!important}.c8-share-constellation circle{fill:#FFCD00!important}.c8-share-symbol{background:rgba(255,205,0,.08)!important}.c8-share-symbol svg{fill:#FFCD00!important}.c8-share-button{background:#FFCD00!important;border-color:#FFCD00!important;color:#000!important}
-.c8-share-apps span{background:rgba(255,255,255,.03)!important;border-color:rgba(255,255,255,.1)!important;color:rgba(255,255,255,.6)!important}
+/* Origen, instalación y compartir */
+.c8-origin-note summary{background:#0B0B0B!important;border-color:rgba(255,205,0,.42)!important}.c8-origin-note summary:hover{background:#101010!important;border-color:rgba(255,205,0,.72)!important}.c8-origin-note summary span{background:rgba(255,205,0,.04)!important;border-color:rgba(255,205,0,.28)!important;color:#FFCD00!important}.c8-origin-body{color:rgba(255,255,255,.82)!important}
+.c8-install-head h2,.c8-install-platform strong,.c8-share-copy h2{color:#fff!important}.c8-install-head p,.c8-install-platform small,.c8-install-note,.c8-share-copy>p:not(.c8-share-kicker){color:rgba(255,255,255,.64)!important}.c8-install-kicker,.c8-install-status,.c8-share-kicker,.c8-share-status{color:#FFCD00!important}.c8-install-logo-android svg,.c8-install-logo-apple svg{color:#fff!important}.c8-install-button{background:rgba(255,205,0,.06)!important;border-color:rgba(255,205,0,.48)!important;color:#fff!important}.c8-install-button.ready::after{background:#FFCD00!important}.c8-share-card{border-color:rgba(255,205,0,.24)!important}.c8-share-button{background:#FFCD00!important;border-color:#FFCD00!important;color:#000!important}
 .c8-share-dialog,.c8-install-dialog{background:#090909!important;color:#fff!important;border-color:rgba(255,205,0,.28)!important;box-shadow:0 30px 100px rgba(0,0,0,.66)!important}.c8-share-dialog::backdrop,.c8-install-dialog::backdrop{background:rgba(0,0,0,.84)!important}
-.c8-share-dialog p,.c8-install-dialog p,.c8-share-options span,.c8-install-dialog-foot{color:rgba(255,255,255,.58)!important}.c8-share-dialog h3,.c8-install-dialog h3,.c8-share-options strong{color:#fff!important}
-.c8-share-options a,.c8-share-option-copy,.c8-install-step{background:rgba(255,255,255,.025)!important;border-color:rgba(255,255,255,.09)!important;color:#fff!important}.c8-install-step b{background:rgba(255,205,0,.11)!important;color:#FFCD00!important}
 
-/* Fuentes y pie */
-.profile-sources,.profile-sources h4,.profile-sources li,.profile-sources small{color:rgba(255,255,255,.80)!important}.profile-sources a{color:#fff!important;text-decoration-color:rgba(255,205,0,.72)!important}.profile-sources a:hover,.profile-sources a:focus-visible{color:#FFCD00!important}
-footer,footer span,footer small{color:rgba(255,255,255,.60)!important}footer{background:#050505!important;border-top-color:rgba(255,255,255,.06)!important}footer::before{content:none!important;display:none!important}
+footer,footer span,footer small,.c8-legal-links a{color:rgba(255,255,255,.62)!important}footer{background:#050505!important;border-top-color:rgba(255,255,255,.06)!important}.c8-legal-links a:hover{color:#FFCD00!important}
 
 @media(max-width:620px){
-  .brand::after{font-size:16px!important}.brand-mark{width:34px!important;height:21px!important}
+  .brand::after{font-size:16px!important}
   #inicio .c8-inclusion-note{color:rgba(255,255,255,.82)!important}
+  .hero-lead,.time-match-copy>p:last-of-type,.section-heading>p:last-child,.project-copy .project-definition,.project-copy .project-secondary,.profile-bio,.directory-head p,.directory-empty p{color:rgba(255,255,255,.84)!important}
+  .c8-stats-head .eyebrow,.c8-stat-eyebrow{font-size:12px!important;line-height:1.35!important;letter-spacing:.11em!important}
 }
