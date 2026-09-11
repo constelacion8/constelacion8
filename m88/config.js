@@ -15,7 +15,9 @@ if (typeof document !== 'undefined' && nativeFetch) {
 
   import('./agenda.js?v=20260910-private1').catch(error=>console.warn('Agenda no disponible',error));
   import('./municipal-map.js?v=20260910-private1').catch(error=>console.warn('Mapa municipal no disponible',error));
-  import('./companies.js?v=20260911-private1').catch(error=>console.warn('Devolución Cultural no disponible',error));
+  import('./companies.js?v=20260911-private1')
+    .then(()=>import('./companies-overview.js?v=20260911-contacted-companies1'))
+    .catch(error=>console.warn('Devolución Cultural no disponible',error));
 }
 
 function installPrivateFetchProxy(){
