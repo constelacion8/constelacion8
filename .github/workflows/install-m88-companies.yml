@@ -1,0 +1,45 @@
+name: Install M88 Devolucion Cultural
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-m88-companies.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-m88:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Attach company module to private M88 config
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('m88/config.js')
+          text = path.read_text()
+          module = "  import('./companies.js?v=20260911-private1').catch(error=>console.warn('Devolución Cultural no disponible',error));"
+          if "./companies.js" not in text:
+              anchor = "  import('./municipal-map.js?v=20260910-private1').catch(error=>console.warn('Mapa municipal no disponible',error));"
+              if anchor not in text:
+                  raise SystemExit('No se encontró el punto seguro de inserción en config.js')
+              text = text.replace(anchor, anchor + '\n' + module)
+              path.write_text(text)
+          PY
+
+      - name: Commit patch
+        run: |
+          if git diff --quiet -- m88/config.js; then
+            echo 'Module already attached.'
+            exit 0
+          fi
+          git config user.name 'constelacion8'
+          git config user.email 'info@enriquerodda.com'
+          git add m88/config.js
+          git commit -m 'Connect Devolucion Cultural module to M88'
+          git push origin main
