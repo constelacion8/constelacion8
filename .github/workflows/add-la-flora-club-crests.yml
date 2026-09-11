@@ -1,8 +1,6 @@
 name: Add La Flora club crests
 on:
   push:
-    paths:
-      - '.github/workflows/add-la-flora-club-crests.yml'
 permissions:
   contents: write
 jobs:
@@ -11,7 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download crest assets
-        shell: bash
         run: |
           set -e
           mkdir -p area-2627/assets/clubs
@@ -23,45 +20,33 @@ jobs:
           curl -L --fail 'https://www.footylogos.com/downloads/logo/spain-national-team-logo-footylogos.png' -o area-2627/assets/clubs/spain.png
           curl -L --fail 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bandera%20Siete%20Estrellas%20Verdes.svg' -o area-2627/assets/clubs/canarias-7-estrellas.svg
       - name: Patch web UI
-        shell: python
         run: |
+          python3 - <<'PY'
           from pathlib import Path
           p = Path('area-2627/index.html')
           s = p.read_text(encoding='utf-8')
-
           anchor = "pretty=n=>String(n||'').replace(/andrew perilla/i,'Andrew Perilla');"
           helper = """const CRESTS={'erodda':'assets/clubs/real-madrid.png','jm.':'assets/clubs/atletico-madrid.png','berto115':'assets/clubs/cd-tenerife.png','tosco13':'assets/clubs/atletico-madrid.png','andrew perilla':'assets/clubs/real-betis.png','bustaid':'assets/clubs/canarias-7-estrellas.svg','.rives.':'assets/clubs/fc-barcelona.png','fran.88':'assets/clubs/cd-tenerife.png','vidrio77':'assets/clubs/atletico-madrid.png','thoth':'assets/clubs/spain.png'};function crest(n,size='rank'){const src=CRESTS[String(n||'').toLowerCase()];return src?`<img class=\"crestimg ${size==='hero'?'hero-crest':'rank-crest'}\" src=\"${src}\" alt=\"\" ${size==='hero'?'':'loading=\"lazy\"'}>`:''}"""
           if 'const CRESTS=' not in s:
-              if anchor not in s:
-                  raise SystemExit('helper anchor not found')
+              if anchor not in s: raise SystemExit('helper anchor not found')
               s = s.replace(anchor, anchor + helper, 1)
-
-          css = """
-.crestimg{display:block;object-fit:contain}.av{width:80px;height:80px;margin:auto auto 8px;display:grid;place-items:center;padding:7px;border-radius:16px;border:1px solid #3a465c;background:radial-gradient(circle at 50% 35%,#ffffff12,transparent 58%),linear-gradient(#111925,#080d14);box-shadow:0 0 0 3px #ffffff08,0 10px 24px #0007}.hero-crest{width:100%;height:100%}.rank-crest{width:32px;height:32px;flex:0 0 32px}.podname{display:flex;align-items:center;gap:6px;min-width:0}.podname .rank-crest{width:25px;height:25px;flex-basis:25px}.podname span{min-width:0}.row .rank-crest{margin-left:1px}@media(max-width:360px){.av{width:70px;height:70px}.rank-crest{width:28px;height:28px;flex-basis:28px}}
-"""
-          if '.crestimg{' not in s:
-              s = s.replace('</style>', css + '</style>', 1)
-
-          old_a = '<div class="c"><div class="av"></div><h2>${esc(pretty(m.option_a))}</h2>'
-          new_a = '<div class="c"><div class="av">${crest(m.option_a,\'hero\')}</div><h2>${esc(pretty(m.option_a))}</h2>'
-          old_b = '<div class="c"><div class="av"></div><h2>${esc(pretty(m.option_b))}</h2>'
-          new_b = '<div class="c"><div class="av">${crest(m.option_b,\'hero\')}</div><h2>${esc(pretty(m.option_b))}</h2>'
-          if old_a in s: s = s.replace(old_a, new_a, 1)
-          if old_b in s: s = s.replace(old_b, new_b, 1)
-
-          old_rank = '<span class="num">${i===0?\'♛\':i+1}</span><span class="nm"><b>${esc(pretty(p.display_name))}</b>'
-          new_rank = '<span class="num">${i===0?\'♛\':i+1}</span>${crest(p.display_name,\'rank\')}<span class="nm"><b>${esc(pretty(p.display_name))}</b>'
-          if old_rank in s:
-              s = s.replace(old_rank, new_rank, 1)
-
-          old_pod = '<div class="pod"><em>#${i+1}</em><span>${esc(pretty(p.display_name))}</span><b>${money(p.balance)}</b></div>'
-          new_pod = '<div class="pod"><em>#${i+1}</em><div class="podname">${crest(p.display_name,\'rank\')}<span>${esc(pretty(p.display_name))}</span></div><b>${money(p.balance)}</b></div>'
-          if old_pod in s:
-              s = s.replace(old_pod, new_pod, 1)
-
+          css = ".crestimg{display:block;object-fit:contain}.av{width:80px;height:80px;margin:auto auto 8px;display:grid;place-items:center;padding:7px;border-radius:16px;border:1px solid #3a465c;background:radial-gradient(circle at 50% 35%,#ffffff12,transparent 58%),linear-gradient(#111925,#080d14);box-shadow:0 0 0 3px #ffffff08,0 10px 24px #0007}.hero-crest{width:100%;height:100%}.rank-crest{width:32px;height:32px;flex:0 0 32px}.podname{display:flex;align-items:center;gap:6px;min-width:0}.podname .rank-crest{width:25px;height:25px;flex-basis:25px}.podname span{min-width:0}.row .rank-crest{margin-left:1px}@media(max-width:360px){.av{width:70px;height:70px}.rank-crest{width:28px;height:28px;flex-basis:28px}}"
+          if '.crestimg{' not in s: s = s.replace('</style>', css + '</style>', 1)
+          a0 = '<div class="c"><div class="av"></div><h2>${esc(pretty(m.option_a))}</h2>'
+          a1 = '<div class="c"><div class="av">${crest(m.option_a,\'hero\')}</div><h2>${esc(pretty(m.option_a))}</h2>'
+          b0 = '<div class="c"><div class="av"></div><h2>${esc(pretty(m.option_b))}</h2>'
+          b1 = '<div class="c"><div class="av">${crest(m.option_b,\'hero\')}</div><h2>${esc(pretty(m.option_b))}</h2>'
+          if a0 in s: s = s.replace(a0, a1, 1)
+          if b0 in s: s = s.replace(b0, b1, 1)
+          r0 = '<span class="num">${i===0?\'♛\':i+1}</span><span class="nm"><b>${esc(pretty(p.display_name))}</b>'
+          r1 = '<span class="num">${i===0?\'♛\':i+1}</span>${crest(p.display_name,\'rank\')}<span class="nm"><b>${esc(pretty(p.display_name))}</b>'
+          if r0 in s: s = s.replace(r0, r1, 1)
+          q0 = '<div class="pod"><em>#${i+1}</em><span>${esc(pretty(p.display_name))}</span><b>${money(p.balance)}</b></div>'
+          q1 = '<div class="pod"><em>#${i+1}</em><div class="podname">${crest(p.display_name,\'rank\')}<span>${esc(pretty(p.display_name))}</span></div><b>${money(p.balance)}</b></div>'
+          if q0 in s: s = s.replace(q0, q1, 1)
           p.write_text(s, encoding='utf-8')
+          PY
       - name: Commit changes and remove workflow
-        shell: bash
         run: |
           set -e
           rm .github/workflows/add-la-flora-club-crests.yml
