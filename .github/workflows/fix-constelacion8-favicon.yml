@@ -1,0 +1,29 @@
+name: Remove violet from Constelacion 8 favicon
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-constelacion8-favicon.yml'
+      - '.github/scripts/fix_constelacion8_favicon.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Remove violet and install explicit favicon
+        run: python .github/scripts/fix_constelacion8_favicon.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html app.css refine.css contrast.css origin-note.css install-app.css favicon.svg
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove violet from Constelacion 8 favicon and root theme"
+            git push
+          fi
