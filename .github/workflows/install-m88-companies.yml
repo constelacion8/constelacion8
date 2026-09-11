@@ -17,29 +17,40 @@ jobs:
         with:
           ref: main
 
-      - name: Attach company module to private M88 config
+      - name: Attach company module and bust browser cache
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          path = Path('m88/config.js')
-          text = path.read_text()
+
+          config = Path('m88/config.js')
+          text = config.read_text()
           module = "  import('./companies.js?v=20260911-private1').catch(error=>console.warn('Devolución Cultural no disponible',error));"
           if "./companies.js" not in text:
               anchor = "  import('./municipal-map.js?v=20260910-private1').catch(error=>console.warn('Mapa municipal no disponible',error));"
               if anchor not in text:
                   raise SystemExit('No se encontró el punto seguro de inserción en config.js')
               text = text.replace(anchor, anchor + '\n' + module)
-              path.write_text(text)
+          config.write_text(text)
+
+          app = Path('m88/app.js')
+          text = app.read_text()
+          text = text.replace("./config.js?v=20260909-agenda1", "./config.js?v=20260911-companies1")
+          app.write_text(text)
+
+          index = Path('m88/index.html')
+          text = index.read_text()
+          text = text.replace("app.js?v=20260909-contacted1", "app.js?v=20260911-companies1")
+          index.write_text(text)
           PY
 
       - name: Commit patch
         run: |
-          if git diff --quiet -- m88/config.js; then
-            echo 'Module already attached.'
+          if git diff --quiet -- m88/config.js m88/app.js m88/index.html; then
+            echo 'Module and cache versions already installed.'
             exit 0
           fi
           git config user.name 'constelacion8'
           git config user.email 'info@enriquerodda.com'
-          git add m88/config.js
-          git commit -m 'Connect Devolucion Cultural module to M88'
+          git add m88/config.js m88/app.js m88/index.html
+          git commit -m 'Refresh Devolucion Cultural assets in M88'
           git push origin main
