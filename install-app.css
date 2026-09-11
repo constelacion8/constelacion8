@@ -195,7 +195,7 @@
   border:1px solid #FFCD00;
   border-radius:14px;
   background:#FFCD00;
-  color:#16052a;
+  color:#050505;
   cursor:pointer;
   font:700 13px/1.15 "Work Sans",Arial,sans-serif;
   letter-spacing:-.02em;
@@ -227,7 +227,7 @@
   padding:0;
   border:1px solid rgba(255,205,0,.28);
   border-radius:20px;
-  background:#16052a;
+  background:#050505;
   color:#fff;
   box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 70px rgba(157,78,221,.14);
 }
@@ -273,7 +273,7 @@
   padding:0;
   border:1px solid rgba(255,205,0,.28);
   border-radius:20px;
-  background:#16052a;
+  background:#050505;
   color:#fff;
   box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 70px rgba(157,78,221,.14);
 }
@@ -302,7 +302,7 @@
 .c8-install-dialog-foot{margin-top:18px;color:rgba(245,237,250,.48);font:400 9px/1.5 "Open Sans",Arial,sans-serif}
 
 .c8-footer-admin{
-  color:#725F81;
+  color:#656565;
   font:500 9px/1 "Work Sans",Arial,sans-serif;
   letter-spacing:.08em;
   text-decoration:none;
