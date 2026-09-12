@@ -1,0 +1,38 @@
+name: Fix La Flora Bets editorial state loader
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-la-flora-loadstate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix state loader recursion
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text(encoding='utf-8')
+          bad="async function loadState(){const x=await loadState();try{x.posts=await rpc('lf_get_posts',{p_session_token:session})}catch{x.posts=[]}return x}"
+          good="async function loadState(){const x=await rpc('lf_get_state',{p_session_token:session});try{x.posts=await rpc('lf_get_posts',{p_session_token:session})}catch{x.posts=[]}return x}"
+          if bad not in s:
+              raise SystemExit('broken loadState pattern not found')
+          s=s.replace(bad,good,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          git commit -m "Fix La Flora Bets state loader"
+          git push origin main
