@@ -1,0 +1,83 @@
+name: Add La Flora Bets editorial section
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-la-flora-editorial.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Add chronicles and opinion section
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('area-2627/index.html')
+          s = path.read_text(encoding='utf-8')
+
+          css = r'''
+          .presshead{margin-top:14px;padding:20px 17px 18px;border:1px solid #303b4f;border-radius:17px;background:linear-gradient(145deg,#17131a,#0a1018 55%,#111a27);box-shadow:0 20px 50px #0007}.pressmast{font:400 42px/.9 'Bebas Neue';letter-spacing:.02em}.pressmast b{color:var(--r);font-weight:400;font-style:italic}.presshead p{margin:8px 0 0;font-size:12px;line-height:1.5;color:#aeb8c8}.pressfilters{display:flex;gap:7px;margin:12px 0 11px;overflow:auto;padding-bottom:2px}.pf{flex:0 0 auto;border:1px solid #3a465a;border-radius:999px;background:#0b121c;color:#c5cfdd;padding:8px 12px;font:700 11px 'Oswald';letter-spacing:.06em;text-transform:uppercase}.pf.on{border-color:#ff454e;background:#3d0b10;color:#fff}.postgrid{display:grid;gap:10px}.postcard{width:100%;text-align:left;border:1px solid #303b4f;border-radius:14px;background:linear-gradient(#121925,#080d14);color:#fff;padding:15px;box-shadow:0 12px 32px #0005}.postcard.opinion{border-left:3px solid var(--y)}.postcard.cronica{border-left:3px solid var(--r)}.postmeta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px;font:700 9px 'Oswald';letter-spacing:.1em;text-transform:uppercase;color:#99a6b8}.posttag{display:inline-flex;align-items:center;gap:5px;color:#fff}.posttag i{width:7px;height:7px;border-radius:50%;background:var(--r)}.postcard.opinion .posttag i{background:var(--y)}.postcard h3{font:700 23px/1.08 'Oswald';margin:0 0 8px;letter-spacing:-.01em}.postcard p{margin:0;font-size:12px;line-height:1.55;color:#bdc7d5}.postmore{display:block;margin-top:11px;color:#fff;font:700 10px 'Oswald';letter-spacing:.08em;text-transform:uppercase}.article{margin-top:14px;border:1px solid #303b4f;border-radius:17px;background:linear-gradient(#111824,#080d14);overflow:hidden;box-shadow:0 20px 50px #0007}.articletop{padding:14px 16px;border-bottom:1px solid #252f3f}.backpress{border:0;background:none;color:#d4dce8;padding:0;font:700 11px 'Oswald';letter-spacing:.08em;text-transform:uppercase}.articlebody{padding:19px 17px 22px}.articlebody .postmeta{margin-bottom:12px}.articlebody h1{font:700 34px/1.03 'Oswald';letter-spacing:-.035em;margin:0 0 12px}.articlelead{font-size:15px!important;line-height:1.55!important;color:#dfe5ed!important;margin:0 0 19px!important}.articletext p{font-size:14px;line-height:1.75;color:#ccd5e1;margin:0 0 17px}.byline{margin-top:21px;padding-top:13px;border-top:1px solid #293346;color:#98a5b8;font-size:10px}.navin{grid-template-columns:repeat(5,minmax(0,1fr))!important}.nb{min-width:0}.nb .lbl{font-size:9px}@media(max-width:390px){.nb .lbl{font-size:8px}.pressmast{font-size:38px}.postcard h3{font-size:21px}.articlebody h1{font-size:31px}}
+          '''.strip()
+          if '.pressmast{' not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+
+          s = s.replace("let gate=localStorage.getItem(K1)||'',session=localStorage.getItem(K2)||'',state=null,tab='home',pick='',stake=100,msg='',lastPhase='';", "let gate=localStorage.getItem(K1)||'',session=localStorage.getItem(K2)||'',state=null,tab='home',pick='',stake=100,msg='',lastPhase='',articleSlug='',pressFilter='all';")
+
+          if 'async function loadState()' not in s:
+              marker = 'const me=()=>'
+              helper = "async function loadState(){const x=await rpc('lf_get_state',{p_session_token:session});try{x.posts=await rpc('lf_get_posts',{p_session_token:session})}catch{x.posts=[]}return x}"
+              if marker not in s:
+                  raise SystemExit('state helper marker not found')
+              s = s.replace(marker, helper + marker, 1)
+          s = s.replace("await rpc('lf_get_state',{p_session_token:session})", "await loadState()")
+
+          old_nav = "[['home','⌂','Inicio'],['rank','♛','Ranking'],['rounds','◷','Jornadas'],['hist','▤','Mis apuestas']]"
+          new_nav = "[['home','⌂','Inicio'],['rank','♛','Ranking'],['rounds','◷','Jornadas'],['press','✎','Crónicas'],['hist','▤','Apuestas']]"
+          if old_nav in s:
+              s = s.replace(old_nav,new_nav,1)
+          elif "['press','✎','Crónicas']" not in s:
+              raise SystemExit('nav array not found')
+
+          old_route = "${tab==='home'?home():tab==='rank'?ranking():tab==='rounds'?rounds():history()}"
+          new_route = "${tab==='home'?home():tab==='rank'?ranking():tab==='rounds'?rounds():tab==='press'?press():history()}"
+          if old_route in s:
+              s = s.replace(old_route,new_route,1)
+          elif "tab==='press'?press()" not in s:
+              raise SystemExit('main route not found')
+
+          if 'function press(){' not in s:
+              marker = 'function history(){'
+              block = r'''const postDate=v=>v?new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'long',year:'numeric'}).format(new Date(v)):'';function postTag(p){return p.category==='opinion'?'Opinión':'Crónica'}function postCard(p){return`<button class="postcard ${esc(p.category)}" data-post="${esc(p.slug)}"><div class="postmeta"><span class="posttag"><i></i>${esc(postTag(p))}${p.jornada?' · JORNADA '+esc(p.jornada):''}</span><span>${esc(postDate(p.published_at))}</span></div><h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p><span class="postmore">Leer artículo ›</span></button>`}function articleView(p){const paras=String(p.body||'').split(/\n\s*\n/).filter(Boolean);return`<article class="article"><div class="articletop"><button class="backpress" data-back-press>‹ Volver a Crónicas</button></div><div class="articlebody"><div class="postmeta"><span class="posttag"><i></i>${esc(postTag(p))}${p.jornada?' · JORNADA '+esc(p.jornada):''}</span><span>${esc(postDate(p.published_at))}</span></div><h1>${esc(p.title)}</h1><p class="articlelead">${esc(p.excerpt)}</p><div class="articletext">${paras.map(x=>`<p>${esc(x)}</p>`).join('')}</div><div class="byline">${esc(p.author)} · La Flora Bets</div></div></article>`}function press(){const posts=[...(state?.posts||[])],active=posts.find(p=>p.slug===articleSlug);if(active)return articleView(active);const shown=pressFilter==='all'?posts:posts.filter(p=>p.category===pressFilter);return`<section class="presshead"><div class="eye">LA FLORA BETS · EDITORIAL</div><div class="pressmast">CRÓNICAS <b>& OPINIÓN</b></div><p>Historias de cada jornada, análisis, mercado y columnas sobre todo lo que pasa dentro de La Flora 26.27.</p></section><div class="pressfilters">${[['all','Todo'],['cronica','Crónicas'],['opinion','Opinión']].map(x=>`<button class="pf ${pressFilter===x[0]?'on':''}" data-filter="${x[0]}">${x[1]}</button>`).join('')}</div><div class="postgrid">${shown.length?shown.map(postCard).join(''):'<div class="notice">Todavía no hay artículos en esta categoría.</div>'}</div>`}'''
+              if marker not in s:
+                  raise SystemExit('history marker not found')
+              s = s.replace(marker, block + marker, 1)
+
+          old_bind = "document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{tab=x.dataset.tab;msg='';main()});"
+          new_bind = "document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{tab=x.dataset.tab;articleSlug='';msg='';main()});document.querySelectorAll('[data-post]').forEach(x=>x.onclick=()=>{articleSlug=x.dataset.post;main();window.scrollTo({top:0,behavior:'smooth'})});document.querySelectorAll('[data-filter]').forEach(x=>x.onclick=()=>{pressFilter=x.dataset.filter;main()});document.querySelector('[data-back-press]')?.addEventListener('click',()=>{articleSlug='';main()});"
+          if old_bind in s:
+              s = s.replace(old_bind,new_bind,1)
+          elif "document.querySelectorAll('[data-post]')" not in s:
+              raise SystemExit('bind marker not found')
+
+          path.write_text(s,encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Add chronicles and opinion to La Flora Bets"
+            git push origin main
+          fi
