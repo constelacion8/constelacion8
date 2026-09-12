@@ -1,0 +1,36 @@
+name: Verify La Flora Bets JavaScript
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-la-flora-js.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Extract and validate application JavaScript
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          s=Path('area-2627/index.html').read_text(encoding='utf-8')
+          start=s.index('<script>')+len('<script>')
+          end=s.rindex('</script>')
+          Path('/tmp/la-flora-app.js').write_text(s[start:end],encoding='utf-8')
+          PY
+          node --check /tmp/la-flora-app.js
+          printf 'JavaScript syntax verified\n' > .github/la-flora-js-ok.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/la-flora-js-ok.txt
+          git commit -m "Verify La Flora Bets JavaScript"
+          git push origin main
