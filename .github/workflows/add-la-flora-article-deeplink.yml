@@ -1,0 +1,52 @@
+name: Add La Flora article deeplinks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-la-flora-article-deeplink.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add direct article URL support
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text()
+          old="state=null,tab='home',pick='',stake=100,msg='',lastPhase='',articleSlug='',pressFilter='all';"
+          new="state=null,initialArticle=(()=>{const m=location.hash.match(/^#articulo=(.+)$/);return m?decodeURIComponent(m[1]):''})(),tab=initialArticle?'press':'home',pick='',stake=100,msg='',lastPhase='',articleSlug=initialArticle,pressFilter='all';"
+          assert old in s, 'initial state marker not found'
+          s=s.replace(old,new,1)
+          old="state=await loadState();tab='home';render()"
+          new="state=await loadState();tab=articleSlug?'press':'home';render()"
+          assert old in s, 'login tab marker not found'
+          s=s.replace(old,new,1)
+          old="document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{tab=x.dataset.tab;articleSlug='';msg='';main()});document.querySelectorAll('[data-post]').forEach(x=>x.onclick=()=>{articleSlug=x.dataset.post;main();window.scrollTo({top:0,behavior:'smooth'})});"
+          new="document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{tab=x.dataset.tab;articleSlug='';history.replaceState(null,'',location.pathname+location.search);msg='';main()});document.querySelectorAll('[data-post]').forEach(x=>x.onclick=()=>{articleSlug=x.dataset.post;history.replaceState(null,'',location.pathname+location.search+'#articulo='+encodeURIComponent(articleSlug));main();window.scrollTo({top:0,behavior:'smooth'})});"
+          assert old in s, 'article binding marker not found'
+          s=s.replace(old,new,1)
+          old="document.querySelector('[data-back-press]')?.addEventListener('click',()=>{articleSlug='';main()});"
+          new="document.querySelector('[data-back-press]')?.addEventListener('click',()=>{articleSlug='';history.replaceState(null,'',location.pathname+location.search);main()});"
+          assert old in s, 'article back marker not found'
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Support direct links to La Flora articles"
+            git push
+          fi
