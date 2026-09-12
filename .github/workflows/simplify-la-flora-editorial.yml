@@ -1,0 +1,56 @@
+name: Simplify La Flora Bets editorial
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/simplify-la-flora-editorial.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  simplify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove visible dates and author metadata
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('area-2627/index.html')
+          s=p.read_text(encoding='utf-8')
+
+          old="const postDate=v=>v?new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'long',year:'numeric'}).format(new Date(v)):'';function postTag(p){return p.category==='opinion'?'Opinión':'Crónica'}function postCard(p){return`<button class=\"postcard ${esc(p.category)}\" data-post=\"${esc(p.slug)}\"><div class=\"postmeta\"><span class=\"posttag\"><i></i>${esc(postTag(p))}${p.jornada?' · JORNADA '+esc(p.jornada):''}</span><span>${esc(postDate(p.published_at))}</span></div><h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p><span class=\"postmore\">Leer artículo ›</span></button>`}"
+          new="function postTag(p){return p.category==='opinion'?'Opinión':'Crónica'}function postCard(p){return`<button class=\"postcard ${esc(p.category)}\" data-post=\"${esc(p.slug)}\"><div class=\"postmeta\"><span class=\"posttag\"><i></i>${esc(postTag(p))}</span></div><h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p><span class=\"postmore\">Leer artículo ›</span></button>`}"
+          if old not in s:
+              raise SystemExit('post card pattern not found')
+          s=s.replace(old,new,1)
+
+          pattern=r"function articleView\(p\)\{const paras=String\(p\.body\|\|'\'\)\.split\(/\\n\\s\*\\n/\)\.filter\(Boolean\);return`<article class=\"article\">.*?</article>`\}function press\(\)"
+          m=re.search(pattern,s)
+          if not m:
+              raise SystemExit('article view pattern not found')
+          replacement="function articleView(p){const paras=String(p.body||'').split(/\\n\\s*\\n/).filter(Boolean);return`<article class=\"article\"><div class=\"articletop\"><button class=\"backpress\" data-back-press>‹ Volver a Crónicas</button></div><div class=\"articlebody\"><div class=\"postmeta\"><span class=\"posttag\"><i></i>${esc(postTag(p))}</span></div><h1>${esc(p.title)}</h1><p class=\"articlelead\">${esc(p.excerpt)}</p><div class=\"articletext\">${paras.map(x=>`<p>${esc(x)}</p>`).join('')}</div></div></article>`}function press()"
+          s=s[:m.start()]+replacement+s[m.end():]
+
+          oldpress="function press(){const posts=[...(state?.posts||[])],active=posts.find(p=>p.slug===articleSlug);if(active)return articleView(active);const shown=pressFilter==='all'?posts:posts.filter(p=>p.category===pressFilter);"
+          newpress="function press(){const posts=[...(state?.posts||[])].sort((a,b)=>new Date(b.published_at||b.created_at||0)-new Date(a.published_at||a.created_at||0)),active=posts.find(p=>p.slug===articleSlug);if(active)return articleView(active);const shown=pressFilter==='all'?posts:posts.filter(p=>p.category===pressFilter);"
+          if oldpress not in s:
+              raise SystemExit('press function pattern not found')
+          s=s.replace(oldpress,newpress,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          git commit -m "Simplify editorial article presentation"
+          git push origin main
