@@ -1,0 +1,57 @@
+name: Fix La Flora navigation history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-la-flora-nav-history.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix browser history calls
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('area-2627/index.html')
+          s=p.read_text(encoding='utf-8')
+          count=s.count("history.replaceState")
+          assert count >= 3, f'Expected history.replaceState calls, found {count}'
+          s=s.replace("history.replaceState", "window.history.replaceState")
+          p.write_text(s, encoding='utf-8')
+          print(f'Updated {count} browser history calls')
+          PY
+      - name: Validate JavaScript
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          s=Path('area-2627/index.html').read_text(encoding='utf-8')
+          start=s.index('<script>')+len('<script>')
+          end=s.rindex('</script>')
+          Path('/tmp/la-flora-app.js').write_text(s[start:end],encoding='utf-8')
+          PY
+          node --check /tmp/la-flora-app.js
+      - name: Verify navigation fix
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          s=Path('area-2627/index.html').read_text(encoding='utf-8')
+          assert 'window.history.replaceState' in s
+          assert 'history.replaceState' not in s.replace('window.history.replaceState','')
+          print('Navigation history calls verified')
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          git commit -m "Fix La Flora Bets navigation buttons"
+          git push origin main
