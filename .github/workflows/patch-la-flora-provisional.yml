@@ -1,0 +1,101 @@
+name: Patch La Flora Bets provisional results
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-la-flora-provisional.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch provisional result experience
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('area-2627/index.html')
+          s = path.read_text(encoding='utf-8')
+
+          css = r'''
+          .duelrole{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:5px 10px;border:1px solid #39455a;border-radius:999px;background:#0a111b;color:#aeb8c8;font:700 10px 'Oswald';letter-spacing:.08em;text-transform:uppercase}.prov{margin:0 11px 13px;padding:13px 14px 14px;border:1px solid #ffc94a66;border-radius:12px;background:linear-gradient(145deg,#231b0b,#0a0f17 62%);box-shadow:0 10px 26px #0006}.provtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.provtop b{display:flex;align-items:center;gap:7px;font:700 11px 'Oswald';letter-spacing:.1em;color:var(--y)}.provtop b i{display:block;width:8px;height:8px;border-radius:50%;background:var(--y);box-shadow:0 0 10px var(--y)}.provtop small{font:700 9px 'Oswald';letter-spacing:.1em;color:#dfe5ee}.provlead{font:700 20px/1.2 'Oswald';color:#fff}.provtime{margin-top:6px;font-size:10px;color:#9faabd}.ranknote{margin:6px 0 0;color:#aeb8c7;font-size:11px;line-height:1.45}.podwin{display:block;margin-top:3px;color:var(--g);font-size:9px;line-height:1.2}.provwin{color:var(--g)!important}.provloss{color:#ff8a90!important}@media(max-width:500px){.provlead{font-size:22px}.duelrole{font-size:10px}}
+          '''.strip()
+          if '.provlead{' not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+
+          marker = 'async function start()'
+          helper = r'''function provisionalRank(m){return[...(state?.provisionalRows||[])].filter(x=>x.market_id===m?.id).map(x=>({...x,id:x.player_id,balance:x.projected_balance})).sort((a,b)=>Number(b.projected_balance)-Number(a.projected_balance)||String(a.display_name).localeCompare(String(b.display_name),'es'))}function liveTime(v){return v?new Intl.DateTimeFormat('es-ES',{hour:'2-digit',minute:'2-digit'}).format(new Date(v)):'—'}function provisionalStatus(m){if(!m?.provisional_result||m.status!=='open')return'';const lead=m.provisional_result==='X'?'Empate provisional en la clasificación':`${esc(label(m,m.provisional_result))} va por delante en la clasificación`;return`<div class="prov"><div class="provtop"><b><i></i> RESULTADO PROVISIONAL</b><small>EN JUEGO</small></div><div class="provlead">${lead}</div><div class="provtime">Última actualización · ${liveTime(m.provisional_updated_at)}</div></div>`}function pendingBetText(m,b){if(!m?.provisional_result)return'PENDIENTE';const p=provisionalRank(m).find(x=>x.id===state.currentId);return b.pick===m.provisional_result&&Number(p?.provisional_payout||0)>0?`ACERTANDO<br>+${money(p.provisional_payout)} PROV.`:'NO ACERTANDO<br>0 ƒ PROV.'}'''
+          if 'function provisionalRank(m)' not in s:
+              if marker not in s:
+                  raise SystemExit('start marker not found')
+              s = s.replace(marker, helper + marker, 1)
+
+          s = s.replace('<div class="pts"><b>${m.option_a_points||0}</b><small>PFSY</small></div>', '<div class="duelrole">${m.provisional_result===\'A\'?\'POR DELANTE\':m.provisional_result===\'X\'?\'EMPATE PROVISIONAL\':\'EN EL DUELO\'}</div>', 1)
+          s = s.replace('<div class="pts"><b>${m.option_b_points||0}</b><small>PFSY</small></div>', '<div class="duelrole">${m.provisional_result===\'B\'?\'POR DELANTE\':m.provisional_result===\'X\'?\'EMPATE PROVISIONAL\':\'EN EL DUELO\'}</div>', 1)
+          s = s.replace('${trust(m)}<div class="bar">', '${provisionalStatus(m)}${trust(m)}<div class="bar">', 1)
+
+          old_home = "function home(){const m=market();return`${leagueIntro()}${m?hero(m):'<div class=\"panel\"><div class=\"ph\"><h2>No hay duelo publicado</h2></div></div>'}${rankPreview()}${roundPreview()}${tutorial()}`}"
+          if old_home not in s:
+              raise SystemExit('home marker not found')
+
+          old_intro = re.search(r'function leagueIntro\(\)\{return`.*?`\}function hero', s)
+          if not old_intro:
+              raise SystemExit('leagueIntro block not found')
+          new_intro = '''function leagueIntro(){return`<section class="leagueintro"><div class="kicker">JORNADA 5 · LA LIGA, AL ROJO VIVO</div><p>La Jornada 5 llega con varios cruces directos y posiciones muy apretadas. <b>JM.</b> y <b>Berto115</b> mantienen una pelea abierta; <b>.Rives.</b> y <b>Fran.88</b> llegan muy cerca; y <b>Vidrio77</b> y <b>thoth</b> completan otro duelo directo. Pero todas las miradas están en el 4.º puesto: <b>Tosco13</b> y <b>Andrew Perilla</b>. El gran duelo de la jornada está servido.</p></section>`}function hero'''
+          s = s[:old_intro.start()] + new_intro + s[old_intro.end():]
+
+          s = s.replace('<h4>Tosco13 (177) vs Andrew Perilla (175)</h4><p>El duelo real parte con solo 2 puntos de diferencia.', '<h4>Tosco13 vs Andrew Perilla</h4><p>El duelo real parte con una clasificación muy ajustada.', 1)
+
+          rank_preview = re.search(r'function rankPreview\(\)\{.*?\}function rc', s)
+          if not rank_preview:
+              raise SystemExit('rankPreview block not found')
+          new_rank_preview = r'''function rankPreview(){const m=market(),pr=m?.provisional_result?provisionalRank(m):[],prov=pr.length>0,r=(prov?pr:rank()).slice(0,3);return`<section class="sec"><div class="sect"><h3>${prov?'♛ Ranking provisional':'♛ Ranking general'}</h3><button data-tab="rank">Ver completo ›</button></div><div class="podium">${r.map((p,i)=>`<div class="pod"><em>#${i+1}</em><div class="podname">${crest(p.display_name,'rank')}<span>${esc(pretty(p.display_name))}</span></div><b>${money(prov?p.projected_balance:p.balance)}</b>${prov?`<small class="podwin">${Number(p.provisional_payout||0)>0?'+'+money(p.provisional_payout)+' premio':'0 ƒ premio'}</small>`:''}</div>`).join('')}</div></section>`}function rc'''
+          s = s[:rank_preview.start()] + new_rank_preview + s[rank_preview.end():]
+
+          rc_block = re.search(r'function rc\(m\)\{.*?\}function roundPreview', s)
+          if not rc_block:
+              raise SystemExit('rc block not found')
+          new_rc = r'''function rc(m){const ph=phase(m),lead=m.provisional_result?(m.provisional_result==='X'?'Empate provisional':pretty(label(m,m.provisional_result))+' por delante'):'';return`<article class="rc ${m.status==='open'?'cur':''}"><div class="rt"><span>JORNADA ${m.jornada}</span><span>${fd(m.closes_at)}</span></div><h4>${esc(pretty(m.option_a))} <span style="color:var(--r)">VS</span> ${esc(pretty(m.option_b))}</h4><strong>${m.result?esc(label(m,m.result)):lead?esc(lead):'Resultado pendiente'}</strong><div class="rr ${m.result?'':'pend'}">${m.result?'✓ RESULTADO: '+esc(label(m,m.result)):m.provisional_result?'● RESULTADO PROVISIONAL · '+liveTime(m.provisional_updated_at):ph==='open'?'● APUESTAS ABIERTAS':ph==='closed'?'PENDIENTE DE RESOLUCIÓN':'ABRE 24H ANTES'}</div></article>`}function roundPreview'''
+          s = s[:rc_block.start()] + new_rc + s[rc_block.end():]
+
+          ranking_block = re.search(r'function ranking\(\)\{.*?\}function rounds', s)
+          if not ranking_block:
+              raise SystemExit('ranking block not found')
+          new_ranking = r'''function ranking(){const m=market(),pr=m?.provisional_result?provisionalRank(m):[],prov=pr.length>0,r=prov?pr:rank();return`<section class="panel"><div class="ph"><div class="eye">${prov?'EN JUEGO · LA FLORA BETS':'LA FLORA BETS'}</div><h2>${prov?'Ranking provisional':'Ranking general'}</h2>${prov?`<p class="ranknote">Así quedaría la clasificación de florines si el duelo terminara ahora. Última actualización · ${liveTime(m.provisional_updated_at)}</p>`:''}</div><div class="rows">${r.map((p,i)=>`<div class="row ${p.id===state.currentId?'me':''}"><span class="num">${i===0?'♛':i+1}</span>${crest(p.display_name,'rank')}<span class="nm"><b>${esc(pretty(p.display_name))}</b><small>${prov?(Number(p.provisional_payout||0)>0?'PREMIO PROVISIONAL +'+money(p.provisional_payout):'SIN PREMIO PROVISIONAL'):(p.id===state.currentId?'TU POSICIÓN':'LA FLORA 26.27')}</small></span><strong>${money(prov?p.projected_balance:p.balance)}</strong></div>`).join('')}</div></section>`}function rounds'''
+          s = s[:ranking_block.start()] + new_ranking + s[ranking_block.end():]
+
+          history_block = re.search(r'function history\(\)\{.*?\}function bind', s)
+          if not history_block:
+              raise SystemExit('history block not found')
+          new_history = r'''function history(){const a=(state.bets||[]).filter(b=>b.user_id===state.currentId),mk=id=>state.markets.find(m=>m.id===id);return`<section class="panel"><div class="ph"><div class="eye">TU TEMPORADA</div><h2>Mis apuestas</h2></div><div style="padding:0 12px">${a.length?a.map(b=>{const m=mk(b.market_id),live=b.status==='pending'&&m?.provisional_result,hit=live&&b.pick===m.provisional_result;return`<div class="hr"><span><b>Jornada ${m?.jornada||'—'} · ${esc(m?label(m,b.pick):b.pick)}</b><small>${money(b.amount)}</small></span><span class="status ${live?(hit?'provwin':'provloss'):b.status}">${b.status==='won'?`GANADA<br>+${money(b.payout)}`:b.status==='lost'?'PERDIDA':pendingBetText(m,b)}</span></div>`}).join(''):'<div class="notice">Todavía no has apostado.</div>'}</div></section>`}function bind'''
+          s = s[:history_block.start()] + new_history + s[history_block.end():]
+
+          render_marker = 'function render(){'
+          if 'async function liveRefresh()' not in s:
+              live_refresh = r'''let liveBusy=false;async function liveRefresh(){if(liveBusy||!session||!state||document.hidden)return;liveBusy=true;try{state=await rpc('lf_get_state',{p_session_token:session});main()}catch{}finally{liveBusy=false}}'''
+              if render_marker not in s:
+                  raise SystemExit('render marker not found')
+              s = s.replace(render_marker, live_refresh + render_marker, 1)
+          if 'setInterval(liveRefresh,30000)' not in s:
+              s = s.replace('setInterval(tick,1000);start()', 'setInterval(tick,1000);setInterval(liveRefresh,30000);start()', 1)
+
+          path.write_text(s, encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Add live provisional results to La Flora Bets"
+            git push origin main
+          fi
