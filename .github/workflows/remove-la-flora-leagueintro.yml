@@ -1,0 +1,38 @@
+name: Remove La Flora Bets league intro
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/remove-la-flora-leagueintro.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove Jornada 5 intro card from home
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path('area-2627/index.html')
+          s = p.read_text(encoding='utf-8')
+          old = "function home(){const m=market();return`${leagueIntro()}${m?hero(m):"
+          new = "function home(){const m=market();return`${m?hero(m):"
+          if old not in s:
+              raise SystemExit('league intro render hook not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add area-2627/index.html
+          git commit -m "Remove La Flora Bets Jornada 5 intro card"
+          git push origin main
