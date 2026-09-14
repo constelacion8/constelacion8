@@ -49,10 +49,17 @@ async function privateRestFetch(table, params, input, init, allowRetry){
   endpoint.searchParams.set('table', table);
   for(const [key,value] of params.entries()) endpoint.searchParams.append(key,value);
 
-  const sourceHeaders = new Headers(input instanceof Request ? input.headers : undefined);
+  const inheritedHeaders = new Headers(input instanceof Request ? input.headers : undefined);
   const initHeaders = new Headers(init?.headers || undefined);
-  initHeaders.forEach((value,key)=>sourceHeaders.set(key,value));
-  sourceHeaders.delete('apikey');
+  initHeaders.forEach((value,key)=>inheritedHeaders.set(key,value));
+
+  // El proxy solo necesita estas cabeceras. No reenviamos cabeceras automáticas
+  // de supabase-js (como x-client-info), evitando preflights CORS innecesarios.
+  const sourceHeaders = new Headers();
+  const range = inheritedHeaders.get('range');
+  const prefer = inheritedHeaders.get('prefer');
+  if(range) sourceHeaders.set('Range', range);
+  if(prefer) sourceHeaders.set('Prefer', prefer);
   sourceHeaders.set('Authorization', `Bearer ${getToken() || ''}`);
   sourceHeaders.set('Accept', 'application/json');
 
