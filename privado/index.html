@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10021f">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Área privada · Constelación 8</title>
+  <style>
+    :root{color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#10021f;color:#f7f2ff}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 75% 0%,#40215f 0%,#10021f 53%);display:flex;flex-direction:column}
+    header{padding:25px clamp(20px,5vw,70px);border-bottom:1px solid #ffffff20;display:flex;justify-content:space-between;gap:20px;align-items:center}
+    header a{color:#fff;text-decoration:none;font-size:13px}header strong{font-size:16px;letter-spacing:.11em}header strong span{color:#dfb76a}
+    main{width:min(460px,calc(100% - 34px));margin:auto;padding:55px 0}
+    .panel{background:#251335;border:1px solid #ffffff27;border-radius:19px;box-shadow:0 25px 70px #0006;padding:clamp(25px,6vw,44px)}
+    .eyebrow{color:#dfb76a;text-transform:uppercase;font-weight:750;letter-spacing:.15em;font-size:11px;margin:0 0 13px}
+    h1{font-size:clamp(29px,5vw,39px);line-height:1.1;margin:0 0 14px}p{color:#d2c7dc;line-height:1.55;font-size:14px}form{display:grid;gap:18px;margin-top:27px}
+    label{display:grid;gap:8px;font-size:13px;font-weight:650}input{width:100%;border:1px solid #ffffff40;border-radius:10px;background:#13071f;color:#fff;padding:14px 15px;font:inherit;font-size:16px}input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #dfb76a;outline-offset:3px}
+    button,.action{border:0;border-radius:10px;background:#dfb76a;color:#1a0929;font:inherit;font-size:14px;font-weight:750;padding:14px 17px;cursor:pointer;text-decoration:none;text-align:center;display:block}button:disabled{opacity:.6;cursor:wait}
+    .secondary{background:transparent;color:#f8f1ff;border:1px solid #ffffff50;margin-top:12px}
+    .status{min-height:21px;margin:12px 0 0;color:#f5baaf}#privatePanel[hidden],#loginPanel[hidden]{display:none}
+    footer{text-align:center;padding:24px;color:#9e90ad;font-size:11px}
+  </style>
+</head>
+<body>
+  <header><a href="../"><strong>CONSTELACIÓN <span>8</span></strong></a><a href="../">Volver al atlas</a></header>
+  <main>
+    <section class="panel" id="loginPanel">
+      <p class="eyebrow">Acceso restringido</p>
+      <h1>Área privada</h1>
+      <p>Identifícate para acceder a las herramientas privadas de Constelación 8.</p>
+      <form id="loginForm">
+        <label for="username">Usuario<input id="username" name="username" autocomplete="username" required inputmode="numeric" spellcheck="false"></label>
+        <label for="password">Contraseña<input id="password" name="password" type="password" autocomplete="current-password" required></label>
+        <button id="loginButton" type="submit">Entrar</button>
+      </form>
+      <p class="status" id="loginStatus" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" id="privatePanel" hidden>
+      <p class="eyebrow">Sesión de administrador</p>
+      <h1>Bienvenido</h1>
+      <p>Has accedido a la zona privada. Desde aquí puedes entrar al panel de control de Constelación 8.</p>
+      <a class="action" href="../admin/">Abrir panel de control</a>
+      <button class="secondary" id="logoutButton" type="button">Cerrar sesión</button>
+      <p class="status" id="sessionStatus" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer>Constelación 8 · Área privada</footer>
+  <script type="module">
+    import { supabase } from '../supabase-client.js';
+    const adminLoginEmail = 'info@enriquerodda.com';
+    const username = '28081988';
+    const loginPanel = document.getElementById('loginPanel');
+    const privatePanel = document.getElementById('privatePanel');
+    const loginForm = document.getElementById('loginForm');
+    const loginStatus = document.getElementById('loginStatus');
+    const sessionStatus = document.getElementById('sessionStatus');
+    let revision = 0;
+    async function display(session) {
+      const currentRevision = ++revision;
+      loginPanel.hidden = true;
+      privatePanel.hidden = true;
+      if (!session?.user) { loginPanel.hidden = false; return; }
+      const { data, error } = await supabase.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle();
+      if (currentRevision !== revision) return;
+      if (error || !data?.user_id) {
+        await supabase.auth.signOut();
+        loginPanel.hidden = false;
+        loginStatus.textContent = 'La cuenta no dispone de acceso privado.';
+        return;
+      }
+      privatePanel.hidden = false;
+    }
+    loginForm.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const button=document.getElementById('loginButton');
+      const submittedUsername=document.getElementById('username').value.trim();
+      const password=document.getElementById('password').value;
+      loginStatus.textContent='Comprobando acceso…';
+      button.disabled=true;
+      try {
+        if(submittedUsername!==username){loginStatus.textContent='Usuario o contraseña incorrectos.';return;}
+        const {data,error}=await supabase.auth.signInWithPassword({email:adminLoginEmail,password});
+        if(error||!data.session){loginStatus.textContent='Usuario o contraseña incorrectos.';return;}
+        document.getElementById('password').value='';
+        loginStatus.textContent='';
+        await display(data.session);
+      }catch{loginStatus.textContent='No se pudo conectar. Inténtalo de nuevo.';}
+      finally{button.disabled=false;}
+    });
+    document.getElementById('logoutButton').addEventListener('click',async()=>{
+      sessionStatus.textContent='Cerrando sesión…';
+      await supabase.auth.signOut();
+      sessionStatus.textContent='';
+      await display(null);
+    });
+    supabase.auth.onAuthStateChange((_event,session)=>{queueMicrotask(()=>display(session));});
+    const {data}=await supabase.auth.getSession();
+    await display(data.session);
+  </script>
+</body>
+</html>
