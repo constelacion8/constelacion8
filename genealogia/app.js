@@ -1,4 +1,14 @@
 import { supabase } from '../supabase-client.js';
-console.info('Archivo genealógico inicializado');
-const status = document.getElementById('loginStatus');
-if (status) status.textContent = 'Preparando acceso privado…';
+import { startWorkspace } from './workspace.js';
+const $=id=>document.getElementById(id);
+let recovery=false;
+$('username').type='email';$('username').inputMode='email';$('username').placeholder='Correo del administrador';document.querySelector('label[for="username"]').textContent='Correo electrónico';
+function showApp(active){$('authPage').hidden=active;$('appShell').hidden=!active;$('mobileNav').hidden=!active;}
+async function check(session){if(!session?.user){showApp(false);return;}if(recovery){$('loginArea').hidden=true;$('recoveryArea').hidden=false;showApp(false);return;}const {data,error}=await supabase.rpc('gen_is_admin');if(error||data!==true){showApp(false);$('loginStatus').textContent='Esta cuenta no tiene permiso de administrador.';return;}showApp(true);await startWorkspace(supabase);}
+$('loginForm').onsubmit=async e=>{e.preventDefault();let btn=e.target.querySelector('button');btn.disabled=true;$('loginStatus').textContent='Comprobando acceso…';try{const {data,error}=await supabase.auth.signInWithPassword({email:$('username').value.trim(),password:$('password').value});if(error||!data?.session){$('loginStatus').textContent='Correo o contraseña incorrectos.';return;}$('password').value='';$('loginStatus').textContent='';await check(data.session);}catch(err){$('loginStatus').textContent='No se pudo conectar.';console.error(err);}finally{btn.disabled=false;}};
+$('recoverButton').onclick=async()=>{const email=$('username').value.trim();if(!email){$('recoverStatus').textContent='Introduce primero tu correo de administrador.';return;}const btn=$('recoverButton');btn.disabled=true;try{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:new URL('./',location.href).href});$('recoverStatus').textContent=error?'No se pudo enviar el enlace.':'Revisa tu correo para establecer una nueva contraseña.';}catch(err){$('recoverStatus').textContent='Error de conexión.';}finally{btn.disabled=false;}};
+$('recoveryForm').onsubmit=async e=>{e.preventDefault();const password=$('newPassword').value;if(password!==$('confirmPassword').value){$('recoveryStatus').textContent='Las contraseñas no coinciden.';return;}const {error}=await supabase.auth.updateUser({password});if(error){$('recoveryStatus').textContent=error.message;return;}recovery=false;await supabase.auth.signOut();$('recoveryArea').hidden=true;$('loginArea').hidden=false;$('loginStatus').textContent='Contraseña actualizada. Inicia sesión.';};
+async function logout(){await supabase.auth.signOut();showApp(false);$('loginStatus').textContent='Sesión cerrada.';}
+$('sidebarLogout').onclick=logout;$('topLogout').onclick=logout;
+supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){recovery=true;$('recoveryArea').hidden=false;$('loginArea').hidden=true;showApp(false);return;}queueMicrotask(()=>check(session));});
+const {data}=await supabase.auth.getSession();await check(data.session);
