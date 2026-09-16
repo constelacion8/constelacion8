@@ -17,8 +17,8 @@
     h1{font-size:clamp(29px,5vw,39px);line-height:1.1;margin:0 0 14px}p{color:#d2c7dc;line-height:1.55;font-size:14px}form{display:grid;gap:18px;margin-top:27px}
     label{display:grid;gap:8px;font-size:13px;font-weight:650}input{width:100%;border:1px solid #ffffff40;border-radius:10px;background:#13071f;color:#fff;padding:14px 15px;font:inherit;font-size:16px}input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #dfb76a;outline-offset:3px}
     button,.action{border:0;border-radius:10px;background:#dfb76a;color:#1a0929;font:inherit;font-size:14px;font-weight:750;padding:14px 17px;cursor:pointer;text-decoration:none;text-align:center;display:block}button:disabled{opacity:.6;cursor:wait}
-    .secondary{background:transparent;color:#f8f1ff;border:1px solid #ffffff50;margin-top:12px}
-    .status{min-height:21px;margin:12px 0 0;color:#f5baaf}#privatePanel[hidden],#loginPanel[hidden]{display:none}
+    .secondary{background:transparent;color:#f8f1ff;border:1px solid #ffffff50;margin-top:12px}.text-button{background:none;color:#dfb76a;padding:10px 0;text-decoration:underline}
+    .status{min-height:21px;margin:12px 0 0;color:#f5baaf}#privatePanel[hidden],#loginPanel[hidden],#recoveryPanel[hidden]{display:none}
     footer{text-align:center;padding:24px;color:#9e90ad;font-size:11px}
   </style>
 </head>
@@ -35,6 +35,19 @@
         <button id="loginButton" type="submit">Entrar</button>
       </form>
       <p class="status" id="loginStatus" role="status" aria-live="polite"></p>
+      <button class="text-button" id="recoverButton" type="button">¿No puedes entrar? Restablecer contraseña</button>
+      <p class="status" id="recoverStatus" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" id="recoveryPanel" hidden>
+      <p class="eyebrow">Recuperación de acceso</p>
+      <h1>Nueva contraseña</h1>
+      <p>Elige la contraseña del administrador. Se guardará en Supabase, no en el código público de esta web.</p>
+      <form id="recoveryForm">
+        <label for="newPassword">Nueva contraseña<input id="newPassword" name="newPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+        <label for="confirmPassword">Repetir contraseña<input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button id="savePassword" type="submit">Guardar contraseña</button>
+      </form>
+      <p class="status" id="recoveryStatus" role="status" aria-live="polite"></p>
     </section>
     <section class="panel" id="privatePanel" hidden>
       <p class="eyebrow">Sesión de administrador</p>
@@ -52,14 +65,29 @@
     const username = '28081988';
     const loginPanel = document.getElementById('loginPanel');
     const privatePanel = document.getElementById('privatePanel');
+    const recoveryPanel = document.getElementById('recoveryPanel');
     const loginForm = document.getElementById('loginForm');
     const loginStatus = document.getElementById('loginStatus');
+    const recoverStatus = document.getElementById('recoverStatus');
+    const recoveryStatus = document.getElementById('recoveryStatus');
     const sessionStatus = document.getElementById('sessionStatus');
     let revision = 0;
-    async function display(session) {
-      const currentRevision = ++revision;
+    let recovering = window.location.hash.includes('type=recovery') || new URLSearchParams(window.location.search).get('type') === 'recovery';
+
+    function showRecovery() {
+      recovering = true;
+      ++revision;
       loginPanel.hidden = true;
       privatePanel.hidden = true;
+      recoveryPanel.hidden = false;
+    }
+
+    async function display(session) {
+      const currentRevision = ++revision;
+      if (recovering && session?.user) { showRecovery(); return; }
+      loginPanel.hidden = true;
+      privatePanel.hidden = true;
+      recoveryPanel.hidden = true;
       if (!session?.user) { loginPanel.hidden = false; return; }
       const { data, error } = await supabase.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle();
       if (currentRevision !== revision) return;
@@ -71,6 +99,7 @@
       }
       privatePanel.hidden = false;
     }
+
     loginForm.addEventListener('submit',async event=>{
       event.preventDefault();
       const button=document.getElementById('loginButton');
@@ -81,20 +110,62 @@
       try {
         if(submittedUsername!==username){loginStatus.textContent='Usuario o contraseña incorrectos.';return;}
         const {data,error}=await supabase.auth.signInWithPassword({email:adminLoginEmail,password});
-        if(error||!data.session){loginStatus.textContent='Usuario o contraseña incorrectos.';return;}
+        if(error||!data.session){loginStatus.textContent='Usuario o contraseña incorrectos. Si aún no has establecido la nueva contraseña, usa «Restablecer contraseña».';return;}
         document.getElementById('password').value='';
         loginStatus.textContent='';
         await display(data.session);
       }catch{loginStatus.textContent='No se pudo conectar. Inténtalo de nuevo.';}
       finally{button.disabled=false;}
     });
+
+    document.getElementById('recoverButton').addEventListener('click',async()=>{
+      const button=document.getElementById('recoverButton');
+      button.disabled=true;
+      recoverStatus.textContent='Enviando enlace de recuperación…';
+      try {
+        const redirectTo = new URL('privado/', window.location.origin + '/').toString();
+        const { error } = await supabase.auth.resetPasswordForEmail(adminLoginEmail, { redirectTo });
+        recoverStatus.textContent=error ? 'No se ha podido enviar el correo. Revisa la configuración de recuperación de Supabase.' : 'Si la cuenta está disponible, recibirás un enlace de recuperación en el correo del administrador. Ábrelo para establecer tu contraseña.';
+      }catch{recoverStatus.textContent='Error de conexión. Inténtalo de nuevo.';}
+      finally{button.disabled=false;}
+    });
+
+    document.getElementById('recoveryForm').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const button=document.getElementById('savePassword');
+      const password=document.getElementById('newPassword').value;
+      const confirm=document.getElementById('confirmPassword').value;
+      if(password!==confirm){recoveryStatus.textContent='Las contraseñas no coinciden.';return;}
+      button.disabled=true;
+      recoveryStatus.textContent='Guardando contraseña…';
+      try {
+        const { data: { user }, error: sessionError } = await supabase.auth.getUser();
+        if(sessionError || !user || user.email?.toLowerCase() !== adminLoginEmail){recoveryStatus.textContent='Enlace inválido o caducado. Solicita otro desde el acceso privado.';return;}
+        const {data: admin, error: adminError} = await supabase.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+        if(adminError || !admin?.user_id){recoveryStatus.textContent='Esta cuenta no es administradora.';return;}
+        const {error}=await supabase.auth.updateUser({password});
+        if(error){recoveryStatus.textContent=error.message || 'No se pudo cambiar la contraseña.';return;}
+        document.getElementById('newPassword').value='';
+        document.getElementById('confirmPassword').value='';
+        recovering=false;
+        await supabase.auth.signOut();
+        recoveryStatus.textContent='';
+        await display(null);
+        loginStatus.textContent='Contraseña actualizada. Ya puedes entrar con tu usuario.';
+      }catch{recoveryStatus.textContent='No se ha podido completar el cambio. Inténtalo de nuevo.';}
+      finally{button.disabled=false;}
+    });
+
     document.getElementById('logoutButton').addEventListener('click',async()=>{
       sessionStatus.textContent='Cerrando sesión…';
       await supabase.auth.signOut();
       sessionStatus.textContent='';
       await display(null);
     });
-    supabase.auth.onAuthStateChange((_event,session)=>{queueMicrotask(()=>display(session));});
+    supabase.auth.onAuthStateChange((event,session)=>{
+      if(event==='PASSWORD_RECOVERY'){showRecovery();return;}
+      queueMicrotask(()=>display(session));
+    });
     const {data}=await supabase.auth.getSession();
     await display(data.session);
   </script>
