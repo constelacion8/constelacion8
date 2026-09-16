@@ -1,0 +1,41 @@
+name: Validate genealogy workspace
+on:
+  push:
+    paths:
+      - 'genealogia/**'
+      - '.github/workflows/validate-genealogia.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          for file in genealogia/*.js; do
+            cp "$file" "/tmp/$(basename "${file%.js}").mjs"
+            node --check "/tmp/$(basename "${file%.js}").mjs"
+          done
+      - name: Check required page and imported modules
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import re
+          root=Path('genealogia')
+          class IDs(HTMLParser):
+              def __init__(self): super().__init__();self.ids=set()
+              def handle_starttag(self, tag, attrs):
+                  self.ids.update(v for k,v in attrs if k=='id')
+          parser=IDs();parser.feed((root/'index.html').read_text())
+          js='\n'.join(p.read_text() for p in root.glob('*.js'))
+          refs=set(re.findall(r"\$\('([A-Za-z0-9_-]+)'\)",js))
+          missing=sorted(refs-parser.ids)
+          assert not missing, f'Missing HTML ids: {missing}'
+          for name in ('app.js','workspace.js','workspace-actions.js','workspace-export.js','style.css'):
+              assert (root/name).is_file(), name
+          print(f'Checked {len(refs)} interface selectors: all HTML ids exist')
+          PY
