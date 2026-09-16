@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="theme-color" content="#171b25">
+<title>Árbol clásico · Archivo familiar · Constelación 8</title>
+<link rel="stylesheet" href="classic.css?v=20260916b">
+</head>
+<body>
+<header class="masthead"><a class="brand" href="../">CONSTELACIÓN <strong>8</strong><span> / ARCHIVO FAMILIAR</span></a><a class="back" href="../">← Volver al archivo</a></header>
+<section class="gate" id="gate"><div class="gate-card"><div class="eyebrow">ARCHIVO FAMILIAR · PRIVADO</div><h1>Tu árbol genealógico</h1><p>Accede con la misma cuenta administradora del archivo familiar. Las fichas nunca se cargan sin autorización.</p><form id="loginForm"><label>Usuario o correo<input id="username" autocomplete="username" required placeholder="Usuario"></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required placeholder="Contraseña"></label><button class="primary" id="loginButton" type="submit">Entrar al árbol →</button></form><p class="status" id="loginStatus" role="status"></p><a href="../">Recuperar acceso desde el archivo familiar</a></div></section>
+<div class="app" id="app" hidden>
+  <div class="intro"><div><div class="eyebrow">ÁRBOL GENEALÓGICO · VISTA CLÁSICA</div><h1>Las generaciones, conectadas.</h1><p>Una vista familiar de los mismos datos del archivo. Pulsa una tarjeta para consultar su ficha o convertirla en el centro del árbol.</p></div><button class="quiet" id="logout" type="button">Cerrar sesión</button></div>
+  <div class="toolbar" aria-label="Controles del árbol"><label class="focus-label" for="focus">Persona central<select id="focus" aria-label="Persona central"></select></label><fieldset class="modes" aria-label="Tipo de árbol"><legend class="sr-only">Tipo de árbol</legend><button class="mode active" data-mode="ancestors" type="button" aria-pressed="true">Ascendencia</button><button class="mode" data-mode="descendants" type="button" aria-pressed="false">Descendencia</button><button class="mode" data-mode="family" type="button" aria-pressed="false">Núcleo familiar</button></fieldset><label class="generation-label" for="generations">Generaciones<select id="generations"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label><button class="quiet" id="fit" type="button">Centrar árbol</button></div>
+  <p id="treeStatus" class="status" role="status"></p>
+  <div class="workspace"><section class="viewer" aria-label="Árbol familiar interactivo"><div class="viewer-label"><strong id="modeTitle">Ascendencia</strong><span id="treeCount">Selecciona una persona</span></div><div id="viewport" class="viewport" tabindex="0" aria-label="Arrastra para mover el árbol. Usa los controles para acercar o alejar."><div id="stage" class="stage"><svg id="connections" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg><div id="cards"></div></div></div><div class="view-controls"><button type="button" id="zoomOut" aria-label="Alejar">−</button><span id="zoomLabel">100 %</span><button type="button" id="zoomIn" aria-label="Acercar">+</button><button type="button" id="zoomFit">Encajar</button></div></section><aside class="person-panel" id="personPanel" aria-live="polite"><div class="panel-placeholder"><div class="eyebrow">FICHA RÁPIDA</div><h2>Una historia detrás de cada nombre.</h2><p>Selecciona cualquier tarjeta para ver sus datos y parentescos.</p></div></aside></div>
+  <footer><span>Las fechas aproximadas y las relaciones familiares sin prueba documental se identifican en cada ficha. El orden de las tarjetas no establece un orden de nacimiento.</span><a href="../">Archivo de investigación ↗</a></footer>
+</div>
+<script type="module" src="classic.js?v=20260916b"></script>
+</body></html>
