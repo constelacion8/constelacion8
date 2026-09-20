@@ -17,6 +17,9 @@ function addDossierLinks(){
  document.querySelector('#page-tasks .toolbar')?.append(shortcut);
  const letters=document.createElement('a');letters.id='familyLettersLink';letters.href='./cartas/';letters.className='navbtn';letters.textContent='✉ Cartas de Enrique y Margarita';letters.style.cssText='display:flex;align-items:center;width:100%;text-decoration:none;';letters.setAttribute('aria-label','Abrir archivo epistolar privado de Enrique y Margarita');
  link.insertAdjacentElement('afterend',letters);
+ const mobileLetters=document.createElement('a');mobileLetters.id='mobileFamilyLettersLink';mobileLetters.href='./cartas/';mobileLetters.className='navbtn';mobileLetters.style.textDecoration='none';mobileLetters.setAttribute('aria-label','Abrir las cartas privadas de Enrique y Margarita');
+ const mobileIcon=document.createElement('span');mobileIcon.textContent='✉';mobileIcon.setAttribute('aria-hidden','true');mobileLetters.append(mobileIcon,document.createTextNode('Cartas'));
+ document.querySelector('#mobileNav [data-page="tree"]')?.insertAdjacentElement('afterend',mobileLetters);
  const lettersShortcut=document.createElement('a');lettersShortcut.href='./cartas/';lettersShortcut.className='secondary';lettersShortcut.textContent='✉ Abrir cartas de Enrique y Margarita →';lettersShortcut.style.cssText='display:inline-flex;align-items:center;justify-content:center;text-decoration:none;';
  document.querySelector('#page-tasks .toolbar')?.append(lettersShortcut);
 }
