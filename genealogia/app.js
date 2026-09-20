@@ -17,11 +17,18 @@ function addDossierLinks(){
  document.querySelector('#page-tasks .toolbar')?.append(shortcut);
  const letters=document.createElement('a');letters.id='familyLettersLink';letters.href='./cartas/';letters.className='navbtn';letters.textContent='✉ Cartas de Enrique y Margarita';letters.style.cssText='display:flex;align-items:center;width:100%;text-decoration:none;';letters.setAttribute('aria-label','Abrir archivo epistolar privado de Enrique y Margarita');
  link.insertAdjacentElement('afterend',letters);
+ const houses=document.createElement('a');houses.id='familyHousesLink';houses.href='./casas/';houses.className='navbtn';houses.textContent='⌂ Casas de la familia';houses.style.cssText='display:flex;align-items:center;width:100%;text-decoration:none;';houses.setAttribute('aria-label','Abrir casas familiares y personas vinculadas');
+ letters.insertAdjacentElement('afterend',houses);
  const mobileLetters=document.createElement('a');mobileLetters.id='mobileFamilyLettersLink';mobileLetters.href='./cartas/';mobileLetters.className='navbtn';mobileLetters.style.textDecoration='none';mobileLetters.setAttribute('aria-label','Abrir las cartas privadas de Enrique y Margarita');
  const mobileIcon=document.createElement('span');mobileIcon.textContent='✉';mobileIcon.setAttribute('aria-hidden','true');mobileLetters.append(mobileIcon,document.createTextNode('Cartas'));
  document.querySelector('#mobileNav [data-page="tree"]')?.insertAdjacentElement('afterend',mobileLetters);
+ const mobileHouses=document.createElement('a');mobileHouses.id='mobileFamilyHousesLink';mobileHouses.href='./casas/';mobileHouses.className='navbtn';mobileHouses.style.textDecoration='none';mobileHouses.setAttribute('aria-label','Abrir las casas de la familia');
+ const houseIcon=document.createElement('span');houseIcon.textContent='⌂';houseIcon.setAttribute('aria-hidden','true');mobileHouses.append(houseIcon,document.createTextNode('Casas'));
+ mobileLetters.insertAdjacentElement('afterend',mobileHouses);
  const lettersShortcut=document.createElement('a');lettersShortcut.href='./cartas/';lettersShortcut.className='secondary';lettersShortcut.textContent='✉ Abrir cartas de Enrique y Margarita →';lettersShortcut.style.cssText='display:inline-flex;align-items:center;justify-content:center;text-decoration:none;';
  document.querySelector('#page-tasks .toolbar')?.append(lettersShortcut);
+ const houseShortcut=document.createElement('a');houseShortcut.href='./casas/';houseShortcut.className='secondary';houseShortcut.textContent='⌂ Abrir casas de la familia →';houseShortcut.style.cssText='display:inline-flex;align-items:center;justify-content:center;text-decoration:none;';
+ document.querySelector('#page-tasks .toolbar')?.append(houseShortcut);
 }
 function showApp(active){$('authPage').hidden=active;$('appShell').hidden=!active;$('mobileNav').hidden=!active;}
 async function check(session){if(!session?.user){showApp(false);return;}if(recovery){$('loginArea').hidden=true;$('recoveryArea').hidden=false;showApp(false);return;}const {data,error}=await supabase.rpc('gen_is_admin');if(error||data!==true){showApp(false);$('loginStatus').textContent='Esta cuenta no tiene permiso de administrador.';return;}showApp(true);await startWorkspace(supabase);addDossierLinks();const linked=new URLSearchParams(location.search).get('person');if(linked&&state.people.some(p=>p.id===linked)){state.selected=linked;state.focus=linked;setPage('people');renderPeople();}}
