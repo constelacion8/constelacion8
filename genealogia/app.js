@@ -15,6 +15,10 @@ function addDossierLinks(){
  document.querySelector('.side-nav [data-page="tasks"]')?.insertAdjacentElement('afterend',link);
  const shortcut=document.createElement('a');shortcut.href='./expediente/';shortcut.className='secondary';shortcut.textContent='▣ Abrir expediente familiar →';shortcut.style.cssText='display:inline-flex;align-items:center;justify-content:center;text-decoration:none;';
  document.querySelector('#page-tasks .toolbar')?.append(shortcut);
+ const letters=document.createElement('a');letters.id='familyLettersLink';letters.href='./cartas/';letters.className='navbtn';letters.textContent='✉ Cartas de Enrique y Margarita';letters.style.cssText='display:flex;align-items:center;width:100%;text-decoration:none;';letters.setAttribute('aria-label','Abrir archivo epistolar privado de Enrique y Margarita');
+ link.insertAdjacentElement('afterend',letters);
+ const lettersShortcut=document.createElement('a');lettersShortcut.href='./cartas/';lettersShortcut.className='secondary';lettersShortcut.textContent='✉ Abrir cartas de Enrique y Margarita →';lettersShortcut.style.cssText='display:inline-flex;align-items:center;justify-content:center;text-decoration:none;';
+ document.querySelector('#page-tasks .toolbar')?.append(lettersShortcut);
 }
 function showApp(active){$('authPage').hidden=active;$('appShell').hidden=!active;$('mobileNav').hidden=!active;}
 async function check(session){if(!session?.user){showApp(false);return;}if(recovery){$('loginArea').hidden=true;$('recoveryArea').hidden=false;showApp(false);return;}const {data,error}=await supabase.rpc('gen_is_admin');if(error||data!==true){showApp(false);$('loginStatus').textContent='Esta cuenta no tiene permiso de administrador.';return;}showApp(true);await startWorkspace(supabase);addDossierLinks();const linked=new URLSearchParams(location.search).get('person');if(linked&&state.people.some(p=>p.id===linked)){state.selected=linked;state.focus=linked;setPage('people');renderPeople();}}
