@@ -1,67 +1,86 @@
 {
-  "version": 1,
-  "updated_at": "2026-10-05T10:45:00+01:00",
-  "source": "DE8 commercial outreach snapshot",
+  "version": 2,
+  "updated_at": "2026-10-05T11:45:00+01:00",
+  "source": "DE8 commercial status snapshot",
+  "default_status": "no_contactado",
   "municipalities": [
-    {
-      "municipality_name": "San Cristóbal de La Laguna",
-      "island_name": "Tenerife",
-      "contacted_at": "2026-09-14",
-      "status": "contactado"
-    },
-    {
-      "municipality_name": "Granadilla de Abona",
-      "island_name": "Tenerife",
-      "contacted_at": "2026-09-15",
-      "status": "contactado"
-    },
-    {
-      "municipality_name": "Güímar",
-      "island_name": "Tenerife",
-      "contacted_at": "2026-09-15",
-      "status": "contactado"
-    },
-    {
-      "municipality_name": "Icod de los Vinos",
-      "island_name": "Tenerife",
-      "contacted_at": "2026-09-15",
-      "status": "contactado"
-    },
-    {
-      "municipality_name": "La Orotava",
-      "island_name": "Tenerife",
-      "contacted_at": "2026-09-15",
-      "status": "contactado"
-    },
     {
       "municipality_name": "Telde",
       "island_name": "Gran Canaria",
-      "contacted_at": "2026-09-15",
-      "status": "contactado"
+      "status": "contactado",
+      "contacted_at": "2026-09-15"
     },
     {
-      "municipality_name": "Las Palmas de Gran Canaria",
-      "island_name": "Gran Canaria",
-      "contacted_at": "2026-09-20",
-      "status": "contactado"
+      "municipality_name": "El Paso",
+      "island_name": "La Palma",
+      "status": "negociacion",
+      "contacted_at": "2026-09-09"
     },
     {
       "municipality_name": "Adeje",
       "island_name": "Tenerife",
-      "contacted_at": "2026-10-05",
-      "status": "contactado"
+      "status": "contactado",
+      "contacted_at": "2026-10-05"
     },
     {
       "municipality_name": "Arafo",
       "island_name": "Tenerife",
-      "contacted_at": "2026-10-05",
-      "status": "contactado"
+      "status": "contactado",
+      "contacted_at": "2026-10-05"
     },
     {
       "municipality_name": "Arico",
       "island_name": "Tenerife",
-      "contacted_at": "2026-10-05",
-      "status": "contactado"
+      "status": "contactado",
+      "contacted_at": "2026-10-05"
+    },
+    {
+      "municipality_name": "Buenavista del Norte",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-10-05"
+    },
+    {
+      "municipality_name": "Candelaria",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-10-05"
+    },
+    {
+      "municipality_name": "El Rosario",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-10-05"
+    },
+    {
+      "municipality_name": "Granadilla de Abona",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-09-15"
+    },
+    {
+      "municipality_name": "Güímar",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-09-15"
+    },
+    {
+      "municipality_name": "Icod de los Vinos",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-09-15"
+    },
+    {
+      "municipality_name": "La Orotava",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-09-15"
+    },
+    {
+      "municipality_name": "San Cristóbal de La Laguna",
+      "island_name": "Tenerife",
+      "status": "contactado",
+      "contacted_at": "2026-09-14"
     }
   ]
 }
