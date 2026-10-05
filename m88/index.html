@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="app.css?v=20260909-contacted1">
+  <link rel="stylesheet" href="app.css?v=20261005-outreach2">
   <style>
     .home-contacted{position:relative;z-index:4;width:min(92vw,1160px);margin:26px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.08)}
     .home-contacted h2{margin:0 0 14px;text-align:center;font:600 14px/1.2 "Work Sans",Arial,sans-serif;letter-spacing:-.01em;color:#fff}
@@ -26,7 +26,10 @@
   <div class="noise" aria-hidden="true"></div>
   <div class="app">
     <header class="site-header">
-      <button class="header-count" id="navAll" type="button" aria-label="Ver los 88 municipios">88</button>
+      <div class="header-actions">
+        <button class="header-contacted" id="navContacted" type="button">Municipios contactados <span id="contactedHeaderCount">0</span></button>
+        <button class="header-count" id="navAll" type="button" aria-label="Ver los 88 municipios">88</button>
+      </div>
     </header>
 
     <main>
@@ -114,23 +117,7 @@
       </section>
     </main>
   </div>
-  <script type="module" src="app.js?v=20260911-companies1"></script>
-  <script>
-    (async function(){
-      const list=document.getElementById('homeContactedList');
-      if(!list) return;
-      try{
-        const response=await fetch('https://kvoldyeinvjajsimxmyc.supabase.co/rest/v1/m88_contacted_municipalities?select=municipality_name,island_name&order=municipality_name.asc',{
-          headers:{
-            apikey:'sb_publishable_AjQQNYKbCwaGNv_o1GopAw_TzyLkHXh'
-          }
-        });
-        if(!response.ok) throw new Error('No se pudo cargar la lista');
-        const data=await response.json();
-        if(!data.length) return;
-        list.innerHTML=data.map(item=>`<span class="home-contacted-item"><strong>${String(item.municipality_name||'')}</strong><span>${String(item.island_name||'')}</span></span>`).join('');
-      }catch(error){console.warn(error)}
-    })();
-  </script>
+  <script type="module" src="app.js?v=20261005-outreach2"></script>
+
 </body>
 </html>
