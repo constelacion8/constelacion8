@@ -1,4 +1,4 @@
-const C8_CACHE = 'constelacion8-shell-v8';
+const C8_CACHE = 'constelacion8-shell-v9';
 const C8_SHELL = [
   './',
   './index.html',
@@ -34,7 +34,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname.startsWith('/genealogia/')) {
+  if (url.pathname.startsWith('/genealogia/') || url.pathname.startsWith('/m88/')) {
     event.respondWith(fetch(event.request, { cache: 'no-store' }));
     return;
   }
