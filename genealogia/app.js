@@ -1,5 +1,5 @@
 import { supabase } from '../supabase-client.js';
-import { startWorkspace, state, setPage, renderPeople } from './workspace.js?v=20261005b';
+import { startWorkspace, state, setPage, renderPeople } from './workspace.js';
 const $=id=>document.getElementById(id);
 const loginAlias='28081988', adminAccount='info@enriquerodda.com';
 const resolveAccount=value=>value.trim()===loginAlias?adminAccount:value.trim();
