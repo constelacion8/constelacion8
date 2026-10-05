@@ -114,7 +114,7 @@ function showMap(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showIsland(slug){
+async function showIsland(slug){
   const island=islands.find(item=>item.slug===slug);
   if(!island) return;
   activeIsland=island;
@@ -128,12 +128,13 @@ function showIsland(slug){
   document.getElementById('islandTitle').textContent=island.name;
   document.getElementById('islandCount').textContent=island.municipalities.length?`${island.municipalities.length} municipios · orden alfabético`:island.note;
   search.value='';
+  await loadContactedMunicipalities();
   renderMunicipalities(island.municipalities.map(name=>({name,island:island.name})));
   focusIsland(slug);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showAll(){
+async function showAll(){
   activeIsland=null;
   activeMode='all';
   resetIslandFocus();
@@ -147,6 +148,7 @@ function showAll(){
   document.getElementById('islandTitle').textContent='88 municipios';
   document.getElementById('islandCount').textContent=`${totalMunicipalities} municipios · orden alfabético`;
   search.value='';
+  await loadContactedMunicipalities();
   renderMunicipalities(all);
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -266,6 +268,12 @@ if(navContacted) navContacted.addEventListener('click',()=>void showContacted())
 const backFromContacted=document.getElementById('backFromContacted');
 if(backFromContacted) backFromContacted.addEventListener('click',showMap);
 void loadContactedMunicipalities();
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible') void loadContactedMunicipalities();
+});
+window.addEventListener('focus',()=>void loadContactedMunicipalities());
+
 const navAll=document.getElementById('navAll');
 if(navAll) navAll.addEventListener('click',showAll);
 document.getElementById('backToMap').addEventListener('click',showMap);
