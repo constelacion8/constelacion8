@@ -153,6 +153,13 @@ async function showAll(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+function commercialStatusLabel(status){
+  if(status==='negociacion') return 'En negociación';
+  if(status==='trabajado') return 'Ya hemos trabajado';
+  if(status==='contactado') return 'Contactado';
+  return 'No contactado';
+}
+
 function renderMunicipalities(items){
   if(!items.length){
     grid.innerHTML=`<div class="contact-empty"><strong>Sin municipio propio.</strong><p>${escapeHtml(activeIsland?.note||'')}</p></div>`;
@@ -160,7 +167,8 @@ function renderMunicipalities(items){
   }
   grid.innerHTML=items.map((item,index)=>{
     const contacted=contactedMap.get(item.name);
-    return `<button class="municipality-card${contacted?' is-contacted':''}" type="button" data-name="${escapeAttr(item.name)}" data-island-name="${escapeAttr(item.island)}"><small>${String(index+1).padStart(2,'0')} · ${escapeHtml(item.island)}</small><strong>${escapeHtml(item.name)}</strong>${contacted?'<span class="contacted-label">✓ Contactado</span>':'<span>Ver contactos →</span>'}</button>`;
+    const stateLabel=contacted?commercialStatusLabel(contacted.status):'';
+    return `<button class="municipality-card${contacted?' is-contacted':''}" type="button" data-name="${escapeAttr(item.name)}" data-island-name="${escapeAttr(item.island)}"><small>${String(index+1).padStart(2,'0')} · ${escapeHtml(item.island)}</small><strong>${escapeHtml(item.name)}</strong>${contacted?`<span class="contacted-label">${escapeHtml(stateLabel)}</span>`:'<span>Ver contactos →</span>'}</button>`;
   }).join('');
   grid.querySelectorAll('.municipality-card').forEach(card=>card.addEventListener('click',()=>showMunicipality(card.dataset.name,card.dataset.islandName)));
 }
@@ -190,6 +198,12 @@ async function loadContactedMunicipalities(){
     contactedMap=new Map(data.map(item=>[item.municipality_name,item]));
     const headerCount=document.getElementById('contactedHeaderCount');
     if(headerCount) headerCount.textContent=String(data.length);
+    const homeList=document.getElementById('homeContactedList');
+    if(homeList){
+      homeList.innerHTML=data.length
+        ? data.map(item=>'<span class="home-contacted-item"><strong>'+escapeHtml(item.municipality_name)+'</strong><span>'+escapeHtml(commercialStatusLabel(item.status))+'</span></span>').join('')
+        : '<span class="home-contacted-empty">Aún no hay municipios contactados.</span>';
+    }
     return data;
   }catch(error){
     console.warn('Snapshot local de estados comerciales no disponible',error);
@@ -216,7 +230,7 @@ async function showContacted(){
     contactedEmpty.hidden=false;
   }else{
     contactedEmpty.hidden=true;
-    contactedGrid.innerHTML=data.map(item=>`<button class="municipality-card is-contacted" type="button" data-name="${escapeAttr(item.municipality_name)}" data-island-name="${escapeAttr(item.island_name)}"><small>${escapeHtml(item.island_name)}</small><strong>${escapeHtml(item.municipality_name)}</strong><span class="contacted-label">✓ Contactado</span>${item.contacted_at?`<span class="contacted-date">${formatContactedDate(item.contacted_at)}</span>`:''}</button>`).join('');
+    contactedGrid.innerHTML=data.map(item=>`<button class="municipality-card is-contacted" type="button" data-name="${escapeAttr(item.municipality_name)}" data-island-name="${escapeAttr(item.island_name)}"><small>${escapeHtml(item.island_name)}</small><strong>${escapeHtml(item.municipality_name)}</strong><span class="contacted-label">${escapeHtml(commercialStatusLabel(item.status))}</span>${item.contacted_at?`<span class="contacted-date">${formatContactedDate(item.contacted_at)}</span>`:''}</button>`).join('');
     contactedGrid.querySelectorAll('.municipality-card').forEach(card=>card.addEventListener('click',()=>showMunicipality(card.dataset.name,card.dataset.islandName)));
   }
   window.scrollTo({top:0,behavior:'smooth'});
