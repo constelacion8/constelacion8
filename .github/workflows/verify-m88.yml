@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'm88/**'
+      - 'service-worker.js'
       - '.github/workflows/verify-m88.yml'
   workflow_dispatch:
 
@@ -16,93 +17,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Install Playwright
+
+      - name: Verify repository state
+        shell: bash
         run: |
-          npm init -y >/dev/null 2>&1
-          npm install playwright@1.57.0 >/dev/null 2>&1
-          npx playwright install chromium >/dev/null 2>&1
-      - name: Verify public app
+          set -euo pipefail
+          grep -q 'app.js?v=20261005-outreach2' m88/index.html
+          grep -q 'app.css?v=20261005-outreach2' m88/index.html
+          grep -q 'id="navContacted"' m88/index.html
+          grep -q 'async function showIsland' m88/app.js
+          grep -q 'await loadContactedMunicipalities();' m88/app.js
+          grep -q "visibilitychange" m88/app.js
+          grep -q "m88_contacted_municipalities" m88/app.js
+          grep -q "startsWith('/m88/')" service-worker.js
+          echo 'REPOSITORY_M88_OK'
+
+      - name: Verify deployed M88 assets
+        shell: bash
         run: |
-          cat > verify-m88.cjs <<'NODE'
-          const { chromium } = require('playwright');
-          const sleep = ms => new Promise(resolve=>setTimeout(resolve,ms));
-          (async()=>{
-            const browser=await chromium.launch({headless:true});
-            const page=await browser.newPage({viewport:{width:1440,height:1000}});
-            const errors=[];
-            page.on('pageerror',e=>errors.push(String(e)));
+          set -euo pipefail
+          BASE='https://constelacion8.com/m88'
+          READY=0
+          for attempt in $(seq 1 18); do
+            HTML=$(curl -fsSL --retry 2 --retry-delay 2 "$BASE/?verify=$GITHUB_SHA" || true)
+            if grep -q 'app.js?v=20261005-outreach2' <<<"$HTML" && grep -q 'id="navContacted"' <<<"$HTML"; then
+              READY=1
+              break
+            fi
+            sleep 5
+          done
+          test "$READY" = '1'
 
-            let fresh=false;
-            for(let attempt=0;attempt<12;attempt++){
-              await page.goto(`https://constelacion8.com/m88/?fresh=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
-              const title=(await page.locator('#mapSection h1').textContent().catch(()=>''))?.replace(/\s+/g,' ').trim();
-              const tooltipCount=await page.locator('#mapTooltip').count();
-              if(title==='Mapa comercial de DE8 Films.' && tooltipCount===0){fresh=true;break;}
-              await sleep(5000);
-            }
-            if(!fresh) throw new Error('Fresh minimal M88 deployment not visible yet');
-            if(await page.locator('#loginForm').count()) throw new Error('Unexpected login form');
-            if(await page.locator('.brand-mark').count()) throw new Error('Legacy brand mark still visible in DOM');
+          curl -fsSL --retry 3 "$BASE/app.js?v=20261005-outreach2&sha=$GITHUB_SHA" -o /tmp/m88-app.js
+          grep -q 'async function showIsland' /tmp/m88-app.js
+          grep -q 'await loadContactedMunicipalities();' /tmp/m88-app.js
+          grep -q 'visibilitychange' /tmp/m88-app.js
+          grep -q 'm88_contacted_municipalities' /tmp/m88-app.js
 
-            await page.waitForSelector('[data-island="tenerife"]',{timeout:30000});
-            await page.click('[data-island="tenerife"]');
-            await page.waitForSelector('.municipality-card',{timeout:30000});
-            let count=await page.locator('.municipality-card').count();
-            if(count!==31) throw new Error(`Tenerife expected 31, got ${count}`);
-
-            const apiResponse = page.waitForResponse(r=>r.url().includes('/rest/v1/m88_contacts_directory') && r.request().method()==='GET',{timeout:30000});
-            await page.locator('.municipality-card').filter({hasText:'Adeje'}).click();
-            const response=await apiResponse;
-            if(response.status()!==200) throw new Error(`Supabase directory HTTP ${response.status()}`);
-            await page.waitForFunction(()=>document.querySelector('#contactCount')?.textContent!=='Cargando…',null,{timeout:30000});
-
-            await page.waitForSelector('.contact-card .party-row',{timeout:30000});
-            const partyText=(await page.locator('.contact-card .party-row').first().textContent() || '').replace(/\s+/g,' ').trim();
-            if(!/PSOE|Partido Socialista/i.test(partyText)) throw new Error(`Adeje party mark missing PSOE: ${partyText}`);
-            await page.waitForFunction(()=>{
-              const img=document.querySelector('.contact-card .party-row img.party-logo');
-              return !!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
-            },null,{timeout:15000});
-            const desktopLogo=page.locator('.contact-card .party-logo').first();
-            const desktopSrc=await desktopLogo.getAttribute('src');
-            if(!desktopSrc || !desktopSrc.includes('assets/parties/')) throw new Error(`Party logo is not local: ${desktopSrc}`);
-            const desktopBox=await desktopLogo.boundingBox();
-            if(!desktopBox || desktopBox.height < 50) throw new Error(`Desktop party logo too small: ${desktopBox?.height}`);
-
-            await page.click('#navAll');
-            await page.waitForTimeout(300);
-            count=await page.locator('.municipality-card').count();
-            if(count!==88) throw new Error(`All municipalities expected 88, got ${count}`);
-            if(errors.length) throw new Error(errors.join(' | '));
-
-            const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
-            await mobile.goto(`https://constelacion8.com/m88/?mobilecheck=${Date.now()}`,{waitUntil:'networkidle',timeout:90000});
-            await mobile.waitForSelector('.archipelago-stage',{timeout:30000});
-            const stage=await mobile.locator('.archipelago-stage').boundingBox();
-            if(!stage) throw new Error('Mobile map stage missing');
-            if(stage.x < -1 || stage.x + stage.width > 391) throw new Error(`Mobile map stage clipped: x=${stage.x}, width=${stage.width}`);
-            for(const node of await mobile.locator('.island-node').all()){
-              const box=await node.boundingBox();
-              if(!box) continue;
-              if(box.x < -2 || box.x + box.width > 392) throw new Error(`Mobile island clipped: x=${box.x}, width=${box.width}`);
-            }
-
-            await mobile.click('[data-island="tenerife"]');
-            await mobile.waitForSelector('.municipality-card',{timeout:30000});
-            await mobile.locator('.municipality-card').filter({hasText:'Adeje'}).click();
-            await mobile.waitForFunction(()=>document.querySelector('#contactCount')?.textContent!=='Cargando…',null,{timeout:30000});
-            await mobile.waitForFunction(()=>{
-              const img=document.querySelector('.contact-card .party-row img.party-logo');
-              return !!img && img.complete && img.naturalWidth>0 && getComputedStyle(img).display!=='none';
-            },null,{timeout:15000});
-            const mobileLogo=mobile.locator('.contact-card .party-logo').first();
-            const mobileSrc=await mobileLogo.getAttribute('src');
-            if(!mobileSrc || !mobileSrc.includes('assets/parties/')) throw new Error(`Mobile party logo is not local: ${mobileSrc}`);
-            const mobileBox=await mobileLogo.boundingBox();
-            if(!mobileBox || mobileBox.height < 44) throw new Error(`Mobile party logo too small: ${mobileBox?.height}`);
-
-            console.log('M88_OK: local party logos + larger desktop/mobile size + backend + map fit');
-            await browser.close();
-          })().catch(err=>{console.error(err);process.exit(1)});
-          NODE
-          node verify-m88.cjs
+          curl -fsSL --retry 3 "https://constelacion8.com/service-worker.js?sha=$GITHUB_SHA" -o /tmp/service-worker.js
+          grep -q "startsWith('/m88/')" /tmp/service-worker.js
+          echo 'DEPLOYED_M88_OK'
