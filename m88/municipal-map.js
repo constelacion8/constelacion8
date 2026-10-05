@@ -288,35 +288,17 @@ function ensureLegend(stage, statusMap) {
 async function loadPipelineStatuses() {
   const statuses = new Map(allMunicipalities.map(item => [item.name, 'no_contactado']));
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/m88_municipality_pipeline?select=municipality_name,status&order=municipality_name.asc`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-      cache: 'no-store'
-    });
-    if (!response.ok) throw new Error(`Pipeline ${response.status}`);
-    const rows = await response.json();
+    const response = await fetch('./data/contacted-municipalities.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Snapshot ${response.status}`);
+    const payload = await response.json();
+    const rows = payload.municipalities || [];
     for (const row of rows) {
       const name = canonicalName(row.municipality_name);
-      if (name && STATUS[row.status]) statuses.set(name, row.status);
-    }
-    return statuses;
-  } catch (error) {
-    console.warn('Pipeline municipal no disponible; usando municipios contactados', error);
-  }
-
-  try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/m88_contacted_municipalities?select=municipality_name`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-      cache: 'no-store'
-    });
-    if (response.ok) {
-      const rows = await response.json();
-      for (const row of rows) {
-        const name = canonicalName(row.municipality_name);
-        if (name) statuses.set(name, 'contactado');
-      }
+      const status = STATUS[row.status] ? row.status : 'contactado';
+      if (name) statuses.set(name, status);
     }
   } catch (error) {
-    console.warn('Seguimiento de municipios no disponible', error);
+    console.warn('Snapshot local de estados comerciales no disponible', error);
   }
   return statuses;
 }
