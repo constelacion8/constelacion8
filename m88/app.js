@@ -182,13 +182,19 @@ function showMunicipality(name,islandName){
 }
 
 async function loadContactedMunicipalities(){
-  if(!supabase) return [];
-  const {data,error}=await supabase.from('m88_contacted_municipalities').select('municipality_name,island_name,contacted_at,notes').order('contacted_at',{ascending:false}).order('municipality_name',{ascending:true});
-  if(error){console.warn(error);return[];}
-  contactedMap=new Map(data.map(item=>[item.municipality_name,item]));
-  const headerCount=document.getElementById('contactedHeaderCount');
-  if(headerCount) headerCount.textContent=String(data.length);
-  return data;
+  try{
+    const response=await fetch('./data/contacted-municipalities.json',{cache:'no-store'});
+    if(!response.ok) throw new Error(`Snapshot ${response.status}`);
+    const payload=await response.json();
+    const data=(payload.municipalities||[]).filter(item=>item.status!=='no_contactado');
+    contactedMap=new Map(data.map(item=>[item.municipality_name,item]));
+    const headerCount=document.getElementById('contactedHeaderCount');
+    if(headerCount) headerCount.textContent=String(data.length);
+    return data;
+  }catch(error){
+    console.warn('Snapshot local de estados comerciales no disponible',error);
+    return [...contactedMap.values()];
+  }
 }
 
 async function showContacted(){
@@ -269,10 +275,6 @@ const backFromContacted=document.getElementById('backFromContacted');
 if(backFromContacted) backFromContacted.addEventListener('click',showMap);
 void loadContactedMunicipalities();
 
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible') void loadContactedMunicipalities();
-});
-window.addEventListener('focus',()=>void loadContactedMunicipalities());
 
 const navAll=document.getElementById('navAll');
 if(navAll) navAll.addEventListener('click',showAll);
