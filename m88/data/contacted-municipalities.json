@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated_at": "2026-10-05T12:00:00+01:00",
+  "updated_at": "2026-10-07T09:42:00+01:00",
   "source": "DE8 commercial status snapshot",
   "default_status": "no_contactado",
   "municipalities": [
@@ -81,6 +81,12 @@
       "island_name": "Tenerife",
       "status": "negociacion",
       "contacted_at": "2026-09-14"
+    },
+    {
+      "municipality_name": "El Pinar de El Hierro",
+      "island_name": "El Hierro",
+      "status": "contactado",
+      "contacted_at": "2026-10-07"
     }
   ]
 }
