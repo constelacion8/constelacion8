@@ -1,4 +1,4 @@
-import {state,person,parents,notify} from './workspace.js';
+import {state,person,parents,notify} from './workspace.js?v=20261009bio';
 function download(filename,content,type){let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);}
 const pair=(...ids)=>ids.filter(Boolean).sort().join('|');
 function gedDate(date,year,precision){const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];if(date&&precision==='exact'){let [yy,mm,dd]=date.slice(0,10).split('-');return `${Number(dd)} ${months[Number(mm)-1]} ${yy}`;}return year?(precision==='approximate'?'ABT ':'')+year:null;}
