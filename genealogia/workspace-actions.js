@@ -1,4 +1,4 @@
-import {state,person,source,parents,children,partners,sortedPeople,refresh,renderPeople,renderTree,renderTasks,setPage,notify} from './workspace.js';
+import {state,person,source,parents,children,partners,sortedPeople,refresh,renderPeople,renderTree,renderTasks,setPage,notify} from './workspace.js?v=20261009bio';
 const $=id=>document.getElementById(id), val=id=>$(id).value.trim(),opt=id=>val(id)||null,year=id=>val(id)?Number(val(id)):null;
 let client=null,editPerson=null,editSource=null,editTask=null;
 function show(id){$(id).showModal();}function close(id){$(id).close();}
